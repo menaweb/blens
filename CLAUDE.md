@@ -43,18 +43,26 @@ F0  backend/   Django 5.2 + Django Ninja. config/ (settings, celery), api/ (rout
     infra/     CDK en Python: pila vacía, eu-west-1. Deps aparte: uv sync --group infra
     .github/   CI: ruff · black · makemigrations --check · pytest · validate_seed · vitest · build
 
-F1  engines/oscal_io          lee y valida el Catalog OSCAL 1.1.3 (puro)
+F1  engines/oscal_io          lee y valida el Catalog OSCAL 1.1.3, y exporta la DdA a
+                              OSCAL **profile** (decisión tomada; §17 lo dejaba abierto)
     engines/ens_applicability categoría + niveles por dimensión → medidas, refuerzos y
                               selecciones pendientes (puro, determinista)
     apps/catalog              CatalogVersion, EnsMeasure, EnsRefuerzo, EnsSelectionParam,
                               EnsRequirementItem + import_ens_oscal idempotente
     /api/catalog              versiones, medidas, detalle y applicability (solo lectura)
+
+F2  M1 categorización         DimensionValuation + asistente de 5 pasos **sin cuenta**,
+                              con PDF generado en Celery (WeasyPrint) y caducidad de los
+                              resultados anónimos · pantalla Vue según el handoff
+    M2 DdA                    DeclaracionAplicabilidad + MeasureApplied versionables,
+                              aprobación bloqueada si quedan selecciones sin resolver o
+                              no aplicables sin justificar · export PDF y OSCAL
 ```
 
 **Sin construir:** la landing (`landing/`), los motores de riesgo, scoring y evidencias, el
 seed a base de datos (`seed_blens`), el parser CPSTIC de verdad (solo hay prototipo) y las
-apps `compliance` (salvo `System`), `profiling`, `documents`, `evidence` y `risk`. Siguiente
-fase: **F2** (categorización M1 + DdA M2), en `docs/plan_construccion.md`.
+apps `profiling`, `documents`, `evidence` y `risk`. Siguiente fase: **F3** (motores de
+scoring y riesgo), en `docs/plan_construccion.md`.
 
 **Puesta en marcha y comandos:** `README.md`. Puertos no estándar a propósito para convivir
 con otros proyectos: Postgres **5434**, Django **8001**, Vite **5175**, Redis **6381**.
@@ -875,7 +883,7 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 - **UI del frontend:** shadcn-vue (marca) vs PrimeVue (data-grid) — decidir al montar el dashboard.
 - **Refuerzos sin props (41):** confirmar contra las tablas del RD 311/2022 que son opcionales. Revisar también las erratas conocidas y reportarlas a la AEAD si procede.
 - **Licencia EUPL-1.2 del catálogo:** es copyleft y cubre la comunicación por red. Mantener el JSON sin modificar y separado de la capa propia. Si se modificara, publicar esos cambios bajo EUPL. Validarlo con asesoría legal. El PDF de decisiones es CC BY-NC-SA (no se redistribuye).
-- **Export OSCAL:** decidir el modelo para la DdA (profile vs SSP) y si el paquete de auditoría se exporta también como *assessment-results*.
+- **Export OSCAL:** ✅ la DdA se exporta como **profile** (`engines/oscal_io/export.py`): include/exclude de controles y `set-parameters` para las selecciones. Queda abierto si el paquete de auditoría se exporta además como *assessment-results*, y si hace falta un SSP que importe este profile cuando se publique la implementación.
 - **Datos CPSTIC:** extracción solo de campos fácticos (§3.2.0); validar con asesoría (derecho *sui generis* y aviso legal) e informar al CCN antes de producción.
 - **Fuente del CPSTIC:** ✅ DECIDIDO (§3.2.1) — no hay formato estructurado; ingesta semiautomática desde la guía CCN-STIC-105 con revisión humana. Si el CCN publica OSCAL/JSON, se sustituye el parser sin tocar el modelo.
 - **IA (M16):** proveedor y modelo, acuerdo con retención cero, umbral de confianza por caso de uso y texto para el comprador público sobre el subencargado.

@@ -1,0 +1,73 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{% block titulo %}BLENS{% endblock %}</title>
+  <style>
+    /* Tokens de design/README_handoff.md §Design tokens. Inter no se incrusta todavía:
+       el PDF usa la pila del sistema y se cambiará cuando se suba la fuente a S3. */
+    @page {
+      size: A4;
+      margin: 20mm 18mm 18mm;
+      @bottom-center {
+        content: "BLENS · " counter(page) " de " counter(pages);
+        font-size: 9pt; color: #94A3B8;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+      font-feature-settings: "tnum";
+      color: #0F172A; font-size: 10pt; line-height: 1.5; margin: 0;
+    }
+    code, .mono { font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 9pt; }
+    .antetitulo {
+      font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase; color: #475569;
+    }
+    h1 { font-size: 20pt; letter-spacing: -0.02em; margin: 2mm 0 1mm; color: #0B4F4A; }
+    h2 {
+      font-size: 12pt; margin: 8mm 0 2mm; color: #0B4F4A;
+      border-bottom: 1px solid #CCFBF1; padding-bottom: 1.5mm;
+    }
+    h3 { font-size: 10pt; margin: 5mm 0 1mm; }
+    .cabecera { border-bottom: 2px solid #0F766E; padding-bottom: 4mm; margin-bottom: 6mm; }
+    .meta { color: #475569; font-size: 9pt; }
+    table { width: 100%; border-collapse: collapse; margin-top: 3mm; }
+    th {
+      text-align: left; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.04em;
+      color: #475569; background: #F8FAFC; padding: 2mm; border-bottom: 1px solid #E2E8F0;
+    }
+    td { padding: 2mm; border-bottom: 1px solid #F1F5F9; vertical-align: top; font-size: 9pt; }
+    tr { page-break-inside: avoid; }
+    .chip {
+      display: inline-block; padding: 0.6mm 2mm; border-radius: 3mm; background: #CCFBF1;
+      color: #0B4F4A; font-size: 8.5pt;
+    }
+    .chip.gris { background: #F1F5F9; color: #475569; }
+    .cifras { display: flex; gap: 4mm; margin: 5mm 0; }
+    .cifra {
+      flex: 1; background: #F0FDFA; border: 1px solid #CCFBF1; border-radius: 3mm; padding: 3mm;
+    }
+    .cifra .valor { font-size: 18pt; font-weight: 600; color: #0B4F4A; letter-spacing: -0.01em; }
+    .cifra .etiqueta { font-size: 8.5pt; color: #475569; }
+    .aviso {
+      background: #F8FAFC; border-left: 3px solid #94A3B8; padding: 3mm; font-size: 9pt;
+      color: #475569; margin-top: 6mm;
+    }
+    .pie-legal { margin-top: 8mm; font-size: 8pt; color: #94A3B8; }
+  </style>
+</head>
+<body>
+  <div class="cabecera">
+    <div class="antetitulo">{% block antetitulo %}{% endblock %}</div>
+    <h1>{% block encabezado %}{% endblock %}</h1>
+    <div class="meta">{% block submeta %}{% endblock %}</div>
+  </div>
+  {% block contenido %}{% endblock %}
+  <div class="pie-legal">
+    Documento generado por BLENS el {{ generado_en }}. El texto del catálogo procede de la
+    versión OSCAL del Anexo II publicada por la AEAD (EUPL-1.2), de carácter informativo:
+    a efectos jurídicos rige el RD 311/2022 publicado en el BOE.
+  </div>
+</body>
+</html>
