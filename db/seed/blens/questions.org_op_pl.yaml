@@ -22,7 +22,7 @@ bloques:
     titulo: Gobernanza y documentación
     minutos_estimados: 10
   - code: B07
-    titulo: Planificación y arquitectura
+    titulo: "Inventario y arquitectura"
     minutos_estimados: 8
 
 questions:

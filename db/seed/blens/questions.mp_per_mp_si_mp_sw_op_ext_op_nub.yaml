@@ -16,7 +16,7 @@ bloques:
     titulo: Proveedores y servicios en la nube
     minutos_estimados: 10
   - code: B14
-    titulo: Soportes de información
+    titulo: "Información y soportes"
     minutos_estimados: 5
   - code: B15
     titulo: Desarrollo de aplicaciones

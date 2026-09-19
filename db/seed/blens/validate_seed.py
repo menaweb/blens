@@ -20,13 +20,18 @@ walk(cat)
 ids = {n["id"] for n in nodes}
 medidas = {n["id"] for n in nodes if n.get("class") not in ("family", "subfamily") and not n.get("groups") and n.get("class") != "ens-refuerzo"}
 items = set()
-def collect(parts):
+# Solo cuentan los items que cuelgan de `requisitos`. Los 5 que cuelgan del `overview` de
+# mp.eq.4 son aclaraciones («dispositivos multifunción: impresoras, escáneres…»), no
+# requisitos, y anclar un check ahí es un error: el importador no los carga (§6).
+def collect(parts, dentro=False):
     for p in parts or []:
-        if p.get("name") == "item":
+        requisito = dentro or p.get("name") == "requisitos"
+        if requisito and p.get("name") == "item":
             lab = next((q["value"] for q in p.get("props", []) if q["name"] == "label"), None)
-            if lab: items.add(lab)
-        collect(p.get("parts"))
+            if lab: items.add((p["id"].rsplit(".req.", 1)[0] if ".req." in p["id"] else p["id"], lab))
+        collect(p.get("parts"), requisito)
 for n in nodes: collect(n.get("parts"))
+etiquetas = {lab for _, lab in items}
 
 def load(pattern):
     return {f: yaml.safe_load(open(f, encoding="utf-8")) for f in glob.glob(os.path.join(BASE, pattern))}
@@ -120,7 +125,7 @@ for f, doc in load("checks/checks.*.yaml").items():
         if c["code"] in check_codes: errs.append(f"check duplicado: {c['code']}")
         check_codes.add(c["code"])
         if c["measure"] not in ids: errs.append(f"{c['code']}: medida inexistente")
-        if c["item"] not in items: errs.append(f"{c['code']}: item inexistente {c['item']}")
+        if c["item"] not in etiquetas: errs.append(f"{c['code']}: item inexistente {c['item']} (¿cuelga del overview y no de los requisitos?)")
         for e in c.get("evidencia_esperada") or []:
             if e not in ev_codes: errs.append(f"{c['code']}: evidencia inexistente {e}")
         if not c.get("evidencia_esperada"): warns.append(f"{c['code']}: sin evidencia asociada")
@@ -161,7 +166,7 @@ for n in range(1, 6):
     if n in niveles and n - 1 in niveles and niveles[n] < niveles[n - 1]:
         errs.append(f"eficacia por madurez: L{n} no puede valer menos que L{n-1}")
 
-print(f"medidas OSCAL: {len(medidas)} | items: {len(items)}")
+print(f"medidas OSCAL: {len(medidas)} | etiquetas de requisito: {len(etiquetas)}")
 print(f"preguntas: {sum(len(d['questions']) for d in questions.values())} | plantillas: {len(ev_codes)} | checks: {len(check_codes)}")
 print(f"pares medida-amenaza: {sum(len(v) for v in mp['map'].values())}")
 for w in warns[:15]: print("AVISO:", w)

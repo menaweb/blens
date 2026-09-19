@@ -15,7 +15,7 @@ bloques:
     titulo: Red y comunicaciones
     minutos_estimados: 9
   - code: B12
-    titulo: Monitorización
+    titulo: "Registro, monitorización e incidentes"
     minutos_estimados: 6
   - code: B16
     titulo: Correo, web y navegación

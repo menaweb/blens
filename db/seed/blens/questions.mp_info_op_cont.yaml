@@ -19,7 +19,7 @@ bloques:
     titulo: Copias de seguridad y continuidad
     minutos_estimados: 8
   - code: B14
-    titulo: Protección de la información
+    titulo: "Información y soportes"
     minutos_estimados: 7
 
 questions:
