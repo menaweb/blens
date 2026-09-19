@@ -87,7 +87,15 @@ Incidentes y acciones
 Auditoría
   ├─ Paquete
   └─ Acceso del auditor
+
+Menú de la cuenta (arriba a la derecha, fuera de la barra lateral)
+  ├─ Mi perfil y seguridad (contraseña, segundo factor, sesiones)
+  ├─ Usuarios y roles
+  ├─ Mi actividad
+  └─ Plan y facturación
 ```
+
+Fuera de la aplicación, sin barra lateral: categorización sin cuenta, crear cuenta, iniciar sesión, recuperar contraseña, aceptar invitación y el portal del auditor.
 
 ---
 
@@ -126,6 +134,22 @@ Aquí se gana o se pierde la usabilidad:
 - Ranking de gaps con acción directa.
 - Delta desde la semana anterior.
 - Avisos agrupados: evidencias que caducan, certificados de proveedor que vencen, tareas vencidas.
+
+### Prioridad 1b — cuenta y acceso (el puente entre el gancho y el producto)
+
+Son pantallas de prioridad 1 por lo que se juegan, aunque se diseñen después del camino principal: si el paso de "he obtenido mi categoría" a "tengo una cuenta con mi sistema dentro" se rompe, el gancho gratuito no convierte nada. La identidad la gestiona Cognito (D1 de `docs/decisiones.md`), pero **las pantallas son nuestras**: nada de la Hosted UI de AWS, que rompería la marca y, sobre todo, impediría enseñar el resultado de la categorización encima del formulario de alta. Correo y contraseña, con segundo factor. No hay botón de "entrar con Google" ni de Cl@ve, y conviene que el diseño no lo insinúe.
+
+**P16. Crear cuenta desde el resultado de la categorización.** Continuación natural de P1, no un formulario que aparece de la nada: arriba, el resultado que la persona acaba de obtener (categoría y niveles), para que vea qué está guardando. Debajo, los datos mínimos: organización, nombre, correo y contraseña. Después, verificación del correo y aterrizaje directo en su sistema ya creado. Estado a contemplar: **el resultado anónimo ha caducado** — el alta sigue adelante y se explica sin culpar a nadie que hay que repetir la categorización, que son dos minutos.
+
+**P17. Iniciar sesión, segundo factor y recuperar contraseña.** Tres pantallas sobrias de la misma familia. En el segundo factor: alta con código QR y verificación. **No hay códigos de recuperación** —Cognito no los da—, así que hace falta una salida diseñada para quien pierde el móvil: pedir a un administrador de su organización que se lo restablezca, dicho sin dramatismo y sin dejarle en un callejón. Errores concretos y sin pistas de más: nunca "ese correo no existe". Estado propio para la cuenta bloqueada por intentos fallidos.
+
+**P18. Aceptar una invitación.** La ve alguien que no conoce BLENS y a quien un compañero ha metido en esto. Tiene que decir en una pantalla quién le invita, a qué organización, con qué papel y qué se espera de él, antes de pedirle que elija contraseña. Estados: invitación caducada, ya usada o revocada, cada uno con salida clara.
+
+**P19. Usuarios y roles.** Tabla de miembros con rol, sistemas a los que alcanza, estado e invitaciones pendientes. Incluye **restablecer el segundo factor** de un miembro que ha perdido el suyo, con confirmación y traza: es la contrapartida de que no haya códigos de recuperación. Invitar abre un panel con rol, ámbito de sistemas y bloques del perfilado. Los accesos temporales de auditor y consultor se ven con su **fecha de caducidad destacada**. Acciones delicadas —revocar, cambiar de rol, transferir la propiedad— con confirmación que explica la consecuencia. El sistema impide dejar la organización sin propietario, y el diseño debe explicar por qué, no solo desactivar el botón.
+
+**P20. Mi perfil y seguridad.** Datos personales, contraseña, segundo factor, sesiones activas y **mi actividad**: qué he hecho yo, con fecha. Es lo que convierte el registro encadenado en algo útil para el usuario, y no solo en un requisito de op.exp.8.
+
+**P21. Plan y facturación** (se diseña cuando se cierre el precio, D3). Plan actual, límites, cambio de plan y facturas. No se diseña antes de saber qué se cobra.
 
 ### Prioridad 2 — trabajo de fondo
 
@@ -200,6 +224,9 @@ Estado vacío del dashboard:
 
 **Pantalla 1 · Categorización gratuita**
 > Lee `docs/brief_diseno.md` (§2 tokens, §3 estados) y `docs/cuestionario_perfilado.md` §1bis. Diseña el asistente de categorización de BLENS: 5 pasos, uno por dimensión (confidencialidad, integridad, disponibilidad, autenticidad, trazabilidad), con cuatro opciones cada uno (no aplica, bajo, medio, alto) y ejemplos reconocibles. Más la pantalla de resultado con la categoría obtenida, el número de medidas aplicables y la llamada a crear cuenta. Se usa sin registro y es la puerta del producto: tiene que transmitir seriedad y rapidez. Nada de gamificación.
+
+**Pantalla 1b · Crear cuenta y aceptar invitación**
+> Lee `docs/brief_diseno.md` §5 (P16 a P20) y `docs/roles_y_permisos.md`. Diseña el puente entre la categorización gratuita y el producto: crear cuenta mostrando arriba el resultado recién obtenido, verificación del correo, iniciar sesión, alta del segundo factor con QR, y aceptar una invitación explicando quién invita, a qué organización y con qué papel. Correo y contraseña sobre Cognito, pero con **pantallas nuestras: no uses la Hosted UI de AWS** ni botones de proveedores externos. Incluye los estados incómodos, que son la mitad del trabajo: resultado anónimo caducado, invitación caducada o ya usada, cuenta bloqueada por intentos fallidos y segundo factor perdido. Tono sobrio; quien llega aquí acaba de decidir fiarse.
 
 **Pantalla 2 · Ficha de pregunta del perfilado**
 > Usa el ejemplo real del antivirus de `docs/cuestionario_perfilado.md` §1bis. Diseña la pantalla de una pregunta con sus cuatro apoyos: el texto, el porqué, dónde mirarlo y las opciones como situaciones reales, más glosario al pasar el ratón. Incluye el botón secundario "preguntárselo a otra persona" (no existe la opción "no lo sé") y la barra de progreso por bloques con minutos estimados y responsable asignado.

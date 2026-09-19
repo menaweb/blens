@@ -9,6 +9,9 @@ siempre en **eu-west-1** (§5, residencia del dato en la UE):
 - ECS Fargate para el backend y el worker de Celery; SQS como broker.
 - CloudFront + S3 para el frontend estático.
 - Cognito con MFA, WAF, GuardDuty, Security Hub, Config y Secrets Manager (§13).
+  El user pool se define aquí: politica de contrasenas, verificacion de correo, MFA TOTP
+  y bloqueo por intentos (D1, se cablea en F3b).
+- SES como remitente de Cognito, con dominio propio.
 
 Las dependencias de CDK no se instalan por defecto:  uv sync --group infra
 """
