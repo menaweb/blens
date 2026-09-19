@@ -1,0 +1,63 @@
+[project]
+name = "blens"
+version = "0.1.0"
+description = "BLENS — plataforma de cumplimiento del Esquema Nacional de Seguridad"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "django>=5.2,<6.0",
+    "django-ninja>=1.4",
+    "psycopg[binary]>=3.2",
+    "celery>=5.4",
+    "kombu[sqs]>=5.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-django>=4.9",
+    "ruff>=0.8",
+    "black>=24.10",
+    "pre-commit>=4.0",
+    "pyyaml>=6.0",
+    # Broker de Celery en local. En AWS el broker es SQS (kombu[sqs]), no Redis.
+    "redis>=5.2",
+]
+# Se instala solo cuando se trabaja con infraestructura: uv sync --group infra
+infra = [
+    "aws-cdk-lib>=2.170",
+    "constructs>=10.4",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Los scripts del seed y el prototipo del parser CPSTIC son utilidades de datos escritas
+# en estilo script (una línea por comprobación). Se reescriben en su fase; hasta entonces
+# no se reformatean para no ensuciar el diff de algo que sí valida en CI.
+extend-exclude = [
+    "*/migrations/*",
+    "design",
+    "db/seed/oscal",
+    "db/seed/blens/validate_seed.py",
+    "db/seed/blens/checks/*.py",
+    "engines/cpstic_parser/*.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "DJ"]
+ignore = ["E501"]  # la longitud la impone black
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+extend-exclude = "(/migrations/|/design/|/db/seed/)|engines/cpstic_parser/"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+pythonpath = ["backend", "."]
+testpaths = ["backend", "engines"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-q --strict-markers"
