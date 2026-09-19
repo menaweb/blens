@@ -4,9 +4,9 @@
   "type": "module",
   "version": "0.1.0",
   "scripts": {
-    "dev": "vite --port 5175",
+    "dev": "vite --port 5177",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview --port 5175",
+    "preview": "vite preview --port 5177",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit",
