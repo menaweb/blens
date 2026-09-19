@@ -775,6 +775,195 @@ export interface paths {
         patch: operations["api_routers_checklist_patch_medida"];
         trace?: never;
     };
+    "/api/systems/{system_id}/profiling": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Cuestionario de perfilado (M11)
+         * @description Las preguntas que toca enseñar ahora, con su ayuda y lo ya respondido.
+         *
+         *     Las de seguimiento aparecen solas cuando su condición se cumple: nadie ve el
+         *     cuestionario entero de golpe.
+         */
+        get: operations["api_routers_profiling_cuestionario"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/profiling/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Responder una pregunta del perfilado
+         * @description Guarda la respuesta y rehace la carpeta de evidencias.
+         *
+         *     Devuelve qué requisitos aparecen y cuáles se apartan: responder tiene consecuencias
+         *     visibles, no es rellenar un formulario.
+         */
+        put: operations["api_routers_profiling_responder_pregunta"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/profiling/{code}/delegar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preguntárselo a otra persona
+         * @description Lo que hay en vez de un «no lo sé»: la pregunta pasa a quien la sepa, con nombre.
+         */
+        post: operations["api_routers_profiling_delegar_pregunta"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Carpeta de evidencias (M5)
+         * @description La carpeta a medida de este sistema, con sus huecos y por qué está cada uno.
+         */
+        get: operations["api_routers_evidence_carpeta"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/evidence/recalcular": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rehacer la carpeta con el perfil de hoy
+         * @description Vuelve a derivarla. Idempotente, y nunca borra lo aportado.
+         */
+        post: operations["api_routers_evidence_recalcular_carpeta"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/evidence/{requisito_id}/evidencias": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Aportar una evidencia
+         * @description Sube el fichero y lo enlaza a este requisito y a los demás que cierre.
+         *
+         *     `fecha_evidencia` es la del **hecho** (cuándo se hizo la prueba), no la de subida: es
+         *     la que mira el auditor y la que manda la caducidad.
+         */
+        post: operations["api_routers_evidence_aportar_evidencia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/evidencias/{evidencia_id}/validar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validar una evidencia
+         * @description Quien la aportó no puede validarla, aunque sea RSEG: lo impide `can()` (§15).
+         */
+        post: operations["api_routers_evidence_validar_evidencia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/evidencias/{evidencia_id}/rechazar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rechazar una evidencia con motivo
+         * @description El motivo es obligatorio y concreto: «no se ve la fecha», no «no vale».
+         */
+        post: operations["api_routers_evidence_rechazar_evidencia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/evidence/{requisito_id}/no-aplica": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Marcar un requisito como no aplicable
+         * @description No aplica ≠ pendiente. Se puede descartar, pero queda escrito en el paquete.
+         */
+        post: operations["api_routers_evidence_no_aplica"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/systems/{system_id}/assets": {
         parameters: {
             query?: never;
@@ -1779,6 +1968,235 @@ export interface components {
             madurez_media: number;
             /** Peor */
             peor: string | null;
+        };
+        /** BloqueOut */
+        BloqueOut: {
+            /** Bloque */
+            bloque: string;
+            /** Titulo */
+            titulo: string;
+            /** Total */
+            total: number;
+            /** Respondidas */
+            respondidas: number;
+            /** Minutos */
+            minutos: number;
+        };
+        /** CuestionarioOut */
+        CuestionarioOut: {
+            /** System Id */
+            system_id: number;
+            /** Sistema */
+            sistema: string;
+            /** Categoria */
+            categoria: string;
+            /** Bloques */
+            bloques: components["schemas"]["BloqueOut"][];
+            /** Preguntas */
+            preguntas: components["schemas"]["PreguntaOut"][];
+            /** Pendientes */
+            pendientes: number;
+        };
+        /** OpcionOut */
+        OpcionOut: {
+            /** Code */
+            code: string;
+            /** Label */
+            label: string;
+        };
+        /** PreguntaOut */
+        PreguntaOut: {
+            /** Code */
+            code: string;
+            /** Bloque */
+            bloque: string;
+            /** Tipo */
+            tipo: string;
+            /** Texto */
+            texto: string;
+            /** Por Que */
+            por_que: string;
+            /** Como Saberlo */
+            como_saberlo: string;
+            /** A Quien Preguntar */
+            a_quien_preguntar: string;
+            /** Glosario */
+            glosario: {
+                [key: string]: string;
+            };
+            /** Campos */
+            campos: {
+                [key: string]: string;
+            }[];
+            /** Opciones */
+            opciones: components["schemas"]["OpcionOut"][];
+            /** Minutos Estimados */
+            minutos_estimados: number;
+            /** Respondida */
+            respondida: boolean;
+            /** Valor */
+            valor?: unknown;
+            /** Delegada A */
+            delegada_a?: string | null;
+        };
+        /** RespuestaOut */
+        RespuestaOut: {
+            /** Hechos */
+            hechos: {
+                [key: string]: unknown;
+            };
+            /** Requisitos Nuevos */
+            requisitos_nuevos: string[];
+            /** Requisitos Fuera De Alcance */
+            requisitos_fuera_de_alcance: string[];
+            cuestionario: components["schemas"]["CuestionarioOut"];
+        };
+        /** RespuestaIn */
+        RespuestaIn: {
+            /** Valor */
+            valor?: unknown;
+        };
+        /** DelegacionOut */
+        DelegacionOut: {
+            /** Pregunta */
+            pregunta: string;
+            /** Delegada A */
+            delegada_a: string;
+        };
+        /**
+         * DelegacionIn
+         * @description A quién se le pregunta. Uno de los dos, pero alguno.
+         */
+        DelegacionIn: {
+            /** Usuario Id */
+            usuario_id?: number | null;
+            /**
+             * Email
+             * @default
+             */
+            email: string;
+            /**
+             * Nota
+             * @default
+             */
+            nota: string;
+        };
+        /** CarpetaOut */
+        CarpetaOut: {
+            /** System Id */
+            system_id: number;
+            /** Sistema */
+            sistema: string;
+            /** Categoria */
+            categoria: string;
+            /** Requisitos */
+            requisitos: components["schemas"]["RequisitoOut"][];
+            /** Huecos */
+            huecos: number;
+            /** Obligatorios */
+            obligatorios: number;
+            /** Completitud */
+            completitud: number;
+            /** Por Familia */
+            por_familia: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+        };
+        /** EvidenciaOut */
+        EvidenciaOut: {
+            /** Id */
+            id: number;
+            /** Titulo */
+            titulo: string;
+            /** Nombre Original */
+            nombre_original: string;
+            /**
+             * Fecha Evidencia
+             * Format: date
+             */
+            fecha_evidencia: string;
+            /** Estado */
+            estado: string;
+            /** Motivo Rechazo */
+            motivo_rechazo: string;
+            /** Aportada Por */
+            aportada_por: string;
+            /** Url */
+            url: string | null;
+        };
+        /** RequisitoOut */
+        RequisitoOut: {
+            /** Id */
+            id: number;
+            /** Code */
+            code: string;
+            /** Measure */
+            measure: string;
+            /** Familia */
+            familia: string;
+            /** Marco */
+            marco: string;
+            /** Titulo */
+            titulo: string;
+            /** Instrucciones */
+            instrucciones: string;
+            /** Tipo */
+            tipo: string;
+            /** Formatos */
+            formatos: string[];
+            /** Criterios Aceptacion */
+            criterios_aceptacion: string[];
+            /** Rechazos Tipicos */
+            rechazos_tipicos: string[];
+            /** Pistas */
+            pistas: string[];
+            /** Obligatoria */
+            obligatoria: boolean;
+            /** Generable */
+            generable: boolean;
+            /** Vigencia Dias */
+            vigencia_dias: number | null;
+            /** Carpeta Paquete */
+            carpeta_paquete: string;
+            /** Estado */
+            estado: string;
+            /** Motivo */
+            motivo: string;
+            /** Origen */
+            origen: {
+                [key: string]: unknown;
+            };
+            /** Option Group */
+            option_group: string;
+            /** Alternativas */
+            alternativas: string[];
+            /** Cubierto Por Grupo */
+            cubierto_por_grupo: boolean;
+            /** Responsable Id */
+            responsable_id: number | null;
+            /** Fecha Limite */
+            fecha_limite: string | null;
+            /** Proxima Renovacion */
+            proxima_renovacion: string | null;
+            /** Justificacion */
+            justificacion: string;
+            /** Evidencias */
+            evidencias: components["schemas"]["EvidenciaOut"][];
+        };
+        /** RevisionIn */
+        RevisionIn: {
+            /**
+             * Motivo
+             * @default
+             */
+            motivo: string;
+        };
+        /** NoAplicaIn */
+        NoAplicaIn: {
+            /** Justificacion */
+            justificacion: string;
         };
         /** ActivoOut */
         ActivoOut: {
@@ -2949,6 +3367,261 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ChecklistOut"];
+                };
+            };
+        };
+    };
+    api_routers_profiling_cuestionario: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CuestionarioOut"];
+                };
+            };
+        };
+    };
+    api_routers_profiling_responder_pregunta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RespuestaIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaOut"];
+                };
+            };
+        };
+    };
+    api_routers_profiling_delegar_pregunta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DelegacionIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DelegacionOut"];
+                };
+            };
+        };
+    };
+    api_routers_evidence_carpeta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarpetaOut"];
+                };
+            };
+        };
+    };
+    api_routers_evidence_recalcular_carpeta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarpetaOut"];
+                };
+            };
+        };
+    };
+    api_routers_evidence_aportar_evidencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                requisito_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Fichero
+                     * Format: binary
+                     */
+                    fichero: string;
+                    /**
+                     * Fecha Evidencia
+                     * Format: date
+                     */
+                    fecha_evidencia: string;
+                    /**
+                     * Titulo
+                     * @default
+                     */
+                    titulo?: string;
+                    /**
+                     * Notas
+                     * @default
+                     */
+                    notas?: string;
+                    /**
+                     * Criterios
+                     * @default
+                     */
+                    criterios?: string;
+                    /**
+                     * Otros Requisitos
+                     * @default
+                     */
+                    otros_requisitos?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarpetaOut"];
+                };
+            };
+        };
+    };
+    api_routers_evidence_validar_evidencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                evidencia_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarpetaOut"];
+                };
+            };
+        };
+    };
+    api_routers_evidence_rechazar_evidencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                evidencia_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevisionIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarpetaOut"];
+                };
+            };
+        };
+    };
+    api_routers_evidence_no_aplica: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                requisito_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NoAplicaIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CarpetaOut"];
                 };
             };
         };
