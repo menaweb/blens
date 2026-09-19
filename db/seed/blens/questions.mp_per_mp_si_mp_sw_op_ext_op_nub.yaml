@@ -103,16 +103,16 @@ questions:
     opciones:
       - code: elearning
         label: "Curso en línea con registro"
-        emits: {concienciacion_elearning: true}
+        emits: {concienciacion_elearning: true, concienciacion: si}
       - code: charlas
         label: "Charlas o sesiones presenciales"
-        emits: {concienciacion_charlas: true}
+        emits: {concienciacion_charlas: true, concienciacion: si}
       - code: phishing
         label: "Simulaciones de phishing"
-        emits: {concienciacion_phishing: true}
+        emits: {concienciacion_phishing: true, concienciacion: si}
       - code: pildoras
         label: "Avisos o píldoras periódicas"
-        emits: {concienciacion_pildoras: true}
+        emits: {concienciacion_pildoras: true, concienciacion: si}
       - code: ninguna
         label: "Nada organizado"
         emits: {concienciacion: "no"}
@@ -192,13 +192,13 @@ questions:
     opciones:
       - code: usb
         label: "Memorias o discos externos"
-        emits: {soportes_usb: true}
+        emits: {soportes_usb: true, soportes: si}
       - code: cintas
         label: "Cintas o discos de copia"
-        emits: {soportes_copia: true}
+        emits: {soportes_copia: true, soportes: si}
       - code: papel
         label: "Documentación en papel"
-        emits: {soportes_papel: true}
+        emits: {soportes_papel: true, soportes: si}
       - code: ninguno
         label: "Ninguno, todo queda en los sistemas"
         emits: {soportes: "no"}

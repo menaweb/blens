@@ -141,16 +141,16 @@ questions:
     opciones:
       - code: rinfo
         label: "Responsable de la Información"
-        emits: {rol_informacion: true}
+        emits: {rol_informacion: true, roles_designados: si}
       - code: rserv
         label: "Responsable del Servicio"
-        emits: {rol_servicio: true}
+        emits: {rol_servicio: true, roles_designados: si}
       - code: rseg
         label: "Responsable de Seguridad"
-        emits: {rol_seguridad: true}
+        emits: {rol_seguridad: true, roles_designados: si}
       - code: rsis
         label: "Responsable del Sistema"
-        emits: {rol_sistema: true}
+        emits: {rol_sistema: true, roles_designados: si}
       - code: ninguno
         label: "No hay designaciones por escrito"
         emits: {roles_designados: "no"}
@@ -206,16 +206,16 @@ questions:
     opciones:
       - code: uso_equipos
         label: "Uso de equipos y puesto de trabajo"
-        emits: {norma_equipos: true}
+        emits: {norma_equipos: true, normativa: si}
       - code: correo_internet
         label: "Correo electrónico e internet"
-        emits: {norma_correo: true}
+        emits: {norma_correo: true, normativa: si}
       - code: contrasenas
         label: "Contraseñas y credenciales"
-        emits: {norma_credenciales: true}
+        emits: {norma_credenciales: true, normativa: si}
       - code: teletrabajo
         label: "Teletrabajo y dispositivos móviles"
-        emits: {norma_teletrabajo: true}
+        emits: {norma_teletrabajo: true, normativa: si}
       - code: ninguna
         label: "No hay normas escritas"
         emits: {normativa: "no"}
@@ -255,16 +255,16 @@ questions:
     opciones:
       - code: altas_bajas
         label: "Altas y bajas de usuarios"
-        emits: {proc_altas_bajas: true}
+        emits: {proc_altas_bajas: true, procedimientos: si}
       - code: copias
         label: "Copias de seguridad y restauración"
-        emits: {proc_copias: true}
+        emits: {proc_copias: true, procedimientos: si}
       - code: incidentes
         label: "Gestión de incidentes"
-        emits: {proc_incidentes_doc: true}
+        emits: {proc_incidentes_doc: true, procedimientos: si}
       - code: cambios
         label: "Cambios y actualizaciones"
-        emits: {proc_cambios: true}
+        emits: {proc_cambios: true, procedimientos: si}
       - code: continuidad
         label: "Recuperación ante desastres"
         emits: {proc_continuidad: true}
@@ -304,16 +304,16 @@ questions:
     opciones:
       - code: equipos
         label: "Sí, para equipos nuevos"
-        emits: {autoriza_equipos: true}
+        emits: {autoriza_equipos: true, autorizacion: si}
       - code: software
         label: "Sí, para aplicaciones o servicios nuevos"
-        emits: {autoriza_software: true}
+        emits: {autoriza_software: true, autorizacion: si}
       - code: nube
         label: "Sí, para contratar servicios en la nube"
-        emits: {autoriza_nube: true}
+        emits: {autoriza_nube: true, autorizacion: si}
       - code: instalaciones
         label: "Sí, para instalaciones o traslados"
-        emits: {autoriza_instalaciones: true}
+        emits: {autoriza_instalaciones: true, autorizacion: si}
       - code: "no"
         label: "Cada uno instala o contrata lo que necesita"
         emits: {autorizacion: "no"}

@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Valida el seed propio de BLENS contra el catálogo OSCAL oficial. Se ejecuta en CI."""
-import glob, json, os, sys, collections, yaml
+import glob, itertools, json, os, sys, collections, yaml
 
 OSCAL = sys.argv[1] if len(sys.argv) > 1 else "/mnt/user-data/uploads/ENS_Anexo_II_rev_9-copia.txt"
 BASE = os.path.dirname(os.path.abspath(__file__))
+# Las condiciones se evalúan con el motor de verdad, no con una imitación: lo que valide
+# la CI y lo que luego vea el cliente tienen que salir del mismo código (engines/evidence_engine).
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(BASE))))
+from engines.evidence_engine import contexto_de_datos, plantillas_desde, preguntas_desde  # noqa: E402
+from engines.evidence_engine.jsonlogic import ReglaInvalida, evaluar, hechos_citados  # noqa: E402
 errs, warns = [], []
 
 cat = json.load(open(OSCAL, encoding="utf-8"))["catalog"]
@@ -57,6 +62,50 @@ for f, doc in load("evidence_templates.*.yaml").items():
         if not t.get("vigencia_dias"): warns.append(f"{t['code']}: sin vigencia_dias")
 
 for h in sorted(used - emits): errs.append(f"hecho usado y nunca emitido: {h}")
+
+# --- alcanzabilidad: toda plantilla tiene que poder pedirse por algún camino (§15)
+# No basta con que el hecho exista: hace falta que ALGUNA respuesta posible cumpla la
+# condición. El caso que esto caza es la pregunta múltiple cuya clave paraguas solo emite
+# la opción negativa: «si tienes soportes, aporta X» no se dispararía nunca.
+valores = collections.defaultdict(set)
+for doc in questions.values():
+    for q in preguntas_desde(doc):
+        for opcion in q.opciones:
+            for clave, valor in (opcion.emits or {}).items():
+                valores[clave].update(valor if isinstance(valor, list) else [valor])
+        for campo in q.campos: valores[campo.code].update({0, 1, 100})
+        for clave, valor in (q.emits or {}).items():
+            valores[clave].add("2026-01-01" if valor == "$value" else valor)
+
+def alcanzable(regla):
+    citados = sorted(hechos_citados(regla))
+    if not citados: return True
+    combinaciones = [sorted(valores.get(c, {True, False}), key=str) for c in citados]
+    if any(len(c) > 8 for c in combinaciones): return True   # demasiado abierto para explorarlo
+    for combo in itertools.product(*combinaciones):
+        hechos = dict(zip(citados, combo))
+        for categoria, nivel in (("ALTA", "ALTO"), ("BASICA", "BAJO")):
+            datos = contexto_de_datos(categoria, dict.fromkeys("CITAD", nivel), hechos).datos
+            if evaluar(regla, datos): return True
+    return False
+
+for doc in load("evidence_templates.*.yaml").values():
+    for t in plantillas_desde(doc):
+        try:
+            if not alcanzable(t.applies_if):
+                errs.append(f"{t.code}: ninguna respuesta posible cumple su applies_if")
+        except ReglaInvalida as error:
+            errs.append(f"{t.code}: applies_if no evaluable ({error})")
+for doc in questions.values():
+    for q in preguntas_desde(doc):
+        try:
+            if not alcanzable(q.show_if):
+                errs.append(f"{q.code}: ninguna respuesta posible cumple su show_if")
+        except ReglaInvalida as error:
+            errs.append(f"{q.code}: show_if no evaluable ({error})")
+
+medidas_con_evidencia = {t["measure"] for t in templates.values()}
+for m in sorted(medidas - medidas_con_evidencia): errs.append(f"medida sin ninguna plantilla de evidencia: {m}")
 
 # --- grupos de opciones: preferencias únicas
 for grupo, ts in collections.defaultdict(list, {g: [t for t in templates.values() if t.get("option_group") == g]
