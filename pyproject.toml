@@ -58,6 +58,12 @@ extend-exclude = [
 select = ["E", "F", "I", "UP", "B", "DJ"]
 ignore = ["E501"]  # la longitud la impone black
 
+[tool.ruff.lint.per-file-ignores]
+# Django Ninja declara los ficheros y campos de un formulario con `File(...)` y `Form(...)`
+# en los valores por defecto, como FastAPI. Es su forma de declarar la entrada, no una
+# llamada mutable escondida, que es lo que persigue B008.
+"backend/api/routers/*.py" = ["B008"]
+
 [tool.black]
 line-length = 100
 target-version = ["py312"]

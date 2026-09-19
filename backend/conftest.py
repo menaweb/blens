@@ -120,3 +120,21 @@ def magerit(db):
     call_command("import_ens_oscal", str(oscal), verbosity=0)
     call_command("seed_magerit", verbosity=0)
     return CatalogVersion.objects.get(is_current=True)
+
+
+@pytest.fixture
+def capa_blens(db):
+    """Catálogo ENS + capa propia: checks, preguntas de perfilado y plantillas de evidencia.
+
+    El seed de verdad, igual que en `magerit`: lo que prueban los tests de perfilado y de
+    evidencias es el contenido tanto como el código, porque el contenido es el producto.
+    """
+    from pathlib import Path
+
+    from apps.catalog.models import CatalogVersion
+    from django.core.management import call_command
+
+    oscal = Path(__file__).resolve().parents[1] / "db/seed/oscal/ENS_Anexo_II_rev_9.json"
+    call_command("import_ens_oscal", str(oscal), verbosity=0)
+    call_command("seed_blens", verbosity=0)
+    return CatalogVersion.objects.get(is_current=True)

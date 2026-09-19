@@ -103,10 +103,15 @@ def recalcular(system) -> Reconciliacion:
 
 
 def _estado_segun_evidencias(requisito: EvidenceRequirement) -> str:
+    """El estado que le corresponde por lo que tenga dentro.
+
+    Una evidencia rechazada o caducada no cuenta como aportada: el hueco vuelve a estar
+    abierto, que es justo lo que tiene que ver quien lo va a arreglar.
+    """
     estados = set(requisito.evidencias.values_list("estado", flat=True))
     if EstadoEvidencia.VALIDADA in estados:
         return EstadoRequisito.VALIDADA
-    if estados:
+    if estados & {EstadoEvidencia.APORTADA, EstadoEvidencia.EN_REVISION}:
         return EstadoRequisito.APORTADA
     return EstadoRequisito.PENDIENTE
 

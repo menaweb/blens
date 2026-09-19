@@ -135,3 +135,20 @@ def test_bajar_por_una_ruta_que_no_lleva_a_ningun_sitio():
 def test_in_con_varios_valores_contra_un_texto_y_contra_lo_que_no_es_coleccion():
     assert evaluar({"in": [{"var": "hechos.cpd_acceso"}, "solo con tarjeta"]}, DATOS) is True
     assert evaluar({"in": ["a", 42]}, DATOS) is False
+
+
+def test_distinto_de_un_hecho_que_nadie_ha_emitido_tampoco_se_cumple():
+    """«Si tenéis desarrollo propio, aportad X» no puede saltar antes de preguntarlo."""
+    assert evaluar({"!=": [{"var": "hechos.desarrollo"}, "no"]}, DATOS) is False
+
+
+def test_un_or_funciona_aunque_solo_se_sepa_una_de_sus_partes():
+    """Marcar «CPD propio» no dice nada del rack, y la pregunta de seguimiento tiene que salir."""
+    regla = {
+        "or": [
+            {"==": [{"var": "hechos.instalacion_cpd"}, True]},
+            {"==": [{"var": "hechos.instalacion_rack"}, True]},
+        ]
+    }
+    assert evaluar(regla, {"hechos": {"instalacion_cpd": True}}) is True
+    assert evaluar(regla, {"hechos": {}}) is False

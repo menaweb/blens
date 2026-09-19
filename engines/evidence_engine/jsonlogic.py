@@ -17,7 +17,13 @@ Por qué un evaluador propio y no una librería:
 Semántica, elegida para ser determinista antes que fiel a JavaScript:
 
 - `var` resuelve rutas con puntos recorriendo `Mapping`s. Lo que no existe vale `None`.
-- Las comparaciones con `None` son **falsas**, nunca comparan tipos distintos ni lanzan.
+- **Lo que no se sabe no cumple nada.** Un hecho que nadie ha emitido vale `None`, y con
+  `None` son falsas **tanto `==` como `!=`**, además de `>=` y compañía. No es un capricho
+  lógico: «si tenéis desarrollo propio, aportad X» no puede dispararse porque nadie haya
+  dicho todavía si lo hay. Y como la falsedad se decide en cada comparación y no en la
+  regla entera, un `or` sigue funcionando cuando solo se sabe una de sus partes, que es lo
+  normal en una pregunta de opción múltiple: marcar «CPD propio» no emite nada sobre el
+  rack, y aun así la pregunta de seguimiento tiene que aparecer.
 - `in` mira dentro de listas, tuplas, conjuntos y cadenas; con `None` es falso.
 - **Un hecho con varios valores se compara como conjunto**: si la respuesta a «marca todo
   lo que uses» deja `cpd_acceso = ["tarjeta", "llave"]`, tanto `== "llave"` como
@@ -87,7 +93,7 @@ def evaluar(regla: Any, datos: Mapping[str, Any]) -> Any:
     if operador == "==":
         return _iguales(valores[0], valores[1])
     if operador == "!=":
-        return not _iguales(valores[0], valores[1])
+        return _distintos(valores[0], valores[1])
     if operador in _COMPARACIONES:
         return _comparar(operador, valores)
     if operador == "in":
@@ -163,6 +169,13 @@ def _iguales(izquierda: Any, derecha: Any) -> bool:
     if isinstance(izquierda, bool) != isinstance(derecha, bool):
         return False
     return izquierda == derecha
+
+
+def _distintos(izquierda: Any, derecha: Any) -> bool:
+    """`!=` no es la negación de `==` cuando falta un dato: lo desconocido no cumple nada."""
+    if izquierda is None or derecha is None:
+        return False
+    return not _iguales(izquierda, derecha)
 
 
 def _es_conjunto(valor: Any) -> bool:

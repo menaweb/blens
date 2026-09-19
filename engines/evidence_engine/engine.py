@@ -18,9 +18,10 @@ Las tres cosas que hace:
 
 Dos decisiones que se notan en el producto:
 
-- **Sin el hecho no hay condición.** Una regla que cita un hecho que nadie ha emitido es
-  falsa, no verdadera. La carpeta crece según avanza el perfilado, en vez de aparecer
-  entera el primer día y llenarse de requisitos que luego no aplicaban.
+- **Lo que no se sabe no cumple nada.** Una comparación contra un hecho que nadie ha
+  emitido es falsa, también cuando la comparación es «distinto de» (ver `jsonlogic`). Así
+  la carpeta crece según avanza el perfilado, en vez de aparecer entera el primer día y
+  llenarse de requisitos que luego no aplicaban.
 - **Recalcular no borra.** `reconciliar` compara lo que había con lo que toca ahora y solo
   dice qué dar de alta y qué pasar a `FUERA_DE_ALCANCE`. Las evidencias ya subidas se
   quedan donde están (§10bis.3).
@@ -186,16 +187,8 @@ def contexto_de_datos(
 
 
 def se_cumple(regla: Any, contexto: Contexto) -> bool:
-    """¿Se cumple la condición con lo que sabemos hoy del sistema?
-
-    Sin regla, sí. Si cita un hecho que nadie ha emitido todavía, **no**: la condición no
-    es falsa, es que aún no se puede decidir, y en producto eso se comporta igual.
-    """
-    if regla is None:
-        return True
-    if hechos_citados(regla) - set(contexto.hechos):
-        return False
-    return bool(evaluar(regla, contexto.datos))
+    """¿Se cumple la condición con lo que sabemos hoy del sistema? Sin regla, sí."""
+    return True if regla is None else bool(evaluar(regla, contexto.datos))
 
 
 def preguntas_visibles(preguntas: Iterable[Pregunta], contexto: Contexto) -> tuple[Pregunta, ...]:
