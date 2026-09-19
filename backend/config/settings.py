@@ -23,6 +23,20 @@ ALLOWED_HOSTS = [
     h for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h
 ]
 
+#: Orígenes desde los que se aceptan peticiones con sesión. El frontend **no comparte
+#: origen con la API**: en desarrollo vive en el servidor de Vite y en producción en
+#: CloudFront, así que sin esto toda escritura autenticada se queda en un 403 de CSRF.
+#: Los valores por defecto son los puertos de desarrollo del proyecto; en AWS lo fija
+#: la variable de entorno con el dominio real.
+CSRF_TRUSTED_ORIGINS = [
+    o
+    for o in os.environ.get(
+        "DJANGO_CSRF_TRUSTED_ORIGINS",
+        "http://localhost:5175,http://127.0.0.1:5175" if DEBUG else "",
+    ).split(",")
+    if o
+]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

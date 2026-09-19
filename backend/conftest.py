@@ -53,3 +53,21 @@ def miembro(db, tenant, usuarios):
         return user
 
     return _crear
+
+
+@pytest.fixture
+def magerit(db):
+    """Catálogo ENS importado + capa MAGERIT cargada (tipos, amenazas y salvaguardas).
+
+    Carga el seed de verdad, no uno de juguete: el mapa medida↔amenaza es criterio propio
+    de BLENS y lo que prueba el motor con él es el contrato con ese criterio.
+    """
+    from pathlib import Path
+
+    from apps.catalog.models import CatalogVersion
+    from django.core.management import call_command
+
+    oscal = Path(__file__).resolve().parents[1] / "db/seed/oscal/ENS_Anexo_II_rev_9.json"
+    call_command("import_ens_oscal", str(oscal), verbosity=0)
+    call_command("seed_magerit", verbosity=0)
+    return CatalogVersion.objects.get(is_current=True)

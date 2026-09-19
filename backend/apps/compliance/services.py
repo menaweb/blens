@@ -23,9 +23,13 @@ from apps.compliance.models import (
     DimensionValuation,
     InformeCategorizacion,
     MeasureApplied,
+    MeasureAssessment,
     categoria_de,
 )
 from engines.ens_applicability import Perfil, Resultado, aplicabilidad
+from engines.scoring_engine import Medida as ScoringMedida
+from engines.scoring_engine import Resultado as ScoringResultado
+from engines.scoring_engine import puntuar
 
 RAIZ = Path(__file__).resolve().parents[3]
 SEED_EVIDENCIAS = RAIZ / "db" / "seed" / "blens"
@@ -208,3 +212,83 @@ def generar_dda(
         )
     MeasureApplied.objects.bulk_create(filas)
     return dda
+
+
+# --- Madurez y scoring (M4 / M6) ------------------------------------------------
+
+
+def aplicabilidad_del_sistema(system) -> dict[str, str]:
+    """`{code: motivo}` de las medidas que aplican a este sistema.
+
+    Manda la **última DdA** si la hay: es la decisión formal del cliente, con sus no
+    aplicables justificadas. Sin DdA se deriva de la categorización, para que el
+    checklist funcione desde el primer minuto sin obligar a generar una declaración.
+    """
+    ultima = system.declaraciones.first()
+    if ultima is not None:
+        return {
+            fila.measure.code: fila.motivo
+            for fila in ultima.medidas.select_related("measure")
+            if fila.aplica
+        }
+    niveles = niveles_de(system)
+    if not niveles:
+        return {}
+    _, resultado = categorizar(niveles)
+    return {m.measure_id: m.motivo for m in resultado.aplicables}
+
+
+def valoraciones_de(system) -> dict[str, MeasureAssessment]:
+    return {
+        fila.measure.code: fila
+        for fila in MeasureAssessment.objects.filter(system=system).select_related("measure")
+    }
+
+
+@transaction.atomic
+def asegurar_valoraciones(system) -> int:
+    """Crea la fila de madurez que falte para cada medida aplicable, sin valorar.
+
+    Sin valorar no es L0: es «nadie la ha mirado». El checklist necesita la fila para
+    poder asignar responsable y fecha antes de que nadie declare un nivel.
+    """
+    aplicables = aplicabilidad_del_sistema(system)
+    existentes = set(valoraciones_de(system))
+    version = CatalogVersion.current()
+    faltan = [
+        MeasureAssessment(tenant=system.tenant, system=system, measure=medida)
+        for medida in EnsMeasure.objects.filter(catalog=version)
+        if medida.code in aplicables and medida.code not in existentes
+    ]
+    MeasureAssessment.objects.bulk_create(faltan)
+    return len(faltan)
+
+
+def medidas_para_scoring(system) -> list[ScoringMedida]:
+    """Traduce la base de datos a la entrada del motor puro (§15: el motor no ve Django)."""
+    aplicables = aplicabilidad_del_sistema(system)
+    valoraciones = valoraciones_de(system)
+    version = CatalogVersion.current()
+    salida = []
+    for medida in EnsMeasure.objects.filter(catalog=version):
+        valoracion = valoraciones.get(medida.code)
+        aplica = medida.code in aplicables
+        if valoracion is not None and not valoracion.applies:
+            aplica = False  # el checklist permite excluirla; la justificación va en la DdA
+        salida.append(
+            ScoringMedida(
+                measure_id=medida.code,
+                marco=medida.marco,
+                familia=medida.familia,
+                madurez=valoracion.maturity_level if valoracion else None,
+                objetivo=valoracion.objetivo if valoracion else None,
+                aplica=aplica,
+                soportada=valoracion.madurez_soportada if valoracion else True,
+            )
+        )
+    return salida
+
+
+def puntuar_sistema(system) -> ScoringResultado:
+    """Índices de madurez y cumplimiento del sistema. No guarda nada: se recalcula."""
+    return puntuar(medidas_para_scoring(system), system.categoria)

@@ -232,3 +232,67 @@ class InformeCategorizacion(models.Model):
     @property
     def caducado(self) -> bool:
         return self.expira_en is not None and self.expira_en <= timezone.now()
+
+
+class MeasureAssessment(TenantScopedModel):
+    """**Fuente única de la madurez de una medida** (§15).
+
+    Es el modelo más importante del producto después del catálogo: de aquí salen a la
+    vez el índice de cumplimiento (`engines.scoring_engine`) y la eficacia de la
+    salvaguarda en el riesgo residual (`engines.risk_engine`). Nadie más guarda una
+    madurez; si alguna vista necesita una, la lee de aquí.
+
+    Lo que el cliente declara y lo que puede demostrar son cosas distintas: el nivel
+    vive aquí y la evidencia que lo sostiene llegará en F4. Hasta entonces
+    `madurez_soportada` responde siempre que sí, y está aislado en un único sitio para
+    que enchufar las evidencias sea cambiar este método y nada más.
+    """
+
+    system = models.ForeignKey(System, on_delete=models.CASCADE, related_name="valoraciones_medida")
+    measure = models.ForeignKey("catalog.EnsMeasure", on_delete=models.PROTECT)
+    #: L0-L5 de la CCN-STIC-815. Nulo = nadie la ha valorado todavía, que no es L0.
+    maturity_level = models.PositiveSmallIntegerField(null=True, blank=True)
+    #: Objetivo propio; vacío = el mínimo que exige la categoría del sistema.
+    objetivo = models.PositiveSmallIntegerField(null=True, blank=True)
+    applies = models.BooleanField(default=True)
+
+    responsable = models.ForeignKey(
+        "auth.User",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="medidas_a_cargo",
+    )
+    fecha_limite = models.DateField(null=True, blank=True)
+    notas = models.TextField(blank=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["measure__orden"]
+        constraints = [
+            models.UniqueConstraint(fields=["system", "measure"], name="uniq_madurez_por_medida"),
+            models.CheckConstraint(
+                condition=models.Q(maturity_level__lte=5),
+                name="madurez_dentro_de_la_escala",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(objetivo__lte=5),
+                name="objetivo_dentro_de_la_escala",
+            ),
+        ]
+        verbose_name = "valoración de madurez"
+        verbose_name_plural = "valoraciones de madurez"
+
+    def __str__(self) -> str:
+        nivel = "sin valorar" if self.maturity_level is None else f"L{self.maturity_level}"
+        return f"{self.measure.code} · {nivel}"
+
+    @property
+    def madurez_soportada(self) -> bool:
+        """¿Hay evidencia validada que sostenga el nivel declarado? (M5, F4).
+
+        Devuelve True mientras el módulo de evidencias no exista: no se puede marcar
+        como no soportada una medida por no haber construido todavía dónde subir la
+        evidencia. Lo que sí está construido es el efecto, probado en los dos motores.
+        """
+        return True

@@ -1,0 +1,24 @@
+# Seed BLENS · Eficacia de una salvaguarda según su madurez (CCN-STIC-815)
+# Modelo: MaturityEffectiveness (CLAUDE.md §7.1) · Consumido por engines/risk_engine (§9.2)
+#
+# Es la bisagra entre el checklist y el análisis de riesgos: la misma madurez que da el
+# índice de cumplimiento da la eficacia de la salvaguarda. Una sola fuente de verdad.
+#
+# Los valores son los de §7.1 y coinciden con la escala de porcentajes de §8 dividida
+# entre cien: una medida "definida" (L3) frena el 80 % de lo que podría frenar si
+# estuviera optimizada. Se deja en tabla, y no en código, porque es criterio calibrable:
+# hay consultores que defienden una curva más plana en los niveles bajos.
+#
+# ⚠️ Cambiar esta tabla cambia todos los riesgos residuales ya calculados. No se toca sin
+# recalcular y sin anotar por qué: un informe firmado tiene que poder explicarse.
+
+version: 1
+catalog: MAGERIT-v3
+
+levels:
+  - {level: 0, label: "inexistente", effectiveness: 0.0}
+  - {level: 1, label: "inicial", effectiveness: 0.1}
+  - {level: 2, label: "repetible", effectiveness: 0.5}
+  - {level: 3, label: "definido", effectiveness: 0.8}
+  - {level: 4, label: "gestionado", effectiveness: 0.9}
+  - {level: 5, label: "optimizado", effectiveness: 1.0}
