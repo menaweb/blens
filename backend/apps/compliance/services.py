@@ -238,6 +238,28 @@ def aplicabilidad_del_sistema(system) -> dict[str, str]:
     return {m.measure_id: m.motivo for m in resultado.aplicables}
 
 
+def refuerzos_del_sistema(system) -> set[str]:
+    """Refuerzos activos hoy: los obligatorios más los que el cliente haya elegido.
+
+    Manda la DdA, igual que con las medidas: lo que no está elegido no se pide. Sin DdA se
+    derivan los obligatorios de la categorización, para que la carpeta de evidencias
+    arranque con el perfilado sin esperar a la declaración.
+    """
+    ultima = system.declaraciones.first()
+    if ultima is not None:
+        activos: set[str] = set()
+        for fila in ultima.medidas.all():
+            activos |= set(fila.refuerzos_obligatorios or [])
+            activos |= set(fila.refuerzos_elegidos or [])
+            activos |= {elegido for elegido in (fila.selecciones or {}).values() if elegido}
+        return activos
+    niveles = niveles_de(system)
+    if not niveles:
+        return set()
+    _, resultado = categorizar(niveles)
+    return {r for m in resultado.aplicables for r in m.refuerzos_obligatorios}
+
+
 def valoraciones_de(system) -> dict[str, MeasureAssessment]:
     return {
         fila.measure.code: fila
@@ -266,8 +288,27 @@ def asegurar_valoraciones(system) -> int:
 
 def medidas_para_scoring(system) -> list[ScoringMedida]:
     """Traduce la base de datos a la entrada del motor puro (§15: el motor no ve Django)."""
+    from apps.evidence.models import EvidenceRequirement
+    from apps.evidence.services import MADUREZ_QUE_EXIGE_EVIDENCIA, medidas_soportadas
+
     aplicables = aplicabilidad_del_sistema(system)
     valoraciones = valoraciones_de(system)
+    # Declarado ≠ demostrado (§10bis.3): de L2 en adelante la madurez necesita evidencia
+    # validada. Se resuelve de una vez para todo el sistema, no con una consulta por medida.
+    soportadas = medidas_soportadas(system)
+    con_requisitos = set(
+        EvidenceRequirement.objects.filter(system=system).values_list(
+            "template__measure__code", flat=True
+        )
+    )
+
+    def soportada(code: str, nivel: int | None) -> bool:
+        if nivel is None or nivel < MADUREZ_QUE_EXIGE_EVIDENCIA:
+            return True  # nadie exige demostrar lo que no se declara
+        if code not in con_requisitos:
+            return True  # todavía no se le ha pedido nada: no es un reproche
+        return code in soportadas
+
     version = CatalogVersion.current()
     salida = []
     for medida in EnsMeasure.objects.filter(catalog=version):
@@ -283,7 +324,7 @@ def medidas_para_scoring(system) -> list[ScoringMedida]:
                 madurez=valoracion.maturity_level if valoracion else None,
                 objetivo=valoracion.objetivo if valoracion else None,
                 aplica=aplica,
-                soportada=valoracion.madurez_soportada if valoracion else True,
+                soportada=soportada(medida.code, valoracion.maturity_level if valoracion else None),
             )
         )
     return salida

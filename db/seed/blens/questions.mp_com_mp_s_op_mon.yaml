@@ -15,7 +15,7 @@ bloques:
     titulo: Red y comunicaciones
     minutos_estimados: 9
   - code: B12
-    titulo: Monitorización
+    titulo: "Registro, monitorización e incidentes"
     minutos_estimados: 6
   - code: B16
     titulo: Correo, web y navegación
@@ -292,16 +292,16 @@ questions:
     opciones:
       - code: ips
         label: "El cortafuegos tiene prevención de intrusiones activada"
-        emits: {deteccion_ips: true}
+        emits: {deteccion_ips: true, deteccion: si}
       - code: edr
         label: "El EDR genera alertas"
-        emits: {deteccion_edr: true}
+        emits: {deteccion_edr: true, deteccion: si}
       - code: siem
         label: "El SIEM tiene reglas de detección"
-        emits: {deteccion_siem: true}
+        emits: {deteccion_siem: true, deteccion: si}
       - code: soc
         label: "Un SOC lo vigila"
-        emits: {deteccion_soc: true}
+        emits: {deteccion_soc: true, deteccion: si}
       - code: ninguna
         label: "Nada avisa automáticamente"
         emits: {deteccion: "no"}
@@ -384,16 +384,16 @@ questions:
     opciones:
       - code: ccn
         label: "Avisos del CCN-CERT"
-        emits: {vigilancia_ccn: true}
+        emits: {vigilancia_ccn: true, vigilancia: si}
       - code: fabricantes
         label: "Boletines de los fabricantes"
-        emits: {vigilancia_fabricantes: true}
+        emits: {vigilancia_fabricantes: true, vigilancia: si}
       - code: proveedor
         label: "Nos avisa nuestro proveedor"
-        emits: {vigilancia_proveedor: true}
+        emits: {vigilancia_proveedor: true, vigilancia: si}
       - code: soc
         label: "El SOC nos informa"
-        emits: {vigilancia_soc: true}
+        emits: {vigilancia_soc: true, vigilancia: si}
       - code: ninguna
         label: "No hay un canal definido"
         emits: {vigilancia: "no"}

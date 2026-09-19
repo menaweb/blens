@@ -70,18 +70,32 @@ F3  engines/scoring_engine   L0-L5 → %, objetivo por categoría, delta, semáf
                              RiskResult y RiskTreatment + recálculo en Celery
     M4 checklist             tabla densa con madurez, objetivo, delta, responsable y
                              notas · `/api/systems/{id}/checklist` y pantalla Vue
+
+F4  engines/evidence_engine  reglas JSON Logic (evaluador propio del subconjunto del seed),
+    (backend)                hechos por tipo de pregunta, derivación de requisitos con
+                             grupos de opciones, trazabilidad pregunta→hecho→requisito y
+                             reconciliación que **no borra** · 100 % cubierto
+    capa propia del catálogo EvidenceTemplate, EnsCheck, ProductEvidenceHint, ProfileBlock,
+                             ProfileQuestion y ProfileOption, cargadas con `seed_blens`:
+                             15 bloques, 156 preguntas, 199 plantillas, 459 checks
+    apps/profiling           respuestas con historial, hechos, delegación de preguntas
+    apps/evidence            requisitos con su origen, evidencias con fecha del hecho,
+                             sha256 y vigencia propia; revisión con separación de funciones
+    M11 y M5 (API)           `/api/systems/{id}/profiling` y `/api/systems/{id}/evidence`
+    madurez soportada        `MeasureAssessment.madurez_soportada` ya consulta la evidencia
 ```
 
-**Sin construir:** la landing (`landing/`), el motor de evidencias, el seed de la capa
-propia a base de datos (`seed_blens`: checks, preguntas y plantillas; el MAGERIT ya lo
-carga `seed_magerit`), el parser CPSTIC de verdad (solo hay prototipo) y las apps
-`profiling`, `documents` y `evidence`. Siguiente fase: **F4** (perfilado y carpeta de
-evidencias), en `docs/plan_construccion.md`.
+**Sin construir:** la landing (`landing/`), las **pantallas Vue del perfilado y de la
+carpeta** (de F4 solo está el backend), la app `documents` y el parser CPSTIC de verdad
+(solo hay prototipo). F4 tampoco está cerrada mientras no se haga la **validación externa**
+que pide `docs/validacion_externa.md`: el seed sigue siendo criterio propio.
 
-**Madurez declarada frente a madurez soportada.** El dato existe y los dos motores ya lo
-respetan (`ResultadoMedida.no_soportada` y `Salvaguarda.soportada`, con test), pero hasta
-F4 no hay dónde subir una evidencia: `MeasureAssessment.madurez_soportada` devuelve
-siempre `True`. Es un único método, y es el sitio por donde se enchufa M5.
+**Madurez declarada frente a madurez soportada.** Ya está enchufado: de **L2 en adelante**
+una medida necesita evidencia validada para que su nivel cuente
+(`MeasureAssessment.madurez_soportada` → `apps.evidence.services`). Por debajo de L2 no se
+exige, y una medida a la que el perfilado todavía no ha pedido nada cuenta como soportada:
+no es un reproche no haber aportado lo que nadie ha pedido. El checklist y el dashboard lo
+resuelven para todo el sistema de una vez, no con una consulta por medida.
 
 **Puesta en marcha y comandos:** `README.md`. Puertos no estándar a propósito para convivir
 con otros proyectos: Postgres **5434**, Django **8001**, Vite **5177**, Redis **6381**.
@@ -865,7 +879,9 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
   # Capa MAGERIT del catálogo (tipos de activo, amenazas, eficacias y measure_threat_map).
   # Hay que repetirlo después de cada import_ens_oscal: el mapa cuelga de las medidas.
   uv run backend/manage.py seed_magerit
-  ⛔ uv run backend/manage.py seed_blens     # checks, preguntas y plantillas de evidencia
+  # Capa propia del catálogo (checks, preguntas de perfilado y plantillas de evidencia).
+  # Hay que repetirlo después de cada import_ens_oscal, igual que seed_magerit.
+  uv run backend/manage.py seed_blens
 
   # Frontend (Vue)
   pnpm --dir frontend install

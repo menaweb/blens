@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Valida el seed propio de BLENS contra el catálogo OSCAL oficial. Se ejecuta en CI."""
-import glob, json, os, sys, collections, yaml
+import glob, itertools, json, os, sys, collections, yaml
 
 OSCAL = sys.argv[1] if len(sys.argv) > 1 else "/mnt/user-data/uploads/ENS_Anexo_II_rev_9-copia.txt"
 BASE = os.path.dirname(os.path.abspath(__file__))
+# Las condiciones se evalúan con el motor de verdad, no con una imitación: lo que valide
+# la CI y lo que luego vea el cliente tienen que salir del mismo código (engines/evidence_engine).
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(BASE))))
+from engines.evidence_engine import contexto_de_datos, plantillas_desde, preguntas_desde  # noqa: E402
+from engines.evidence_engine.jsonlogic import ReglaInvalida, evaluar, hechos_citados  # noqa: E402
 errs, warns = [], []
 
 cat = json.load(open(OSCAL, encoding="utf-8"))["catalog"]
@@ -15,13 +20,18 @@ walk(cat)
 ids = {n["id"] for n in nodes}
 medidas = {n["id"] for n in nodes if n.get("class") not in ("family", "subfamily") and not n.get("groups") and n.get("class") != "ens-refuerzo"}
 items = set()
-def collect(parts):
+# Solo cuentan los items que cuelgan de `requisitos`. Los 5 que cuelgan del `overview` de
+# mp.eq.4 son aclaraciones («dispositivos multifunción: impresoras, escáneres…»), no
+# requisitos, y anclar un check ahí es un error: el importador no los carga (§6).
+def collect(parts, dentro=False):
     for p in parts or []:
-        if p.get("name") == "item":
+        requisito = dentro or p.get("name") == "requisitos"
+        if requisito and p.get("name") == "item":
             lab = next((q["value"] for q in p.get("props", []) if q["name"] == "label"), None)
-            if lab: items.add(lab)
-        collect(p.get("parts"))
+            if lab: items.add((p["id"].rsplit(".req.", 1)[0] if ".req." in p["id"] else p["id"], lab))
+        collect(p.get("parts"), requisito)
 for n in nodes: collect(n.get("parts"))
+etiquetas = {lab for _, lab in items}
 
 def load(pattern):
     return {f: yaml.safe_load(open(f, encoding="utf-8")) for f in glob.glob(os.path.join(BASE, pattern))}
@@ -58,6 +68,50 @@ for f, doc in load("evidence_templates.*.yaml").items():
 
 for h in sorted(used - emits): errs.append(f"hecho usado y nunca emitido: {h}")
 
+# --- alcanzabilidad: toda plantilla tiene que poder pedirse por algún camino (§15)
+# No basta con que el hecho exista: hace falta que ALGUNA respuesta posible cumpla la
+# condición. El caso que esto caza es la pregunta múltiple cuya clave paraguas solo emite
+# la opción negativa: «si tienes soportes, aporta X» no se dispararía nunca.
+valores = collections.defaultdict(set)
+for doc in questions.values():
+    for q in preguntas_desde(doc):
+        for opcion in q.opciones:
+            for clave, valor in (opcion.emits or {}).items():
+                valores[clave].update(valor if isinstance(valor, list) else [valor])
+        for campo in q.campos: valores[campo.code].update({0, 1, 100})
+        for clave, valor in (q.emits or {}).items():
+            valores[clave].add("2026-01-01" if valor == "$value" else valor)
+
+def alcanzable(regla):
+    citados = sorted(hechos_citados(regla))
+    if not citados: return True
+    combinaciones = [sorted(valores.get(c, {True, False}), key=str) for c in citados]
+    if any(len(c) > 8 for c in combinaciones): return True   # demasiado abierto para explorarlo
+    for combo in itertools.product(*combinaciones):
+        hechos = dict(zip(citados, combo))
+        for categoria, nivel in (("ALTA", "ALTO"), ("BASICA", "BAJO")):
+            datos = contexto_de_datos(categoria, dict.fromkeys("CITAD", nivel), hechos).datos
+            if evaluar(regla, datos): return True
+    return False
+
+for doc in load("evidence_templates.*.yaml").values():
+    for t in plantillas_desde(doc):
+        try:
+            if not alcanzable(t.applies_if):
+                errs.append(f"{t.code}: ninguna respuesta posible cumple su applies_if")
+        except ReglaInvalida as error:
+            errs.append(f"{t.code}: applies_if no evaluable ({error})")
+for doc in questions.values():
+    for q in preguntas_desde(doc):
+        try:
+            if not alcanzable(q.show_if):
+                errs.append(f"{q.code}: ninguna respuesta posible cumple su show_if")
+        except ReglaInvalida as error:
+            errs.append(f"{q.code}: show_if no evaluable ({error})")
+
+medidas_con_evidencia = {t["measure"] for t in templates.values()}
+for m in sorted(medidas - medidas_con_evidencia): errs.append(f"medida sin ninguna plantilla de evidencia: {m}")
+
 # --- grupos de opciones: preferencias únicas
 for grupo, ts in collections.defaultdict(list, {g: [t for t in templates.values() if t.get("option_group") == g]
         for g in {t.get("option_group") for t in templates.values() if t.get("option_group")}}).items():
@@ -71,7 +125,7 @@ for f, doc in load("checks/checks.*.yaml").items():
         if c["code"] in check_codes: errs.append(f"check duplicado: {c['code']}")
         check_codes.add(c["code"])
         if c["measure"] not in ids: errs.append(f"{c['code']}: medida inexistente")
-        if c["item"] not in items: errs.append(f"{c['code']}: item inexistente {c['item']}")
+        if c["item"] not in etiquetas: errs.append(f"{c['code']}: item inexistente {c['item']} (¿cuelga del overview y no de los requisitos?)")
         for e in c.get("evidencia_esperada") or []:
             if e not in ev_codes: errs.append(f"{c['code']}: evidencia inexistente {e}")
         if not c.get("evidencia_esperada"): warns.append(f"{c['code']}: sin evidencia asociada")
@@ -112,7 +166,7 @@ for n in range(1, 6):
     if n in niveles and n - 1 in niveles and niveles[n] < niveles[n - 1]:
         errs.append(f"eficacia por madurez: L{n} no puede valer menos que L{n-1}")
 
-print(f"medidas OSCAL: {len(medidas)} | items: {len(items)}")
+print(f"medidas OSCAL: {len(medidas)} | etiquetas de requisito: {len(etiquetas)}")
 print(f"preguntas: {sum(len(d['questions']) for d in questions.values())} | plantillas: {len(ev_codes)} | checks: {len(check_codes)}")
 print(f"pares medida-amenaza: {sum(len(v) for v in mp['map'].values())}")
 for w in warns[:15]: print("AVISO:", w)

@@ -453,13 +453,13 @@ questions:
     opciones:
       - code: impresoras
         label: "Impresoras o multifunción"
-        emits: {otros_impresoras: true}
+        emits: {otros_impresoras: true, otros_dispositivos: true}
       - code: camaras
         label: "Cámaras o videovigilancia"
-        emits: {otros_camaras: true}
+        emits: {otros_camaras: true, otros_dispositivos: true}
       - code: iot
         label: "Sensores, control de accesos, domótica"
-        emits: {otros_iot: true}
+        emits: {otros_iot: true, otros_dispositivos: true}
       - code: ninguno
         label: "Ninguno"
         emits: {otros_dispositivos: false}

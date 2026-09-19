@@ -289,10 +289,15 @@ class MeasureAssessment(TenantScopedModel):
 
     @property
     def madurez_soportada(self) -> bool:
-        """¿Hay evidencia validada que sostenga el nivel declarado? (M5, F4).
+        """¿Hay evidencia validada que sostenga el nivel declarado? (M5).
 
-        Devuelve True mientras el módulo de evidencias no exista: no se puede marcar
-        como no soportada una medida por no haber construido todavía dónde subir la
-        evidencia. Lo que sí está construido es el efecto, probado en los dos motores.
+        Es lo primero que mira un auditor: una medida en L3 que nadie puede demostrar
+        vale L0 en la auditoría. Por debajo de L2 no se exige evidencia, y una medida a la
+        que el perfilado todavía no ha pedido nada cuenta como soportada.
+
+        Cómoda para una medida suelta, pero hace consultas: el checklist y el dashboard
+        resuelven el sistema entero de una vez en `apps.compliance.services`.
         """
-        return True
+        from apps.evidence.services import madurez_soportada
+
+        return madurez_soportada(self.system, self.measure.code, self.maturity_level)
