@@ -21,6 +21,394 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Crear cuenta
+         * @description Crea la organización, su propietario y su primer sistema, en una transacción.
+         *
+         *     Si trae el token de una categorización anónima vigente, el sistema nace con sus
+         *     niveles por dimensión. Si caducó, el alta **no** se bloquea: se avisa.
+         */
+        post: operations["api_routers_auth_register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirmar el correo */
+        post: operations["api_routers_auth_confirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reenviar el código */
+        post: operations["api_routers_auth_resend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Iniciar sesión */
+        post: operations["api_routers_auth_login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/mfa/challenge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Segundo factor */
+        post: operations["api_routers_auth_mfa_challenge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refrescar la sesión */
+        post: operations["api_routers_auth_refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cerrar sesión */
+        post: operations["api_routers_auth_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Quién soy */
+        get: operations["api_routers_auth_me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password/forgot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Olvidé la contraseña */
+        post: operations["api_routers_auth_password_forgot"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Nueva contraseña */
+        post: operations["api_routers_auth_password_reset"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/mfa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Empezar el alta del segundo factor */
+        post: operations["api_routers_auth_mfa_setup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirmar el segundo factor */
+        post: operations["api_routers_auth_mfa_verify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/invitation/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ver la invitación */
+        get: operations["api_routers_auth_invitation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/invitation/{token}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Aceptar la invitación */
+        post: operations["api_routers_auth_invitation_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Miembros de la organización */
+        get: operations["api_routers_members_members"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/members/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Invitaciones pendientes */
+        get: operations["api_routers_members_invitations"];
+        put?: never;
+        /** Invitar a alguien */
+        post: operations["api_routers_members_invite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/members/invitations/{invitacion_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revocar la invitación */
+        delete: operations["api_routers_members_invitation_revoke"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/members/{membresia_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Cambiar el rol */
+        patch: operations["api_routers_members_member_update"];
+        trace?: never;
+    };
+    "/api/members/{membresia_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revocar el acceso */
+        post: operations["api_routers_members_member_revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/members/{membresia_id}/transfer-ownership": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Transferir la propiedad */
+        post: operations["api_routers_members_member_transfer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/members/{membresia_id}/reset-mfa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restablecer el segundo factor
+         * @description Para quien ha perdido el móvil. Cognito no da códigos de recuperación (D1).
+         */
+        post: operations["api_routers_members_member_reset_mfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Mi actividad
+         * @description Lo que ha hecho quien llama. El registro encadenado, útil para su dueño y no solo
+         *     para el auditor (`docs/roles_y_permisos.md` §5).
+         */
+        get: operations["api_routers_members_my_activity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/versions": {
         parameters: {
             query?: never;
@@ -570,6 +958,333 @@ export interface components {
             version: string;
             /** Database */
             database: string;
+        };
+        /** RegistroOut */
+        RegistroOut: {
+            /** Email */
+            email: string;
+            /** Organizacion */
+            organizacion: string;
+            /** System Id */
+            system_id: number;
+            /**
+             * Aviso
+             * @default
+             */
+            aviso: string;
+        };
+        /** RegistroIn */
+        RegistroIn: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+            /** Organizacion */
+            organizacion: string;
+            /**
+             * Nombre
+             * @default
+             */
+            nombre: string;
+            /**
+             * Nombre Sistema
+             * @default
+             */
+            nombre_sistema: string;
+            /**
+             * Informe Token
+             * @default
+             */
+            informe_token: string;
+        };
+        /** OkOut */
+        OkOut: {
+            /**
+             * Ok
+             * @default true
+             */
+            ok: boolean;
+            /**
+             * Mensaje
+             * @default
+             */
+            mensaje: string;
+        };
+        /** ConfirmarIn */
+        ConfirmarIn: {
+            /** Email */
+            email: string;
+            /** Codigo */
+            codigo: string;
+        };
+        /** EmailIn */
+        EmailIn: {
+            /** Email */
+            email: string;
+        };
+        /** SesionOut */
+        SesionOut: {
+            /**
+             * Mfa Requerido
+             * @default false
+             */
+            mfa_requerido: boolean;
+            /**
+             * Sesion
+             * @default
+             */
+            sesion: string;
+            /**
+             * Email
+             * @default
+             */
+            email: string;
+        };
+        /** LoginIn */
+        LoginIn: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /** MfaLoginIn */
+        MfaLoginIn: {
+            /** Email */
+            email: string;
+            /** Codigo */
+            codigo: string;
+            /** Sesion */
+            sesion: string;
+        };
+        /** MembresiaOut */
+        MembresiaOut: {
+            /** Tenant Id */
+            tenant_id: number;
+            /** Organizacion */
+            organizacion: string;
+            /** Role */
+            role: string;
+            /** Role Nombre */
+            role_nombre: string;
+            /** Estado */
+            estado: string;
+            /**
+             * Expires At
+             * @default
+             */
+            expires_at: string;
+            /**
+             * Systems
+             * @default []
+             */
+            systems: number[];
+            /**
+             * Bloques
+             * @default []
+             */
+            bloques: string[];
+        };
+        /** YoOut */
+        YoOut: {
+            /** Email */
+            email: string;
+            /** Nombre */
+            nombre: string;
+            /** Mfa Activado */
+            mfa_activado: boolean;
+            /** Mfa Pendiente */
+            mfa_pendiente: boolean;
+            /** Membresias */
+            membresias: components["schemas"]["MembresiaOut"][];
+        };
+        /** PasswordResetIn */
+        PasswordResetIn: {
+            /** Email */
+            email: string;
+            /** Codigo */
+            codigo: string;
+            /** Password */
+            password: string;
+        };
+        /** MfaSetupOut */
+        MfaSetupOut: {
+            /** Secreto */
+            secreto: string;
+            /** Otpauth Uri */
+            otpauth_uri: string;
+            /** Aviso */
+            aviso: string;
+        };
+        /** CodigoIn */
+        CodigoIn: {
+            /** Codigo */
+            codigo: string;
+        };
+        /** InvitacionOut */
+        InvitacionOut: {
+            /** Organizacion */
+            organizacion: string;
+            /** Email */
+            email: string;
+            /** Role */
+            role: string;
+            /** Role Nombre */
+            role_nombre: string;
+            /**
+             * Invitado Por
+             * @default
+             */
+            invitado_por: string;
+            /** Caduca */
+            caduca: string;
+            /** Tiene Cuenta */
+            tiene_cuenta: boolean;
+        };
+        /** AceptadaOut */
+        AceptadaOut: {
+            /** Organizacion */
+            organizacion: string;
+            /** Role */
+            role: string;
+            /** Email */
+            email: string;
+        };
+        /** AceptarIn */
+        AceptarIn: {
+            /**
+             * Password
+             * @default
+             */
+            password: string;
+            /**
+             * Nombre
+             * @default
+             */
+            nombre: string;
+        };
+        /** MiembroOut */
+        MiembroOut: {
+            /** Id */
+            id: number;
+            /** Email */
+            email: string;
+            /**
+             * Nombre
+             * @default
+             */
+            nombre: string;
+            /** Role */
+            role: string;
+            /** Role Nombre */
+            role_nombre: string;
+            /** Estado */
+            estado: string;
+            /**
+             * Expires At
+             * @default
+             */
+            expires_at: string;
+            /**
+             * Caducada
+             * @default false
+             */
+            caducada: boolean;
+            /**
+             * Mfa Activado
+             * @default false
+             */
+            mfa_activado: boolean;
+            /**
+             * Systems
+             * @default []
+             */
+            systems: number[];
+            /**
+             * Bloques
+             * @default []
+             */
+            bloques: string[];
+        };
+        /** InvitacionEmitidaOut */
+        InvitacionEmitidaOut: {
+            /** Id */
+            id: number;
+            /** Email */
+            email: string;
+            /** Role */
+            role: string;
+            /** Caduca */
+            caduca: string;
+            /** Enlace */
+            enlace: string;
+        };
+        /** InvitacionIn */
+        InvitacionIn: {
+            /** Email */
+            email: string;
+            /** Role */
+            role: string;
+            /**
+             * Systems
+             * @default []
+             */
+            systems: number[];
+            /**
+             * Bloques
+             * @default []
+             */
+            bloques: string[];
+            /** Membership Dias */
+            membership_dias?: number | null;
+        };
+        /** InvitacionPendienteOut */
+        InvitacionPendienteOut: {
+            /** Id */
+            id: number;
+            /** Email */
+            email: string;
+            /** Role */
+            role: string;
+            /** Role Nombre */
+            role_nombre: string;
+            /** Caduca */
+            caduca: string;
+        };
+        /** CambioRolIn */
+        CambioRolIn: {
+            /** Role */
+            role: string;
+            /** Dias */
+            dias?: number | null;
+        };
+        /** ReiniciarMfaOut */
+        ReiniciarMfaOut: {
+            /**
+             * Ok
+             * @default true
+             */
+            ok: boolean;
+            /** Mensaje */
+            mensaje: string;
+        };
+        /** ActividadOut */
+        ActividadOut: {
+            /** Fecha */
+            fecha: string;
+            /** Accion */
+            accion: string;
+            /**
+             * Objeto
+             * @default
+             */
+            objeto: string;
+            /**
+             * Datos
+             * @default {}
+             */
+            datos: {
+                [key: string]: unknown;
+            };
         };
         /** VersionOut */
         VersionOut: {
@@ -1248,6 +1963,524 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegistroIn"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegistroOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_confirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmarIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_resend: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SesionOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_mfa_challenge: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaLoginIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SesionOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_refresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SesionOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["YoOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_password_forgot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_password_reset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_mfa_setup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaSetupOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_mfa_verify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CodigoIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_invitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitacionOut"];
+                };
+            };
+        };
+    };
+    api_routers_auth_invitation_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AceptarIn"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AceptadaOut"];
+                };
+            };
+        };
+    };
+    api_routers_members_members: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MiembroOut"][];
+                };
+            };
+        };
+    };
+    api_routers_members_invitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitacionPendienteOut"][];
+                };
+            };
+        };
+    };
+    api_routers_members_invite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InvitacionIn"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitacionEmitidaOut"];
+                };
+            };
+        };
+    };
+    api_routers_members_invitation_revoke: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invitacion_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_members_member_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membresia_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CambioRolIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MiembroOut"];
+                };
+            };
+        };
+    };
+    api_routers_members_member_revoke: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membresia_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MiembroOut"];
+                };
+            };
+        };
+    };
+    api_routers_members_member_transfer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membresia_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MiembroOut"];
+                };
+            };
+        };
+    };
+    api_routers_members_member_reset_mfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membresia_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReiniciarMfaOut"];
+                };
+            };
+        };
+    };
+    api_routers_members_my_activity: {
+        parameters: {
+            query?: {
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActividadOut"][];
                 };
             };
         };

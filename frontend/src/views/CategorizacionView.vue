@@ -4,6 +4,7 @@
  * Layout y textos según design/README_handoff.md §Pantallas 1.
  */
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { categorizar, pedirInforme, type Categorizacion, type Niveles } from '@/api/categorization'
 import { DIMENSIONES, type Nivel } from '@/data/dimensiones'
@@ -14,6 +15,11 @@ const resultado = ref<Categorizacion | null>(null)
 const cargando = ref(false)
 const error = ref<string | null>(null)
 const descarga = ref<string | null>(null)
+/** Token del informe guardado: lo hereda la pantalla de crear cuenta. */
+const informeToken = ref('')
+
+// En los tests de la vista no hay router montado: el alta solo existe dentro de la app.
+const router = useRouter()
 
 const actual = computed(() => DIMENSIONES[paso.value])
 const elegida = computed(() => respuestas.value[paso.value])
@@ -62,16 +68,41 @@ async function siguiente() {
 function rehacer() {
   resultado.value = null
   descarga.value = null
+  informeToken.value = ''
   paso.value = 0
+}
+
+/** Guarda el resultado y devuelve su token. Se crea una vez y sirve para el PDF y el alta. */
+async function asegurarInforme(): Promise<string> {
+  if (informeToken.value) return informeToken.value
+  const informe = await pedirInforme(niveles.value, '', '')
+  informeToken.value = informe.token
+  descarga.value = informe.descarga
+  return informe.token
 }
 
 async function descargarPdf() {
   cargando.value = true
   try {
-    const informe = await pedirInforme(niveles.value, '', '')
-    descarga.value = informe.descarga
+    await asegurarInforme()
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'No se pudo generar el PDF'
+  } finally {
+    cargando.value = false
+  }
+}
+
+/**
+ * El puente entre el gancho y el producto: se guarda el resultado y se llega al alta con
+ * su token, para que la pantalla de crear cuenta pueda enseñar arriba lo que se guarda.
+ */
+async function crearCuenta() {
+  cargando.value = true
+  try {
+    const token = await asegurarInforme()
+    router?.push({ name: 'crear-cuenta', query: { resultado: token } })
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'No se pudo guardar el resultado'
   } finally {
     cargando.value = false
   }
@@ -191,7 +222,9 @@ function claseNivel(nivel: string) {
               Aplicabilidad y se abre el perfilado con las preguntas que te tocan.
             </p>
             <div class="acciones">
-              <button type="button" class="claro">Crear cuenta y guardar</button>
+              <button type="button" class="claro" :disabled="cargando" @click="crearCuenta">
+                Crear cuenta y guardar
+              </button>
               <a v-if="descarga" class="enlace-pdf" :href="descarga">Descargar el PDF</a>
               <button v-else type="button" class="fantasma" :disabled="cargando" @click="descargarPdf">
                 {{ cargando ? 'Generando…' : 'Descargar en PDF' }}
