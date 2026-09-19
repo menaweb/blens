@@ -21,6 +21,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Versiones del catálogo */
+        get: operations["api_routers_catalog_versions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/measures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Medidas del Anexo II */
+        get: operations["api_routers_catalog_measures"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/measures/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalle de una medida */
+        get: operations["api_routers_catalog_measure"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/applicability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Medidas aplicables a un sistema
+         * @description Deriva medidas, refuerzos y selecciones pendientes. No guarda nada.
+         */
+        post: operations["api_routers_catalog_applicability"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/dimensiones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vocabulario de categorías y niveles */
+        get: operations["api_routers_catalog_dimensiones"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -33,6 +121,183 @@ export interface components {
             version: string;
             /** Database */
             database: string;
+        };
+        /** VersionOut */
+        VersionOut: {
+            /** Code */
+            code: string;
+            /** Oscal Version */
+            oscal_version: string;
+            /** Source Version */
+            source_version: string;
+            /** Source Sha256 */
+            source_sha256: string;
+            /** Is Current */
+            is_current: boolean;
+            /** License */
+            license: string;
+            /** Source Url */
+            source_url: string;
+        };
+        /** MeasureOut */
+        MeasureOut: {
+            /** Code */
+            code: string;
+            /** Nombre */
+            nombre: string;
+            /** Marco */
+            marco: string;
+            /** Familia */
+            familia: string;
+            /** Aplicacion Por */
+            aplicacion_por: string;
+            /** Categorias */
+            categorias: string[];
+            /** Niveles */
+            niveles: string[];
+            /** Dimensiones */
+            dimensiones: string[];
+        };
+        /** ItemOut */
+        ItemOut: {
+            /** Code */
+            code: string;
+            /** Label */
+            label: string;
+            /** Prose */
+            prose: string;
+        };
+        /** MeasureDetailOut */
+        MeasureDetailOut: {
+            /** Code */
+            code: string;
+            /** Nombre */
+            nombre: string;
+            /** Marco */
+            marco: string;
+            /** Familia */
+            familia: string;
+            /** Aplicacion Por */
+            aplicacion_por: string;
+            /** Categorias */
+            categorias: string[];
+            /** Niveles */
+            niveles: string[];
+            /** Dimensiones */
+            dimensiones: string[];
+            /** Overview */
+            overview: string;
+            /** Refuerzos */
+            refuerzos: components["schemas"]["RefuerzoOut"][];
+            /** Items */
+            items: components["schemas"]["ItemOut"][];
+        };
+        /** RefuerzoOut */
+        RefuerzoOut: {
+            /** Code */
+            code: string;
+            /** Titulo */
+            titulo: string;
+            /** Opcional */
+            opcional: boolean;
+            /** Aplicacion Por */
+            aplicacion_por: string;
+            /** Categorias */
+            categorias: string[];
+            /** Niveles */
+            niveles: string[];
+            /** Dimensiones */
+            dimensiones: string[];
+        };
+        /** AplicabilidadOut */
+        AplicabilidadOut: {
+            /** Categoria */
+            categoria: string;
+            /** Niveles */
+            niveles: {
+                [key: string]: string;
+            };
+            /** Total Aplicables */
+            total_aplicables: number;
+            /** Aplicables */
+            aplicables: components["schemas"]["MedidaAplicableOut"][];
+            /** No Aplicables */
+            no_aplicables: [
+                string,
+                string
+            ][];
+            /** Selecciones Pendientes */
+            selecciones_pendientes: components["schemas"]["SeleccionOut"][];
+        };
+        /** MedidaAplicableOut */
+        MedidaAplicableOut: {
+            /** Measure Id */
+            measure_id: string;
+            /** Marco */
+            marco: string;
+            /** Familia */
+            familia: string;
+            /** Motivo */
+            motivo: string;
+            /** Refuerzos Obligatorios */
+            refuerzos_obligatorios: string[];
+            /** Refuerzos Opcionales */
+            refuerzos_opcionales: string[];
+            /** Refuerzos No Aplicables */
+            refuerzos_no_aplicables: string[];
+            /** Selecciones */
+            selecciones: components["schemas"]["SeleccionOut"][];
+        };
+        /** SeleccionOut */
+        SeleccionOut: {
+            /** Param Id */
+            param_id: string;
+            /** Measure Id */
+            measure_id: string;
+            /** Nivel */
+            nivel: string | null;
+            /** Opciones */
+            opciones: string[];
+            /** Usage */
+            usage: string;
+        };
+        /**
+         * PerfilIn
+         * @description Categoría y nivel por dimensión. Si no se da categoría, se deriva (Anexo I).
+         */
+        PerfilIn: {
+            /** Categoria */
+            categoria?: ("BASICA" | "MEDIA" | "ALTA") | null;
+            /**
+             * C
+             * @default NA
+             * @enum {string}
+             */
+            C: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * I
+             * @default NA
+             * @enum {string}
+             */
+            I: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * T
+             * @default NA
+             * @enum {string}
+             */
+            T: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * A
+             * @default NA
+             * @enum {string}
+             */
+            A: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * D
+             * @default NA
+             * @enum {string}
+             */
+            D: "NA" | "BAJO" | "MEDIO" | "ALTO";
         };
     };
     responses: never;
@@ -60,6 +325,114 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HealthOut"];
                 };
+            };
+        };
+    };
+    api_routers_catalog_versions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VersionOut"][];
+                };
+            };
+        };
+    };
+    api_routers_catalog_measures: {
+        parameters: {
+            query?: {
+                marco?: string | null;
+                familia?: string | null;
+                q?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeasureOut"][];
+                };
+            };
+        };
+    };
+    api_routers_catalog_measure: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeasureDetailOut"];
+                };
+            };
+        };
+    };
+    api_routers_catalog_applicability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PerfilIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AplicabilidadOut"];
+                };
+            };
+        };
+    };
+    api_routers_catalog_dimensiones: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

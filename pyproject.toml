@@ -9,6 +9,8 @@ dependencies = [
     "psycopg[binary]>=3.2",
     "celery>=5.4",
     "kombu[sqs]>=5.4",
+    # El seed propio y el importador leen YAML en tiempo de ejecución.
+    "pyyaml>=6.0",
 ]
 
 [dependency-groups]
@@ -18,7 +20,6 @@ dev = [
     "ruff>=0.8",
     "black>=24.10",
     "pre-commit>=4.0",
-    "pyyaml>=6.0",
     # Broker de Celery en local. En AWS el broker es SQS (kombu[sqs]), no Redis.
     "redis>=5.2",
 ]
