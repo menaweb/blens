@@ -32,6 +32,11 @@ pnpm --dir frontend dev       # http://localhost:5175
 **Puertos no estándar a propósito**, para convivir con otros proyectos: Postgres `5434`,
 Django `8001`, Vite `5175`, Redis `6381`.
 
+El frontend **no comparte origen con la API**: llega a ella por el proxy de Vite. Django
+solo acepta escrituras con sesión desde los orígenes de `DJANGO_CSRF_TRUSTED_ORIGINS`
+(ver `.env.example`); si cambias el puerto de Vite, cámbialo también ahí o toda escritura
+se quedará en un 403.
+
 ## Comandos
 
 ```bash
@@ -46,6 +51,13 @@ pnpm --dir frontend gen:api                    # OpenAPI → tipos TS (no se esc
 
 # Validación del seed contra el catálogo OSCAL oficial (se ejecuta en CI)
 uv run python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.json
+
+# Catálogo a base de datos: primero el OSCAL oficial, después la capa MAGERIT
+uv run backend/manage.py import_ens_oscal db/seed/oscal/ENS_Anexo_II_rev_9.json
+uv run backend/manage.py seed_magerit     # repetirlo tras cada import: el mapa cuelga de las medidas
+
+# Cobertura de los motores (el plan exige el 100 %)
+uv run pytest engines --cov=engines.risk_engine --cov=engines.scoring_engine --cov-report=term-missing
 ```
 
 ## Estructura

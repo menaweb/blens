@@ -340,6 +340,224 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/systems/{system_id}/checklist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Checklist de medidas (M4)
+         * @description Devuelve la tabla completa con sus índices ya calculados.
+         *
+         *     Crea de paso las filas de madurez que falten: el cliente tiene que poder asignar
+         *     responsable y fecha a una medida antes de haber declarado ningún nivel.
+         */
+        get: operations["api_routers_checklist_checklist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/checklist/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Editar la madurez de una medida
+         * @description Guarda el cambio y encola el recálculo del riesgo.
+         *
+         *     Es el paso único del criterio de cierre de la fase: una madurez cambia y con ella
+         *     cambian el índice de cumplimiento (que se devuelve aquí mismo, recalculado) y el
+         *     riesgo residual (que se rehace en Celery, porque recorre el grafo entero).
+         */
+        patch: operations["api_routers_checklist_patch_medida"];
+        trace?: never;
+    };
+    "/api/systems/{system_id}/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Inventario de activos */
+        get: operations["api_routers_risk_activos"];
+        put?: never;
+        /** Dar de alta un activo */
+        post: operations["api_routers_risk_crear_activo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/{asset_id}/valuation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Valorar un activo (0 a 10) */
+        put: operations["api_routers_risk_valorar_activo"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/dependencies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Grafo de dependencias */
+        get: operations["api_routers_risk_dependencias"];
+        put?: never;
+        /**
+         * Declarar que un activo depende de otro
+         * @description `parent` depende de `child`: el valor desciende del primero al segundo.
+         *
+         *     El ciclo no se rechaza aquí sino al recalcular, donde se puede nombrar entero. Lo
+         *     que sí se rechaza de entrada es lo que no tiene arreglo: depender de uno mismo o de
+         *     un activo de otro sistema.
+         */
+        post: operations["api_routers_risk_crear_dependencia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dependencies/{dependency_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Quitar una dependencia */
+        delete: operations["api_routers_risk_borrar_dependencia"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/risks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Riesgos del sistema, de mayor a menor residual */
+        get: operations["api_routers_risk_riesgos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/{asset_id}/threats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Añadir o ajustar amenaza */
+        post: operations["api_routers_risk_amenaza"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/risks/recompute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Recalcular el riesgo (en segundo plano)
+         * @description Encola el recálculo. Recorre el grafo entero: no va en la petición (§15).
+         */
+        post: operations["api_routers_risk_recalcular"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/risks/{risk_id}/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ¿Qué habría que subir para llegar ahí? */
+        post: operations["api_routers_risk_simular"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/risks/{risk_id}/treatment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Decidir qué se hace
+         * @description Aceptar un riesgo es una decisión de dirección, no un valor por defecto.
+         *
+         *     Por eso `riesgo.aceptar` es una acción propia en la matriz y queda registrado quién
+         *     lo acepta y cuándo: es lo primero que mira un auditor ante un riesgo alto asumido.
+         */
+        put: operations["api_routers_risk_tratamiento"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -675,38 +893,25 @@ export interface components {
              */
             descripcion: string;
         };
-        /** ValoracionIn */
+        /**
+         * ValoracionIn
+         * @description Lo que se puede editar en línea. Lo que no se manda, no se toca.
+         */
         ValoracionIn: {
-            /**
-             * C
-             * @default NA
-             * @enum {string}
-             */
-            C: "NA" | "BAJO" | "MEDIO" | "ALTO";
-            /**
-             * I
-             * @default NA
-             * @enum {string}
-             */
-            I: "NA" | "BAJO" | "MEDIO" | "ALTO";
-            /**
-             * T
-             * @default NA
-             * @enum {string}
-             */
-            T: "NA" | "BAJO" | "MEDIO" | "ALTO";
-            /**
-             * A
-             * @default NA
-             * @enum {string}
-             */
-            A: "NA" | "BAJO" | "MEDIO" | "ALTO";
-            /**
-             * D
-             * @default NA
-             * @enum {string}
-             */
-            D: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /** Maturity Level */
+            maturity_level?: number | null;
+            /** Objetivo */
+            objetivo?: number | null;
+            /** Applies */
+            applies?: boolean | null;
+            /** Responsable Id */
+            responsable_id?: number | null;
+            /** Fecha Limite */
+            fecha_limite?: string | null;
+            /** Notas */
+            notas?: string | null;
+            /** Limpiar */
+            limpiar?: string[] | null;
         };
         /** DdaOut */
         DdaOut: {
@@ -770,6 +975,253 @@ export interface components {
             selecciones?: {
                 [key: string]: string;
             } | null;
+        };
+        /** ChecklistOut */
+        ChecklistOut: {
+            /** System Id */
+            system_id: number;
+            /** Sistema */
+            sistema: string;
+            /** Categoria */
+            categoria: string;
+            /** Objetivo Categoria */
+            objetivo_categoria: number;
+            /** Escala */
+            escala: {
+                [key: string]: string;
+            };
+            /** Medidas */
+            medidas: components["schemas"]["FilaOut"][];
+            sistema_indice: components["schemas"]["IndiceOut"];
+            /** Por Marco */
+            por_marco: {
+                [key: string]: components["schemas"]["IndiceOut"];
+            };
+            /** Por Familia */
+            por_familia: {
+                [key: string]: components["schemas"]["IndiceOut"];
+            };
+            /** Brechas */
+            brechas: string[];
+        };
+        /**
+         * FilaOut
+         * @description Una fila del checklist: lo que el cliente declara y lo que eso vale.
+         */
+        FilaOut: {
+            /** Code */
+            code: string;
+            /** Nombre */
+            nombre: string;
+            /** Marco */
+            marco: string;
+            /** Familia */
+            familia: string;
+            /** Aplica */
+            aplica: boolean;
+            /** Motivo */
+            motivo: string;
+            /** Madurez */
+            madurez: number | null;
+            /** Objetivo */
+            objetivo: number;
+            /** Delta */
+            delta: number | null;
+            /** Semaforo */
+            semaforo: string;
+            /** Madurez Pct */
+            madurez_pct: number;
+            /** Cumplimiento Pct */
+            cumplimiento_pct: number;
+            /** No Soportada */
+            no_soportada: boolean;
+            /** Responsable */
+            responsable: string;
+            /** Responsable Id */
+            responsable_id: number | null;
+            /** Fecha Limite */
+            fecha_limite: string | null;
+            /** Notas */
+            notas: string;
+        };
+        /** IndiceOut */
+        IndiceOut: {
+            /** Clave */
+            clave: string;
+            /** Medidas */
+            medidas: number;
+            /** Con Datos */
+            con_datos: number;
+            /** En Objetivo */
+            en_objetivo: number;
+            /** No Soportadas */
+            no_soportadas: number;
+            /** Madurez */
+            madurez: number;
+            /** Cumplimiento */
+            cumplimiento: number;
+            /** Madurez Media */
+            madurez_media: number;
+            /** Peor */
+            peor: string | null;
+        };
+        /** ActivoOut */
+        ActivoOut: {
+            /** Id */
+            id: number;
+            /** Nombre */
+            nombre: string;
+            /** Descripcion */
+            descripcion: string;
+            /** Tipo */
+            tipo: string;
+            /** Tipo Nombre */
+            tipo_nombre: string;
+            /** Terminal */
+            terminal: boolean;
+            /** Valores */
+            valores: {
+                [key: string]: number;
+            };
+        };
+        /** ActivoIn */
+        ActivoIn: {
+            /** Nombre */
+            nombre: string;
+            /** Tipo */
+            tipo: string;
+            /**
+             * Descripcion
+             * @default
+             */
+            descripcion: string;
+            /**
+             * Valores
+             * @default {}
+             */
+            valores: {
+                [key: string]: number;
+            };
+            /**
+             * Proponer Amenazas
+             * @default true
+             */
+            proponer_amenazas: boolean;
+        };
+        /** ValoresIn */
+        ValoresIn: {
+            /** Valores */
+            valores: {
+                [key: string]: number;
+            };
+        };
+        /** DependenciaOut */
+        DependenciaOut: {
+            /** Id */
+            id: number;
+            /** Parent */
+            parent: number;
+            /** Child */
+            child: number;
+            /** Degree */
+            degree: number;
+        };
+        /** DependenciaIn */
+        DependenciaIn: {
+            /** Parent */
+            parent: number;
+            /** Child */
+            child: number;
+            /**
+             * Degree
+             * @default 1
+             */
+            degree: number;
+        };
+        /** RiesgoOut */
+        RiesgoOut: {
+            /** Id */
+            id: number;
+            /** Asset Id */
+            asset_id: number;
+            /** Activo */
+            activo: string;
+            /** Threat */
+            threat: string;
+            /** Amenaza */
+            amenaza: string;
+            /** Dim */
+            dim: string;
+            /** Frequency */
+            frequency: number;
+            /** Degradation */
+            degradation: number;
+            /** Valor Acumulado */
+            valor_acumulado: number | null;
+            /** Riesgo Intrinseco */
+            riesgo_intrinseco: number | null;
+            /** Riesgo Residual */
+            riesgo_residual: number | null;
+            /** Calculado En */
+            calculado_en: string | null;
+            /** Salvaguardas */
+            salvaguardas: components["schemas"]["SalvaguardaOut"][];
+            /** Decision */
+            decision: string;
+            /** Riesgo Objetivo */
+            riesgo_objetivo: number | null;
+        };
+        /** SalvaguardaOut */
+        SalvaguardaOut: {
+            /** Measure */
+            measure: string;
+            /** Aspect */
+            aspect: string;
+            /** Weight */
+            weight: number;
+            /** Nivel */
+            nivel: number;
+            /** Eficacia */
+            eficacia: number;
+            /** Soportada */
+            soportada: boolean;
+        };
+        /** AmenazaIn */
+        AmenazaIn: {
+            /** Threat */
+            threat: string;
+            /** Dim */
+            dim: string;
+            /** Frequency */
+            frequency: number;
+            /** Degradation */
+            degradation: number;
+            /**
+             * Notas
+             * @default
+             */
+            notas: string;
+        };
+        /** SimulacionIn */
+        SimulacionIn: {
+            /** Objetivo */
+            objetivo: number;
+        };
+        /** TratamientoIn */
+        TratamientoIn: {
+            /** Decision */
+            decision: string;
+            /** Target Risk */
+            target_risk?: number | null;
+            /** Owner Id */
+            owner_id?: number | null;
+            /** Due Date */
+            due_date?: string | null;
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
         };
     };
     responses: never;
@@ -1216,6 +1668,315 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    api_routers_checklist_checklist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChecklistOut"];
+                };
+            };
+        };
+    };
+    api_routers_checklist_patch_medida: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValoracionIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChecklistOut"];
+                };
+            };
+        };
+    };
+    api_routers_risk_activos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivoOut"][];
+                };
+            };
+        };
+    };
+    api_routers_risk_crear_activo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActivoIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivoOut"];
+                };
+            };
+        };
+    };
+    api_routers_risk_valorar_activo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                asset_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValoresIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivoOut"];
+                };
+            };
+        };
+    };
+    api_routers_risk_dependencias: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DependenciaOut"][];
+                };
+            };
+        };
+    };
+    api_routers_risk_crear_dependencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DependenciaIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DependenciaOut"];
+                };
+            };
+        };
+    };
+    api_routers_risk_borrar_dependencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dependency_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_risk_riesgos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiesgoOut"][];
+                };
+            };
+        };
+    };
+    api_routers_risk_amenaza: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                asset_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AmenazaIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiesgoOut"];
+                };
+            };
+        };
+    };
+    api_routers_risk_recalcular: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_risk_simular: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                risk_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulacionIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_risk_tratamiento: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                risk_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TratamientoIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiesgoOut"];
+                };
             };
         };
     };

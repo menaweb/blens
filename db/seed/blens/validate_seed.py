@@ -102,6 +102,16 @@ for t in th["threats"]:
         if dim not in t["dims"]: errs.append(f"{t['code']}: degradación en dimensión no declarada")
 for m in sorted(medidas - mapped): errs.append(f"medida sin salvaguarda en el mapa MAGERIT: {m}")
 
+# Eficacia por madurez: alimenta el riesgo residual, y tiene que cubrir L0-L5 y ser monótona.
+me = yaml.safe_load(open(os.path.join(BASE, "magerit/maturity_effectiveness.yaml"), encoding="utf-8"))
+niveles = {l["level"]: l["effectiveness"] for l in me["levels"]}
+if sorted(niveles) != list(range(6)): errs.append(f"eficacia por madurez: faltan niveles {sorted(set(range(6)) - set(niveles))}")
+if niveles.get(0) != 0: errs.append("eficacia por madurez: L0 tiene que valer 0")
+if niveles.get(5) != 1: errs.append("eficacia por madurez: L5 tiene que valer 1")
+for n in range(1, 6):
+    if n in niveles and n - 1 in niveles and niveles[n] < niveles[n - 1]:
+        errs.append(f"eficacia por madurez: L{n} no puede valer menos que L{n-1}")
+
 print(f"medidas OSCAL: {len(medidas)} | items: {len(items)}")
 print(f"preguntas: {sum(len(d['questions']) for d in questions.values())} | plantillas: {len(ev_codes)} | checks: {len(check_codes)}")
 print(f"pares medida-amenaza: {sum(len(v) for v in mp['map'].values())}")

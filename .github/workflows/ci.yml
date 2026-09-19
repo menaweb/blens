@@ -36,6 +36,11 @@ jobs:
         run: uv run backend/manage.py makemigrations --check --dry-run
       - name: pytest
         run: uv run pytest
+      - name: Cobertura de los motores al 100 % (docs/plan_construccion.md, F3)
+        run: >-
+          uv run pytest engines
+          --cov=engines.risk_engine --cov=engines.scoring_engine
+          --cov-report=term-missing --cov-fail-under=100
 
   seed:
     runs-on: ubuntu-latest
