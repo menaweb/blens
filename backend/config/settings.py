@@ -32,7 +32,7 @@ CSRF_TRUSTED_ORIGINS = [
     o
     for o in os.environ.get(
         "DJANGO_CSRF_TRUSTED_ORIGINS",
-        "http://localhost:5175,http://127.0.0.1:5175" if DEBUG else "",
+        "http://localhost:5177,http://127.0.0.1:5177" if DEBUG else "",
     ).split(",")
     if o
 ]

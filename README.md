@@ -26,11 +26,11 @@ En otra terminal:
 
 ```bash
 pnpm --dir frontend install
-pnpm --dir frontend dev       # http://localhost:5175
+pnpm --dir frontend dev       # http://localhost:5177
 ```
 
 **Puertos no estándar a propósito**, para convivir con otros proyectos: Postgres `5434`,
-Django `8001`, Vite `5175`, Redis `6381`.
+Django `8001`, Vite `5177`, Redis `6381`.
 
 El frontend **no comparte origen con la API**: llega a ella por el proxy de Vite. Django
 solo acepta escrituras con sesión desde los orígenes de `DJANGO_CSRF_TRUSTED_ORIGINS`

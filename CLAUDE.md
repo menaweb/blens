@@ -84,7 +84,7 @@ F4 no hay dónde subir una evidencia: `MeasureAssessment.madurez_soportada` devu
 siempre `True`. Es un único método, y es el sitio por donde se enchufa M5.
 
 **Puesta en marcha y comandos:** `README.md`. Puertos no estándar a propósito para convivir
-con otros proyectos: Postgres **5434**, Django **8001**, Vite **5175**, Redis **6381**.
+con otros proyectos: Postgres **5434**, Django **8001**, Vite **5177**, Redis **6381**.
 
 **Base de datos de desarrollo: `blens_dev`.** Hubo un BLENS anterior (julio de 2026) cuyo
 esquema sobrevivía en este Postgres; se borró por decisión expresa. **No se parte de él**:
@@ -869,7 +869,7 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 
   # Frontend (Vue)
   pnpm --dir frontend install
-  pnpm --dir frontend dev                 # http://localhost:5175
+  pnpm --dir frontend dev                 # http://localhost:5177
   pnpm --dir frontend test                # vitest
   pnpm --dir frontend build               # vue-tsc + build
   pnpm --dir frontend gen:api             # OpenAPI (Django Ninja) → tipos TS
