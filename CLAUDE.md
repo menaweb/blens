@@ -55,10 +55,9 @@ datos (`seed_blens`) y cualquier modelo de §7 que no esté arriba. Siguiente fa
 **Puesta en marcha y comandos:** `README.md`. Puertos no estándar a propósito para convivir
 con otros proyectos: Postgres **5434**, Django **8001**, Vite **5175**, Redis **6381**.
 
-⚠️ **Base de datos de desarrollo: `blens_dev`.** En el mismo Postgres hay una base `blens`
-con el esquema de un **BLENS anterior (julio de 2026)** que llegó bastante más lejos que
-F0 —tiene migraciones `gate_rls`, `tenant_not_null` y modo consultora— y cuyo código ya no
-está en disco. No se usa ni se toca; está ahí por si hay que rescatar algo.
+**Base de datos de desarrollo: `blens_dev`.** Hubo un BLENS anterior (julio de 2026) cuyo
+esquema sobrevivía en este Postgres; se borró por decisión expresa. **No se parte de él**:
+todo lo anterior a F0 queda descartado.
 
 **Convención de nombres de hechos — no la rompas.** Las claves de `ProfileFact` son **planas
 y en snake_case** (`instalacion_cpd`, `entidad_tipo`, `cred_ciclo`). En JSON Logic,

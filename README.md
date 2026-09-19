@@ -61,8 +61,7 @@ uv run python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.js
 
 ## Base de datos de desarrollo
 
-El contenedor sirve la base **`blens_dev`**. En el mismo Postgres hay una base `blens`
-con el esquema de un BLENS anterior (julio de 2026); no se usa ni se toca.
+El contenedor sirve la base **`blens_dev`**.
 
 ## Flujo de trabajo
 
