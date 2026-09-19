@@ -9,7 +9,9 @@ F0 Cimientos ──► F1 Catálogo + aplicabilidad ──► F2 Categorización
                                                       │
                         F3 Motores (scoring + riesgo) ◄┘
                                                       │
-       F4 Perfilado y evidencias ◄─────────────────────┘
+       F3b Cuentas, acceso y alta de cliente ◄─────────┘
+                     │
+       F4 Perfilado y evidencias
                      │
        F5 Documental y versionado
                      │
@@ -21,6 +23,8 @@ F0 Cimientos ──► F1 Catálogo + aplicabilidad ──► F2 Categorización
 ```
 
 CPSTIC (F7) puede adelantarse si aparece pronto un cliente en Media o Alta, pero **no bloquea la v1**.
+
+**F3b va antes de F4 y no es negociable:** el perfilado reparte bloques del cuestionario por rol, asigna responsables a los requisitos de evidencia y tiene un botón de "preguntárselo a otra persona" que crea una tarea para alguien. Nada de eso existe sin usuarios reales, invitaciones y sesión. Además, el GATE de producción exige que el `tenant_id` salga **siempre del contexto autenticado**: sin F3b no se puede ni empezar.
 
 ---
 
@@ -106,6 +110,42 @@ CPSTIC (F7) puede adelantarse si aparece pronto un cliente en Media o Alta, pero
 
 **Prompt de arranque**
 > Lee `CLAUDE.md` §8 y §9 al completo. Implementa la fase F3: `engines/scoring_engine` y `engines/risk_engine` como paquetes Python puros, deterministas, en `Decimal` y con pytest, **antes de cablear nada a Django**. El ejemplo trabajado de §9.3 es test de regresión obligatorio. Después conecta `MeasureAssessment` como fuente única de madurez y expón los endpoints. No dupliques la madurez en ningún otro modelo.
+
+---
+
+## F3b · Cuentas, acceso y alta de cliente
+
+Es el módulo M0 de `CLAUDE.md` §4. Hasta aquí los usuarios se han creado a mano por el admin y por los tests, y la API va por sesión de Django: esta fase cierra ese hueco, **cablea Cognito** (D1) y convierte el gancho de M1 en clientes.
+
+**Entregables**
+- **User pool de Cognito en CDK**: política de contraseñas, verificación de correo, MFA TOTP, bloqueo por intentos y SES como remitente con dominio propio.
+- **Capa `apps/tenancy/identity.py`**: única puerta a Cognito (boto3), detrás de una interfaz con un doble para los tests. **Ningún otro sitio llama a Cognito.**
+- `/api/auth/*` en Django Ninja: registro, confirmación del correo, inicio y cierre de sesión, refresco, restablecer contraseña. Pantallas propias, **no Hosted UI**.
+- **Autenticación de la API por JWT**: verificación contra el JWKS del pool con caché y comprobación de `aud`, `iss` y expiración; sustituye el `django_auth` provisional en todos los routers. El token lo custodia el backend en cookie `HttpOnly`, nunca `localStorage`.
+- **Enlace usuario Django ↔ `sub` de Cognito**, con su migración. El rol no viaja en el token: se lee de `Membership`.
+- **Alta transaccional**: el registro crea `Tenant`, `Membership(PROPIETARIO)` y el primer `System` en una sola transacción, o no crea nada. Si falla después de crear el usuario en Cognito, se limpia o se reconcilia.
+- **Conversión del resultado anónimo de M1**: el informe hecho sin cuenta se reclama con su token, antes de caducar, y se convierte en el primer sistema con sus `DimensionValuation`.
+- **MFA TOTP**: alta del segundo factor con QR (`AssociateSoftwareToken`), obligatorio para PROPIETARIO y RSEG, y **restablecimiento del segundo factor por un administrador de la organización**, porque Cognito no da códigos de recuperación.
+- **Invitaciones, que son de BLENS y no de Cognito**: emisión con rol, ámbito de sistemas y bloques (`Invitation.issue` ya está), aceptación por enlace caducable que crea el usuario en el pool y su `Membership`, revocación y reenvío.
+- **Gestión de usuarios**: listado, cambio de rol y de ámbito, revocación, transferencia de la propiedad, y accesos temporales de AUDITOR y CONSULTOR con su caducidad visible.
+- **Frontend**: store de sesión en Pinia, guardas de ruta y las pantallas P16–P20 de `docs/brief_diseno.md`.
+
+**Fuera de esta fase:** planes y cobro. Dependen de D3 (precio) y se construyen al cierre de la v1, justo antes del GATE.
+
+**Cierre**
+- [ ] Un visitante categoriza sin cuenta, se registra y encuentra su sistema con los cinco niveles por dimensión ya cargados. Con el token caducado, el alta sigue funcionando y el aviso es claro.
+- [ ] **Ningún endpoint que no sea deliberadamente público responde sin sesión**: un test recorre el OpenAPI y falla si un router nuevo no declara `auth`.
+- [ ] PROPIETARIO y RSEG no pueden operar sin el segundo factor activado.
+- [ ] Una invitación caducada, revocada o ya usada no crea `Membership` **ni usuario en Cognito**.
+- [ ] El último PROPIETARIO no puede degradarse ni revocarse sin transferir antes la propiedad.
+- [ ] Un token caducado, con firma inválida o emitido para otro pool se rechaza, y hay test de cada caso.
+- [ ] **La CI no llama a AWS**: toda la suite pasa con el doble de Cognito.
+- [ ] Un alta que falla a mitad no deja un usuario en Cognito sin `Tenant`, o lo reconcilia y lo deja registrado.
+- [ ] Alta, acceso, cambio de rol, revocación, caducidad y restablecimiento del segundo factor quedan en `AuditLog`, y `verify_chain()` sigue verde.
+- [ ] Ninguna credencial en `localStorage`; cookie `HttpOnly`, `Secure` y `SameSite=Lax` con caducidad explícita.
+
+**Prompt de arranque**
+> Lee `CLAUDE.md` §4 (M0), §5 (autenticación), §13 y `docs/roles_y_permisos.md` completo, más D1 de `docs/decisiones.md`. Implementa la fase F3b con **Cognito**, con pantallas propias y sin Hosted UI. Todas las llamadas a Cognito pasan por una única capa con interfaz y doble para los tests: **la CI no llama a AWS**. Cognito solo autentica; el rol se lee de `Membership` y los permisos siguen pasando **solo** por `can()`, sin comprobaciones de rol sueltas en las vistas. Sustituye el `django_auth` provisional por validación de JWT contra el JWKS en todos los routers, de una vez y sin dejar endpoints a medias. El alta de un cliente es una transacción que crea `Tenant`, `Membership(PROPIETARIO)` y el primer `System`, y sabe reclamar el resultado anónimo de la categorización.
 
 ---
 

@@ -2,7 +2,7 @@
 
 > Documento compañero de `CLAUDE.md` §17. Cada decisión lleva opciones, lo que implica cada una, **cuándo hay que decidir** y el **coste de equivocarse**. La recomendación es mía; la decisión es tuya. Cuando se cierre una, se marca aquí y se actualiza §17.
 
-**Estado:** D0, D1, D2 y D6 **decididas** (19/09/2026). Pendientes: D3 precio, D4 UI, D7 CPSTIC, D8 modelo de IA, D9 NIS2.
+**Estado:** D0, D1, D2 y D6 **decididas** (19/09/2026). D1 se reabrió el 19/09/2026 para valorar la autenticación nativa de Django y **se confirma Cognito**. Pendientes: D3 precio, D4 UI, D7 CPSTIC, D8 modelo de IA, D9 NIS2.
 
 ---
 
@@ -27,14 +27,30 @@ Es la decisión de la que cuelgan todas las demás, y no es técnica.
 
 ---
 
-## D1 · Autenticación — ✅ **DECIDIDO: Cognito; Cl@ve y federación SAML fuera**
+## D1 · Autenticación — ✅ **DECIDIDO: Amazon Cognito con MFA; Cl@ve y federación SAML fuera**
+
+> Reabierta y **confirmada** el 19/09/2026 frente a la alternativa de autenticación nativa de Django. El código de F0–F3 autentica con **sesión de Django** (`django_auth` en los routers de Ninja) como provisional: **F3b lo sustituye por Cognito**.
 
 | Opción | A favor | En contra |
 |---|---|---|
-| **Cognito** | Todo en AWS, MFA incluido, poco código, soporta SAML como proveedor de identidad federado | Atarse a AWS, personalización limitada, precio por usuario activo |
-| **djangosaml2** | Control total, federación con los proveedores de identidad de organismos | Más código y mantenimiento, el MFA hay que resolverlo aparte |
+| **Cognito** | MFA, política de contraseñas, verificación de correo, restablecimiento y bloqueo por intentos ya resueltos y auditados; no custodias hashes de contraseñas; admite federación SAML después sin rehacer nada | Atarse a AWS; coste por usuario activo; personalización limitada; hay que doblarlo en los tests para no llamar a la red |
+| **Django nativo** (`django.contrib.auth` + sesión) | Ya está en el código; un solo directorio de usuarios; sin coste por usuario; control total de cada flujo y de cada correo | El MFA, el bloqueo por intentos y la caducidad de contraseña los montas y los mantienes tú; custodias los hashes, que es superficie de riesgo en un producto que aspira a ENS Alto |
+| **djangosaml2** | Federación con los proveedores de identidad de organismos | Solo resuelve la federación: el alta, el MFA y el resto siguen haciendo falta |
 
-**Decidido: Cognito.** Cl@ve y la federación SAML con proveedores de identidad de organismos quedan descartadas: no tienen sentido para este producto. Cubre lo que necesitas ya (correo, contraseña y MFA) y admite federación SAML después para los organismos que la pidan, sin rehacerlo. Con la opción B de D0, esto es aún más claro: no merece mantener infraestructura de identidad propia para pocos usuarios.
+**Decidido: Cognito.** Un producto de cumplimiento cuyo argumento es la seguridad no gana nada custodiando contraseñas: el MFA, la política de contraseñas, la verificación del correo, el restablecimiento y el bloqueo por intentos vienen resueltos y son parte del servicio auditado de AWS. La identidad que de verdad importa —rol, ámbito de sistemas, caducidad— sigue viviendo en `Membership` con `can()` como único punto de decisión, así que Cognito **solo autentica**: no decide nada.
+
+**Qué implica, y es lo que se construye en F3b:**
+- **Pantallas propias, no la Hosted UI.** La conversión del gancho depende de que el registro muestre arriba el resultado de categorización recién obtenido, y la Hosted UI ni lo permite ni respeta la marca. Se llama a las API del pool desde el backend con boto3 (`SignUp`, `InitiateAuth`, `RespondToAuthChallenge`, `ForgotPassword`).
+- **El usuario de Django sigue existiendo** y se enlaza al `sub` de Cognito. El rol **no viaja en el token**: se lee de `Membership`. `can()` no se toca.
+- **La API pasa de sesión a JWT**: verificación de la firma contra el JWKS del pool, con caché y comprobación de `aud`, `iss` y expiración. El token **no se guarda en `localStorage`**; lo custodia el backend en cookie `HttpOnly` o se mantiene en memoria con refresco.
+- **MFA TOTP activado en el pool**, obligatorio para PROPIETARIO y RSEG. Ojo: Cognito **no da códigos de recuperación** de un solo uso, así que perder el segundo factor lo resuelve un administrador de la organización, con traza en el `AuditLog`. Eso es una pantalla que hay que diseñar.
+- **Invitaciones: las emite BLENS**, no Cognito. `Invitation` ya existe con su token y su caducidad; al aceptarla se crea el usuario en el pool (`AdminCreateUser`) y su `Membership`.
+- **Correo saliente por SES** con dominio propio, para que los mensajes de Cognito no lleguen con remitente de AWS.
+- **Tests sin red:** Cognito detrás de una interfaz con un doble en los tests. La CI nunca llama a AWS.
+- **Coste por usuario activo**, que entra en la cuenta del precio (D3): los auditores y consultores invitados también cuentan.
+- **Federación SAML después, si la pide un organismo:** se añade como proveedor de identidad del pool, sin tocar `Membership` ni `can()`. Fuera de la v1.
+
+**Coste de equivocarse: medio.** Salir de Cognito más adelante es posible, pero **la exportación de usuarios no incluye las contraseñas**: habría que obligar a restablecerla a todo el mundo. Lo que no se pierde es el modelo de roles, que es nuestro.
 
 **Por qué Cl@ve queda fuera, para cuando lo pregunte un cliente:** **Cl@ve está pensada para que la ciudadanía se identifique ante las administraciones**, y la adhesión es de organismos públicos, no de un SaaS privado. Habría que integrarse en nombre del organismo, si es que es posible. Además, y esto es lo importante: BLENS no necesita Cl@ve. Quien usa BLENS es el personal de la organización, no el ciudadano. Cl@ve aparece como **respuesta del cliente** en op.acc.5 (cómo se identifican sus usuarios externos), no como forma de entrar a BLENS.
 
@@ -118,7 +134,7 @@ Ya hay criterio en §3.2.0: solo campos fácticos, citando la fuente y sin redis
 | # | Decisión | Recomendación | Cuándo | Coste de equivocarse |
 |---|---|---|---|---|
 | D0 | Qué es BLENS | ✅ Producto SaaS para vender | Decidido | — |
-| D1 | Autenticación | ✅ Cognito; Cl@ve y SAML fuera | Decidido | — |
+| D1 | Autenticación | ✅ Cognito con MFA; Cl@ve y SAML fuera | Decidido (reabierta y confirmada el 19/09/2026) | Medio: al salir, las contraseñas no se exportan |
 | D2 | Región | ✅ eu-west-1 (Irlanda), datos en la UE | Decidido | — |
 | D3 | Precio | Público, tres planes, renovación garantizada | **Antes de F2 (ahora prioritario por D0)** | Medio |
 | D4 | UI | shadcn-vue | Antes de F2 | Bajo |

@@ -116,4 +116,6 @@ Es el punto más delicado: los clientes son sector público y BLENS aspira a ENS
 - [ ] Decidir si Dirección puede ver evidencias con datos personales, o solo los informes. Depende del cliente; probablemente configurable.
 - [ ] Definir qué pasa con las evidencias que subió un usuario al que se le revoca el acceso: se conservan, pero hay que decidir cómo se muestra su autoría.
 - [ ] Modo consultora (M10): un consultor con varios tenants necesita un selector de cliente y un registro que impida mezclar datos. Depende del aislamiento de tenant.
-- [ ] Autenticación: Cognito o SAML para organismos (§17 de `CLAUDE.md`). El mapeo de grupos del proveedor de identidad a estos roles hay que definirlo cuando se decida.
+- [x] Autenticación: **Cognito con MFA**, confirmada el 19/09/2026 en D1 de `docs/decisiones.md`. Cognito **solo autentica**: el rol no viaja en el token ni se mapea a grupos del pool, vive en `Membership` y lo resuelve `can()`. Se cablea en la fase F3b de `docs/plan_construccion.md`.
+- [ ] Restablecer el segundo factor de un miembro que lo ha perdido: Cognito no da códigos de recuperación, así que hay que decidir **qué roles pueden hacerlo** (propuesta: PROPIETARIO, y RSEG solo sobre su ámbito) y dejarlo en el registro.
+- [ ] Si algún organismo pide federación SAML, decidir entonces cómo se traducen sus grupos a estos roles. Fuera de la v1.

@@ -57,12 +57,31 @@ F2  M1 categorización         DimensionValuation + asistente de 5 pasos **sin c
     M2 DdA                    DeclaracionAplicabilidad + MeasureApplied versionables,
                               aprobación bloqueada si quedan selecciones sin resolver o
                               no aplicables sin justificar · export PDF y OSCAL
+
+F3  engines/scoring_engine   L0-L5 → %, objetivo por categoría, delta, semáforo e índices
+                             por familia, marco y sistema **por el peor componente**
+    engines/risk_engine      propagación en el DAG con detección de ciclos, riesgo
+                             intrínseco y residual acoplado a la madurez, agregación y
+                             simulador inverso · regresión de §9.3 (3,82) · 100 % cubierto
+    catálogo MAGERIT         MaturityEffectiveness + tipos de activo, amenazas, valores
+                             por defecto y `measure_threat_map`, cargados con `seed_magerit`
+    MeasureAssessment        **fuente única de la madurez**: alimenta scoring y riesgo
+    apps/risk                Asset, AssetValuation, AssetDependency, ThreatInstance,
+                             RiskResult y RiskTreatment + recálculo en Celery
+    M4 checklist             tabla densa con madurez, objetivo, delta, responsable y
+                             notas · `/api/systems/{id}/checklist` y pantalla Vue
 ```
 
-**Sin construir:** la landing (`landing/`), los motores de riesgo, scoring y evidencias, el
-seed a base de datos (`seed_blens`), el parser CPSTIC de verdad (solo hay prototipo) y las
-apps `profiling`, `documents`, `evidence` y `risk`. Siguiente fase: **F3** (motores de
-scoring y riesgo), en `docs/plan_construccion.md`.
+**Sin construir:** la landing (`landing/`), el motor de evidencias, el seed de la capa
+propia a base de datos (`seed_blens`: checks, preguntas y plantillas; el MAGERIT ya lo
+carga `seed_magerit`), el parser CPSTIC de verdad (solo hay prototipo) y las apps
+`profiling`, `documents` y `evidence`. Siguiente fase: **F4** (perfilado y carpeta de
+evidencias), en `docs/plan_construccion.md`.
+
+**Madurez declarada frente a madurez soportada.** El dato existe y los dos motores ya lo
+respetan (`ResultadoMedida.no_soportada` y `Salvaguarda.soportada`, con test), pero hasta
+F4 no hay dónde subir una evidencia: `MeasureAssessment.madurez_soportada` devuelve
+siempre `True`. Es un único método, y es el sitio por donde se enchufa M5.
 
 **Puesta en marcha y comandos:** `README.md`. Puertos no estándar a propósito para convivir
 con otros proyectos: Postgres **5434**, Django **8001**, Vite **5175**, Redis **6381**.
@@ -230,6 +249,15 @@ El CPSTIC **no se publica en formato estructurado** (a 09/2026). Proceso mensual
 
 Cada módulo con responsabilidad y criterios de aceptación (DoD). Salvo el aislamiento de tenant (§14), todos entran en la v1.
 
+### M0 · Cuentas, acceso y alta de cliente  *(v1 — sin esto no hay producto)*
+- [ ] Registro con correo y contraseña verificada. El alta crea `Tenant`, `Membership(PROPIETARIO)` y el primer `System` en una sola transacción.
+- [ ] **Conversión del resultado anónimo de M1:** el informe hecho sin cuenta se reclama al registrarse, con su token y antes de que caduque, y se convierte en el primer sistema con sus `DimensionValuation`. Es el paso que convierte el gancho en cliente.
+- [ ] Inicio de sesión contra Cognito con **MFA TOTP** (obligatorio para PROPIETARIO y RSEG), restablecer contraseña y bloqueo por intentos. Cognito no da códigos de recuperación: perder el segundo factor lo resuelve un administrador de la organización, con traza.
+- [ ] Invitar a un miembro con rol, ámbito de sistemas y bloques; el invitado acepta por enlace caducable y se le crea su `Membership` (`docs/roles_y_permisos.md`).
+- [ ] Gestión de usuarios: cambiar rol y ámbito, revocar, transferir la propiedad, y los accesos temporales de AUDITOR y CONSULTOR con su caducidad visible.
+- [ ] Alta, acceso, cambio de rol, revocación y caducidad entran en el `AuditLog` encadenado. Un usuario ve su propio registro de actividad.
+- [ ] Planes y cobro: dependen de D3 (precio). Se construyen al cierre de la v1, antes del gate de producción.
+
 ### M1 · Categorización automática  *(gancho gratuito)*
 - [ ] Cuestionario por dimensión (impacto: N/A, Bajo, Medio, Alto).
 - [ ] Categoría = la más alta entre dimensiones; se **guarda el nivel de cada dimensión**. Muestra medidas y refuerzos aplicables calculados con `ens_applicability`, incluidos los de `nivel-dimension`.
@@ -333,7 +361,7 @@ Objetivo transversal: **BLENS debe ser él mismo ejemplar en seguridad** (aspira
 - **Base de datos:** **Amazon Aurora PostgreSQL** (multi-AZ). ORM de Django. Migraciones de Django versionadas.
 - **Documentos:** **WeasyPrint** (HTML→PDF, desde las plantillas HTML de marca) + **python-docx** (Word editable).
 - **IA (M16, post-v1):** **Amazon Bedrock en eu-west-1**, con retención cero y sin uso para entrenamiento. El proveedor del modelo es **subencargado**: entra en la lista de subprocesadores, el encargo de tratamiento y el RAT. La IA nunca toca los motores ni el catálogo.
-- **Autenticación:** **Amazon Cognito** con MFA (DECIDIDO, §17/D1). **Cl@ve y la federación SAML de organismos quedan fuera**: quien usa BLENS es el personal de la organización, no la ciudadanía. Cl@ve aparece como respuesta del cliente en op.acc.5, nunca como forma de entrar al producto. 
+- **Autenticación:** **Amazon Cognito** con MFA TOTP (DECIDIDO, §17/D1; reabierta y confirmada el 19/09/2026 frente a la autenticación nativa de Django). Cognito **solo autentica**: el rol vive en `Membership` y todo permiso pasa por `can()`. Pantallas propias llamando a las API del pool con boto3, **no la Hosted UI**. La API valida **JWT** contra el JWKS del pool (el `django_auth` por sesión de F0–F3 es provisional y lo sustituye F3b); el token nunca en `localStorage`. Correo saliente por **SES** con dominio propio. Cognito se dobla en los tests: **la CI no llama a AWS**. **Cl@ve y la federación SAML de organismos quedan fuera**: quien usa BLENS es el personal de la organización, no la ciudadanía. Cl@ve aparece como respuesta del cliente en op.acc.5, nunca como forma de entrar al producto.
 - **Almacenamiento:** **S3 con versioning + Object Lock**; cifrado **SSE-KMS**.
 - **IaC:** **AWS CDK en Python** (mismo lenguaje que el backend). Alternativa: Terraform (§17).
 - **Despliegue:** frontend Vue como **estático en S3 + CloudFront**; backend Django + worker Celery en **ECS Fargate**. **No Vercel.**
@@ -370,7 +398,8 @@ blens/
     config/               # proyecto Django: settings, celery app, urls raíz
     apps/
       catalog/            # catálogo ENS (medidas, refuerzos, checks) + comando seed
-      tenancy/            # Tenant/Organizacion + tenant_id (aislamiento: fase posterior)
+      tenancy/            # Tenant, cuentas y acceso (registro y sesión contra Cognito, MFA, invitaciones),
+                          #   Membership/roles, AuditLog y can() + tenant_id (aislamiento: fase posterior)
       compliance/         # System, categorización, DdA, MeasureAssessment
       documents/          # Documento + versión + generación (WeasyPrint/docx)
       profiling/          # cuestionario de perfilado, respuestas y hechos del sistema (M11)
@@ -791,7 +820,7 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 
 ## 15. Convenciones para Claude Code
 
-**Stack fijado (§5). No reabrir** sin motivo: Django + Django Ninja · Vue 3 + Vite · Aurora PostgreSQL · Celery + SQS · WeasyPrint/docx · AWS CDK (Python) · Cognito (sin Cl@ve ni SAML) · pytest/Vitest · región eu-west-1. **Antes de asumir, pregunta** en cualquier otra decisión con coste de reversión alto.
+**Stack fijado (§5). No reabrir** sin motivo: Django + Django Ninja · Vue 3 + Vite · Aurora PostgreSQL · Celery + SQS · WeasyPrint/docx · AWS CDK (Python) · Cognito con MFA (sin Cl@ve ni SAML) · pytest/Vitest · región eu-west-1. **Antes de asumir, pregunta** en cualquier otra decisión con coste de reversión alto.
 
 **Reglas de trabajo:**
 - **Motores puros primero.** `risk_engine` y `scoring_engine` como paquetes Python deterministas **con pytest**, antes de cablear nada. El ejemplo §9.3 es test de regresión obligatorio.
@@ -833,7 +862,10 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 
   uv run backend/manage.py import_ens_oscal db/seed/oscal/ENS_Anexo_II_rev_9.json
   # idempotente; falla si una versión nueva deja huérfana una referencia de la capa propia
-  ⛔ uv run backend/manage.py seed_blens     # checks, measure_threat_map, preguntas, plantillas
+  # Capa MAGERIT del catálogo (tipos de activo, amenazas, eficacias y measure_threat_map).
+  # Hay que repetirlo después de cada import_ens_oscal: el mapa cuelga de las medidas.
+  uv run backend/manage.py seed_magerit
+  ⛔ uv run backend/manage.py seed_blens     # checks, preguntas y plantillas de evidencia
 
   # Frontend (Vue)
   pnpm --dir frontend install
@@ -854,14 +886,15 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 
 > ⚠️ **La numeración de fases que manda es la de `docs/plan_construccion.md`**, que es la que usan `ESTRUCTURA.md` y el resto de referencias (validación externa antes de cerrar **F4**, CPSTIC en **F7**). La tabla de abajo es una **agrupación temática** con numeración propia y **no coincide** con ella. Secuencia canónica:
 >
-> `F0 Cimientos → F1 Catálogo + ens_applicability → F2 Categorización y DdA → F3 Motores (scoring + riesgo) → F4 Perfilado y evidencias → F5 Documental y versionado → F6 Paquete de auditoría + portal del auditor (fin v1) → GATE producción → F7 CPSTIC · F8 Palancas`
+> `F0 Cimientos → F1 Catálogo + ens_applicability → F2 Categorización y DdA → F3 Motores (scoring + riesgo) → F3b Cuentas y acceso → F4 Perfilado y evidencias → F5 Documental y versionado → F6 Paquete de auditoría + portal del auditor (fin v1) → GATE producción → F7 CPSTIC · F8 Palancas`
 >
 > Cada fase de `plan_construccion.md` trae entregables, criterios de cierre y su prompt de arranque. No se empieza una fase sin cerrar la anterior.
 
 | Agrupación temática (numeración propia, ver aviso) | Entregable |
 |---|---|
-| **F0 · Cimientos** | Monorepo (Django + Vue + engines + infra), Aurora, S3 Object Lock, Cognito+MFA, import OSCAL del catálogo ENS (73 medidas, 133 refuerzos, 467 items) + `ens_applicability` con pytest. `tenant_id` (nullable) en modelos de tenant. **Membership/Invitation/AuditLog y `can()` desde la primera migración** (`docs/roles_y_permisos.md`). |
+| **F0 · Cimientos** | Monorepo (Django + Vue + engines + infra), Aurora, S3 Object Lock, import OSCAL del catálogo ENS (73 medidas, 133 refuerzos, 467 items) + `ens_applicability` con pytest. `tenant_id` (nullable) en modelos de tenant. **Membership/Invitation/AuditLog y `can()` desde la primera migración** (`docs/roles_y_permisos.md`). |
 | **F1 · Núcleo cliente** | M1 Categorización (freemium) + M2 DdA + export PDF (WeasyPrint) + **M11 perfilado** con `evidence_engine` y carpeta a medida (vista de huecos). |
+| **F1a · Cuentas y acceso** | M0: registro y sesión contra Cognito con MFA TOTP, conversión del resultado anónimo en cuenta, invitación y aceptación, gestión de usuarios y roles sobre `Membership` y `can()`. Ver F3b de `docs/plan_construccion.md`. |
 | **F1b · CPSTIC** | `cpstic_parser` (guía 105) + staging/diff/revisión en panel admin + snapshot CPSTIC + `SecurityComponent` + rutas op.pl.5 + revalidación mensual. |
 | **F2 · Motores** | `scoring_engine` (M6) + `risk_engine` (M7) con pytest; M4 checklist. |
 | **F3 · Documental** | M3 generación documental + M8 versionado inmutable. |
@@ -878,6 +911,7 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 
 
 - **Stack (lenguaje, API, frontend, IaC):** ✅ DECIDIDO — Django + Django Ninja + Vue + CDK Python (§5).
+- **Autenticación:** ✅ DECIDIDO (D1, reabierta y confirmada el 19/09/2026) — **Cognito con MFA**, descartada la autenticación nativa de Django. Se cablea en F3b; hasta entonces la API va por sesión de Django.
 - **Aislamiento de tenant:** ✅ DECIDIDO — fuera de v1, gate previo a producción; `tenant_id` como andamiaje ya en v1 (§14).
 - **IaC:** CDK en Python confirmado; Terraform solo si se prefiere declarativo.
 - **UI del frontend:** shadcn-vue (marca) vs PrimeVue (data-grid) — decidir al montar el dashboard.

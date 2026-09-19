@@ -1,7 +1,7 @@
 """Sistemas, categorización guardada y Declaración de Aplicabilidad (M2).
 
 Todo lo de aquí pasa por `can()` (§15): ni una comprobación de rol suelta. Autenticación
-por sesión de Django mientras Cognito no esté cableado (§5, D1).
+por sesión de Django mientras Cognito no esté cableado (§5, D1): lo sustituye F3b.
 """
 
 from __future__ import annotations
