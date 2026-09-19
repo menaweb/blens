@@ -1,0 +1,576 @@
+# Seed BLENS · Plantillas de evidencia — familias mp.if (Instalaciones) y mp.eq (Equipos)
+# Especificación: docs/evidencias_por_herramienta.md §3.5 y §3.12
+# option_group: alternativas válidas, basta una. preferencia 1 = la más sólida.
+
+version: 1
+familias: [mp.if, mp.eq]
+
+templates:
+
+  # =================================================================== mp.if.1
+  - code: EV-mp.if.1-01
+    measure: mp.if.1
+    option_group: mp.if.1.control_acceso
+    preferencia: 1
+    titulo: "Control de acceso a la sala: configuración y autorizados"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.1"
+    applies_if: {in: [{var: "hechos.cpd_acceso"}, ["tarjeta", "biometria"]]}
+    instrucciones: "Listado de personas autorizadas a entrar, exportado del sistema de control de accesos."
+    criterios_aceptacion:
+      - "Se identifica la zona o puerta"
+      - "Consta el listado de autorizados con su perfil"
+      - "No aparece personal que ya no trabaja en la organización"
+      - "Fecha visible"
+    rechazos_tipicos:
+      - "Aparecen tarjetas activas de personas que causaron baja"
+      - "Lista de autorizados sin fecha ni responsable"
+
+  - code: EV-mp.if.1-02
+    measure: mp.if.1
+    option_group: mp.if.1.control_acceso
+    preferencia: 2
+    titulo: "Fotografías del control de acceso y relación de llaves"
+    tipo: FOTO
+    formatos: [png, jpg, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.1"
+    applies_if: {"==": [{var: "hechos.cpd_acceso"}, "llave"]}
+    instrucciones: "Fotos de la puerta y de su cierre, más la relación de a quién se ha entregado llave, firmada."
+    criterios_aceptacion:
+      - "Se ve el mecanismo de cierre, no solo la puerta cerrada"
+      - "La relación de llaves indica persona y fecha de entrega"
+    rechazos_tipicos:
+      - "Fotos sin fecha ni contexto que permita saber qué sala es"
+      - "Llaves entregadas sin registro: nadie sabe cuántas copias hay"
+
+  - code: EV-mp.if.1-03
+    measure: mp.if.1
+    titulo: "Plano o croquis con las zonas y su acceso"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.if.1"
+    applies_if: {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_rack"}, true]}]}
+    generable: true
+    instrucciones: "Croquis sencillo de las instalaciones marcando qué zonas son de acceso restringido y por dónde se entra. No hace falta un plano de arquitecto."
+    criterios_aceptacion:
+      - "Se distinguen zonas públicas, de trabajo y restringidas"
+      - "Está fechado"
+
+  - code: EV-mp.if.1-04
+    measure: mp.if.1
+    titulo: "Revisión de las personas autorizadas"
+    tipo: ACTA
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    generable: true
+    instrucciones: "Acta de la última revisión de quién puede entrar: fecha, quién revisó y qué altas y bajas se hicieron."
+    criterios_aceptacion:
+      - "Fecha dentro del último año"
+      - "Consta quién la aprobó"
+
+  # =================================================================== mp.if.2
+  - code: EV-mp.if.2-01
+    measure: mp.if.2
+    option_group: mp.if.2.registro
+    preferencia: 1
+    titulo: "Registro de accesos a la sala"
+    tipo: REGISTRO
+    formatos: [csv, pdf, png]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.if.2"
+    applies_if: {"!=": [{var: "hechos.cpd_registro"}, "no"]}
+    instrucciones: "Extracto del registro de entradas de los últimos tres meses."
+    criterios_aceptacion:
+      - "Consta persona, fecha y hora"
+      - "Cubre el periodo completo, sin huecos inexplicados"
+      - "Hay movimiento real: un registro vacío no demuestra control"
+    rechazos_tipicos:
+      - "Libro de firmas con la última entrada de hace un año"
+      - "Registro que solo recoge visitas y no al personal propio"
+
+  - code: EV-mp.if.2-02
+    measure: mp.if.2
+    titulo: "Control de visitas externas"
+    tipo: REGISTRO
+    formatos: [pdf, png, csv]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.if.2"
+    applies_if: {"!=": [{var: "hechos.visitas"}, "no"]}
+    instrucciones: "Registro de visitas del periodo (mantenimiento, técnicos, mensajería) con quién acompañó a cada una."
+    criterios_aceptacion:
+      - "Consta el motivo de la visita y la persona que acompaña"
+      - "Incluye a los técnicos de mantenimiento, que son los que más entran"
+    rechazos_tipicos:
+      - "El técnico del aire acondicionado entra solo y sin registro"
+
+  - code: EV-mp.if.2-03
+    measure: mp.if.2
+    titulo: "Norma de identificación y acompañamiento de visitas"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: false
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.if.2"
+    generable: true
+    instrucciones: "Norma que fije cómo se identifica y acompaña a quien entra desde fuera."
+    criterios_aceptacion:
+      - "Aprobada y fechada"
+      - "Concreta quién acompaña y qué se registra de cada visita"
+
+  # =================================================================== mp.if.3
+  - code: EV-mp.if.3-01
+    measure: mp.if.3
+    option_group: mp.if.3.clima
+    preferencia: 1
+    titulo: "Mantenimiento de la climatización"
+    tipo: CONTRATO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.3"
+    applies_if: {in: [{var: "hechos.cpd_clima"}, ["dedicada_mantenida", "dedicada", "edificio"]]}
+    instrucciones: "Contrato de mantenimiento y los partes de las últimas revisiones del equipo que refrigera la sala."
+    criterios_aceptacion:
+      - "El contrato está vigente"
+      - "Hay al menos un parte del último año"
+      - "El equipo del parte corresponde a la sala, no al resto del edificio"
+    rechazos_tipicos:
+      - "Contrato firmado pero sin ninguna revisión hecha"
+      - "Partes del aire acondicionado de las oficinas, no del CPD"
+
+  - code: EV-mp.if.3-02
+    measure: mp.if.3
+    option_group: mp.if.3.clima
+    preferencia: 2
+    titulo: "Registro de condiciones ambientales"
+    tipo: REGISTRO
+    formatos: [csv, png, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.if.3"
+    applies_if: {"==": [{var: "hechos.cpd_sensores"}, true]}
+    instrucciones: "Histórico de temperatura y humedad de la sala, o captura del panel de los sensores con sus umbrales de aviso."
+    criterios_aceptacion:
+      - "Se ven valores del periodo y los umbrales configurados"
+      - "Consta a quién avisa el sistema"
+
+  - code: EV-mp.if.3-03
+    measure: mp.if.3
+    titulo: "Fotografías del acondicionamiento de la sala"
+    tipo: FOTO
+    formatos: [png, jpg, pdf]
+    obligatoria: false
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.if.3"
+    applies_if: {"==": [{var: "hechos.instalacion_cpd"}, true]}
+    instrucciones: "Fotos generales de la sala: racks, climatización, cableado y ausencia de material almacenado que no pinte nada ahí."
+    criterios_aceptacion:
+      - "Se ve el conjunto de la sala, no un detalle aislado"
+    rechazos_tipicos:
+      - "La sala se usa como almacén: cajas y material apilado junto a los racks"
+
+  # =================================================================== mp.if.4
+  - code: EV-mp.if.4-01
+    measure: mp.if.4
+    titulo: "Sistema de alimentación ininterrumpida instalado"
+    tipo: FOTO
+    formatos: [png, jpg, pdf]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.if.4"
+    applies_if: {and: [{">=": [{var: "nivel_orden.D"}, 1]}, {in: [{var: "hechos.energia"}, ["sai", "sai_generador"]]}]}
+    instrucciones: "Foto o ficha del SAI con su modelo y capacidad, y a qué equipos alimenta."
+    criterios_aceptacion:
+      - "Se identifica el equipo y su capacidad"
+      - "Consta qué sistemas quedan protegidos"
+
+  - code: EV-mp.if.4-02
+    measure: mp.if.4
+    titulo: "Prueba del suministro de emergencia"
+    tipo: REGISTRO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.4"
+    applies_if: {in: [{var: "hechos.energia"}, ["sai", "sai_generador"]]}
+    instrucciones: "Informe o parte de la última prueba: cuándo se hizo, cuánto aguantó y si las baterías están en estado correcto."
+    criterios_aceptacion:
+      - "Fecha dentro del último año"
+      - "Consta la autonomía medida, no solo la nominal"
+      - "Consta el estado de las baterías"
+    rechazos_tipicos:
+      - "Se aporta la factura de compra del SAI en lugar de una prueba"
+      - "Última prueba de hace cinco años: las baterías duran menos que eso"
+
+  - code: EV-mp.if.4-03
+    measure: mp.if.4
+    refuerzo: mp.if.4.r1
+    titulo: "Suministro eléctrico de emergencia"
+    tipo: CONTRATO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.4"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    instrucciones: "Evidencia del generador o del acuerdo de suministro alternativo, con su mantenimiento y sus pruebas."
+    criterios_aceptacion:
+      - "Consta el mantenimiento vigente"
+      - "Consta al menos una prueba de arranque en el último año"
+
+  # =================================================================== mp.if.5
+  - code: EV-mp.if.5-01
+    measure: mp.if.5
+    option_group: mp.if.5.incendios
+    preferencia: 1
+    titulo: "Instalación de protección contra incendios y su revisión"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.D"}, 1]}, {or: [{"==": [{var: "hechos.incendios_deteccion"}, true]}, {"==": [{var: "hechos.incendios_extincion"}, true]}]}]}
+    instrucciones: "Certificado de la instalación y acta de la última revisión por empresa mantenedora autorizada."
+    criterios_aceptacion:
+      - "La revisión está dentro de plazo"
+      - "La empresa mantenedora está identificada"
+      - "Cubre la sala donde están los equipos"
+    rechazos_tipicos:
+      - "Revisión caducada"
+      - "El certificado cubre el edificio pero no la sala técnica"
+
+  - code: EV-mp.if.5-02
+    measure: mp.if.5
+    option_group: mp.if.5.incendios
+    preferencia: 2
+    titulo: "Extintores con su etiqueta de revisión"
+    tipo: FOTO
+    formatos: [png, jpg, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.if.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.D"}, 1]}, {"==": [{var: "hechos.incendios_extintores"}, true]}]}
+    instrucciones: "Foto de los extintores próximos a la sala donde se lea la etiqueta con la fecha de la última revisión."
+    criterios_aceptacion:
+      - "La etiqueta es legible y está en fecha"
+      - "Se ve dónde están ubicados"
+    rechazos_tipicos:
+      - "Etiqueta caducada o ilegible en la foto"
+      - "Extintor de agua junto a equipos eléctricos"
+
+  # =================================================================== mp.if.6
+  - code: EV-mp.if.6-01
+    measure: mp.if.6
+    titulo: "Valoración del riesgo de inundación y medidas"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.if.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    generable: true
+    instrucciones: "Documento breve con la valoración del riesgo de agua (ubicación, tuberías, desagües) y las medidas tomadas, con fotos si las hay: elevación de equipos, detectores de agua, desagües."
+    criterios_aceptacion:
+      - "Consta la ubicación concreta de la sala"
+      - "Si hay riesgo, consta la medida adoptada"
+      - "Coherente con lo declarado en el análisis de riesgos"
+
+  # =================================================================== mp.if.7
+  - code: EV-mp.if.7-01
+    measure: mp.if.7
+    option_group: mp.if.7.equipamiento
+    preferencia: 1
+    titulo: "Registro de entrada y salida de equipamiento"
+    tipo: REGISTRO
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.if.7"
+    applies_if: {"!=": [{var: "hechos.registro_equipamiento"}, "no"]}
+    instrucciones: "Registro de los equipos que han entrado o salido en el periodo, con fecha, motivo y responsable."
+    criterios_aceptacion:
+      - "Consta fecha, equipo, motivo y persona responsable"
+      - "Es coherente con las altas y bajas del inventario"
+    rechazos_tipicos:
+      - "El inventario muestra bajas que no aparecen en el registro de salidas"
+      - "Portátiles enviados a reparar sin constancia de qué llevaban dentro"
+
+  - code: EV-mp.if.7-02
+    measure: mp.if.7
+    option_group: mp.if.7.equipamiento
+    preferencia: 2
+    titulo: "Albaranes de entrada y salida archivados"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.if.7"
+    applies_if: {"==": [{var: "hechos.registro_equipamiento"}, "albaranes"]}
+    instrucciones: "Muestra de albaranes del periodo que acrediten entradas y salidas de equipamiento."
+    criterios_aceptacion:
+      - "Se identifica el equipo concreto, no solo el proveedor"
+
+  # =================================================================== mp.eq.1
+  - code: EV-mp.eq.1-01
+    measure: mp.eq.1
+    titulo: "Norma de puesto de trabajo despejado"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.eq.1"
+    generable: true
+    instrucciones: "Norma que indique qué no puede quedarse a la vista al terminar la jornada, difundida al personal."
+    criterios_aceptacion:
+      - "Aprobada y fechada"
+      - "Consta su difusión al personal"
+
+  - code: EV-mp.eq.1-02
+    measure: mp.eq.1
+    titulo: "Acuse de lectura de la norma por el personal"
+    tipo: REGISTRO
+    formatos: [csv, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.1"
+    generable: true
+    instrucciones: "Registro de quién ha leído y aceptado la norma, con su cobertura sobre el total de la plantilla."
+    criterios_aceptacion:
+      - "Se ve la cobertura: personas que han acusado frente al total"
+      - "Incluye las incorporaciones del periodo"
+
+  - code: EV-mp.eq.1-03
+    measure: mp.eq.1
+    refuerzo: mp.eq.1.r1
+    titulo: "Almacenamiento bajo llave disponible"
+    tipo: FOTO
+    formatos: [png, jpg, pdf]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.eq.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Foto de los armarios o cajoneras con llave donde se guarda la documentación y los soportes."
+    criterios_aceptacion:
+      - "Se ve el cierre con llave"
+      - "Consta quién custodia las llaves"
+
+  # =================================================================== mp.eq.2
+  - code: EV-mp.eq.2-01
+    measure: mp.eq.2
+    option_group: mp.eq.2.bloqueo
+    preferencia: 1
+    titulo: "Bloqueo de sesión configurado de forma centralizada"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, png, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.2"
+    applies_if: {and: [{">=": [{var: "nivel_orden.A"}, 2]}, {"==": [{var: "hechos.bloqueo_sesion"}, "central"]}]}
+    instrucciones: "Export de la directiva que fija el bloqueo por inactividad, con los minutos visibles y el ámbito al que se aplica."
+    criterios_aceptacion:
+      - "Se ven los minutos configurados"
+      - "Se ve a qué equipos o usuarios aplica"
+      - "El valor coincide con el de vuestra normativa interna"
+    rechazos_tipicos:
+      - "La norma dice 10 minutos y la directiva está a 60"
+      - "La directiva existe pero no está vinculada a ninguna unidad organizativa"
+    product_hints:
+      - match: {producto: "Active Directory"}
+        instrucciones: "Administración de directivas de grupo → la GPO correspondiente → Guardar informe HTML; el valor está en Configuración de equipo → Directivas → Opciones de seguridad"
+      - match: {producto: "Microsoft Intune"}
+        instrucciones: "Intune → Dispositivos → Directivas de configuración → la directiva de bloqueo de pantalla → Exportar"
+
+  - code: EV-mp.eq.2-02
+    measure: mp.eq.2
+    option_group: mp.eq.2.bloqueo
+    preferencia: 2
+    titulo: "Captura del bloqueo configurado en equipos de muestra"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.2"
+    applies_if: {and: [{">=": [{var: "nivel_orden.A"}, 2]}, {"==": [{var: "hechos.bloqueo_sesion"}, "usuario"]}]}
+    instrucciones: "Capturas de la configuración de bloqueo en tres equipos de distintos usuarios."
+    criterios_aceptacion:
+      - "Se identifica cada equipo"
+      - "Los tres muestran el mismo criterio"
+    rechazos_tipicos:
+      - "Cada equipo tiene un valor distinto: no hay control real"
+
+  - code: EV-mp.eq.2-03
+    measure: mp.eq.2
+    refuerzo: mp.eq.2.r1
+    titulo: "Cierre automático de sesión"
+    tipo: EXPORT_CONFIG
+    formatos: [png, pdf, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.2"
+    applies_if: {">=": [{var: "nivel_orden.A"}, 3]}
+    instrucciones: "Configuración que cierra la sesión (no solo bloquea la pantalla) tras un tiempo de inactividad."
+    criterios_aceptacion:
+      - "Se distingue claramente cierre de sesión de bloqueo de pantalla"
+
+  # =================================================================== mp.eq.3
+  - code: EV-mp.eq.3-01
+    measure: mp.eq.3
+    titulo: "Inventario de dispositivos portátiles"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.eq.3"
+    applies_if: {or: [{"==": [{var: "hechos.portatiles"}, true]}, {"==": [{var: "hechos.moviles"}, true]}]}
+    instrucciones: "Listado de portátiles, tabletas y móviles con acceso a información del servicio, con su usuario asignado."
+    criterios_aceptacion:
+      - "Cada dispositivo tiene usuario asignado"
+      - "Incluye los móviles con correo corporativo"
+      - "Coincide con el inventario general"
+
+  - code: EV-mp.eq.3-02
+    measure: mp.eq.3
+    option_group: mp.eq.3.cifrado
+    preferencia: 1
+    titulo: "Informe de cifrado de disco"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, pdf, png]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.eq.3"
+    applies_if: {"==": [{var: "hechos.portatiles"}, true]}
+    instrucciones: "Informe de la consola de gestión con el estado de cifrado equipo por equipo."
+    criterios_aceptacion:
+      - "Se ve el total de portátiles y cuántos están cifrados"
+      - "Si alguno no lo está, consta el motivo y el plazo"
+      - "Fecha visible"
+    rechazos_tipicos:
+      - "Se declara que están todos cifrados y el informe muestra equipos sin cifrar"
+      - "Captura de un solo equipo con BitLocker activado"
+    product_hints:
+      - match: {producto: "Microsoft Intune"}
+        instrucciones: "Intune → Dispositivos → Monitor → Informe de cifrado → Exportar"
+      - match: {producto: "Jamf"}
+        instrucciones: "Jamf Pro → Dispositivos → Informes inteligentes → estado de FileVault"
+
+  - code: EV-mp.eq.3-03
+    measure: mp.eq.3
+    option_group: mp.eq.3.cifrado
+    preferencia: 2
+    titulo: "Capturas del cifrado en equipos de muestra"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.eq.3"
+    applies_if: {and: [{"==": [{var: "hechos.portatiles"}, true]}, {in: [{var: "hechos.cifrado_portatiles"}, ["algunos", "por_comprobar"]]}]}
+    instrucciones: "Capturas del estado de cifrado en tres portátiles distintos, identificando cada equipo."
+    criterios_aceptacion:
+      - "Se identifica cada equipo (nombre o número de serie)"
+      - "Se ve que el cifrado está activo, no solo disponible"
+      - "Fecha visible"
+
+  - code: EV-mp.eq.3-04
+    measure: mp.eq.3
+    titulo: "Gestión de la flota y borrado remoto"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.eq.3"
+    applies_if: {or: [{"==": [{var: "hechos.portatiles"}, true]}, {"==": [{var: "hechos.moviles"}, true]}]}
+    instrucciones: "Captura de la consola de gestión donde se vean las políticas aplicadas y la opción de borrado remoto disponible."
+    criterios_aceptacion:
+      - "Se ve el número de dispositivos gestionados frente al inventario"
+      - "Se ve la política aplicada (código de acceso, cifrado, borrado)"
+
+  - code: EV-mp.eq.3-05
+    measure: mp.eq.3
+    titulo: "Procedimiento ante pérdida o robo"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.eq.3"
+    applies_if: {or: [{"==": [{var: "hechos.portatiles"}, true]}, {"==": [{var: "hechos.moviles"}, true]}]}
+    generable: true
+    instrucciones: "Pasos a seguir si se pierde un dispositivo: a quién avisar, borrado remoto, registro como incidente y valoración de brecha de datos."
+    criterios_aceptacion:
+      - "Incluye contactos concretos"
+      - "Enlaza con el procedimiento de incidentes"
+      - "Contempla la valoración de brecha de datos personales"
+
+  - code: EV-mp.eq.3-06
+    measure: mp.eq.3
+    refuerzo: mp.eq.3.r2
+    titulo: "Entornos protegidos para dispositivos portátiles"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.3"
+    applies_if: {">=": [{var: "categoria_orden"}, 3]}
+    instrucciones: "Evidencia de la separación entre el entorno corporativo y el personal en los dispositivos (contenedor de trabajo, perfil gestionado)."
+    criterios_aceptacion:
+      - "Se ve la política de separación aplicada y a qué dispositivos"
+      - "Se distingue el perfil de trabajo del personal"
+
+  # =================================================================== mp.eq.4
+  - code: EV-mp.eq.4-01
+    measure: mp.eq.4
+    titulo: "Inventario de otros dispositivos de red"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.eq.4"
+    applies_if: {and: [{">=": [{var: "nivel_orden.C"}, 1]}, {"!=": [{var: "hechos.otros_dispositivos"}, false]}]}
+    instrucciones: "Listado de impresoras, cámaras, sensores y otros aparatos conectados, con su ubicación y responsable."
+    criterios_aceptacion:
+      - "Incluye dirección de red y ubicación física"
+      - "Consta responsable"
+    rechazos_tipicos:
+      - "Aparecen en la red dispositivos que no están en ningún inventario"
+
+  - code: EV-mp.eq.4-02
+    measure: mp.eq.4
+    refuerzo: mp.eq.4.r2
+    titulo: "Segmentación y credenciales de los dispositivos de red"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.4"
+    applies_if: {and: [{">=": [{var: "nivel_orden.C"}, 2]}, {"!=": [{var: "hechos.otros_dispositivos"}, false]}]}
+    instrucciones: "Evidencia de que estos dispositivos están en una red separada y de que se cambiaron sus credenciales de fábrica."
+    criterios_aceptacion:
+      - "Se ve la VLAN o segmento donde están"
+      - "Consta el cambio de credenciales por defecto"
+    rechazos_tipicos:
+      - "Impresoras accesibles desde toda la red con la clave de administración de fábrica"
+
+  - code: EV-mp.eq.4-03
+    measure: mp.eq.4
+    refuerzo: mp.eq.4.r1
+    titulo: "Productos certificados en dispositivos de red"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.eq.4"
+    applies_if: {">=": [{var: "nivel_orden.C"}, 2]}
+    instrucciones: "Para los dispositivos que lo requieran, evidencia de su cualificación CPSTIC o certificación equivalente. Se resuelve con el flujo de op.pl.5."
+    criterios_aceptacion:
+      - "El producto y la versión coinciden con los cualificados"
+      - "La categoría del producto cubre la del sistema"

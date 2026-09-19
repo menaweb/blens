@@ -1,0 +1,211 @@
+# Seed BLENS · Checks de verificación — familia mp.com
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.com
+checks:
+  - code: "CHK-mp.com.1.1"
+    measure: mp.com.1
+    item: "mp.com.1.1"
+    descripcion: "Se dispondrá de un sistema de protección perimetral que separe la red interna del exterior. Todo el tráfico deberá atravesar dicho sistema"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.com.1-01, EV-mp.com.1-02, EV-mp.com.1-03]
+  - code: "CHK-mp.com.1.2"
+    measure: mp.com.1
+    item: "mp.com.1.2"
+    descripcion: "Todos los flujos de información a través del perímetro deben estar autorizados previamente…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.com.1-01, EV-mp.com.1-02, EV-mp.com.1-03]
+  - code: "CHK-mp.com.2.1"
+    measure: mp.com.2
+    item: "mp.com.2.1"
+    descripcion: "Se emplearán redes privadas virtuales cifradas cuando la comunicación discurra por redes fuera del propio dominio de seguridad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.com.2-01]
+  - code: "CHK-mp.com.2.r1.1"
+    measure: mp.com.2
+    refuerzo: mp.com.2.r1
+    item: "mp.com.2.r1.1"
+    descripcion: "Se emplearán algoritmos y parámetros autorizados por el CCN"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.com.2-02]
+  - code: "CHK-mp.com.2.r2.1"
+    measure: mp.com.2
+    refuerzo: mp.com.2.r2
+    item: "mp.com.2.r2.1"
+    descripcion: "Se emplearán dispositivos hardware en el establecimiento y utilización de la red privada virtual"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.2.r3.1"
+    measure: mp.com.2
+    refuerzo: mp.com.2.r3
+    item: "mp.com.2.r3.1"
+    descripcion: "Se usarán productos o servicios que cumplan lo establecido en [op.pl.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.2.r4.1"
+    measure: mp.com.2
+    refuerzo: mp.com.2.r4
+    item: "mp.com.2.r4.1"
+    descripcion: "Se emplearán cifradores que cumplan con los requisitos establecidos en la guía CCN-STIC que sea de aplicación"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.2.r5.1"
+    measure: mp.com.2
+    refuerzo: mp.com.2.r5
+    item: "mp.com.2.r5.1"
+    descripcion: "Se cifrará toda la información transmitida"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.3.1"
+    measure: mp.com.3
+    item: "mp.com.3.1"
+    descripcion: "En comunicaciones con puntos exteriores al dominio propio de seguridad, se asegurará la autenticidad del otro extremo del canal de comunicación antes de intercambiar información. (Ver [op.acc.5])"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-mp.com.3-01]
+  - code: "CHK-mp.com.3.2"
+    measure: mp.com.3
+    item: "mp.com.3.2"
+    descripcion: "Se prevendrán ataques activos garantizando que al ser detectados se activarán los procedimientos previstos de tratamiento del incidente. Se considerarán ataques activos:"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.com.3-01]
+  - code: "CHK-mp.com.3.2a"
+    measure: mp.com.3
+    item: "a)"
+    item_padre: "mp.com.3.2"
+    descripcion: "La alteración de la información en tránsito"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.com.3-01]
+  - code: "CHK-mp.com.3.2b"
+    measure: mp.com.3
+    item: "b)"
+    item_padre: "mp.com.3.2"
+    descripcion: "La inyección de información espuria"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.com.3-01]
+  - code: "CHK-mp.com.3.2c"
+    measure: mp.com.3
+    item: "c)"
+    item_padre: "mp.com.3.2"
+    descripcion: "El secuestro de la sesión por una tercera parte"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.com.3-01]
+  - code: "CHK-mp.com.3.3"
+    measure: mp.com.3
+    item: "mp.com.3.3"
+    descripcion: "Se aceptará cualquier mecanismo de identificación y autenticación de los previstos en el ordenamiento jurídico y en la normativa de aplicación"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.com.3-01]
+  - code: "CHK-mp.com.3.r1.1"
+    measure: mp.com.3
+    refuerzo: mp.com.3.r1
+    item: "mp.com.3.r1.1"
+    descripcion: "Se emplearán redes privadas virtuales cifradas cuando la comunicación discurra por redes fuera del propio dominio de seguridad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.com.3-02]
+  - code: "CHK-mp.com.3.r2.1"
+    measure: mp.com.3
+    refuerzo: mp.com.3.r2
+    item: "mp.com.3.r2.1"
+    descripcion: "Se emplearán algoritmos y parámetros autorizados por el CCN"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.3.r3.1"
+    measure: mp.com.3
+    refuerzo: mp.com.3.r3
+    item: "mp.com.3.r3.1"
+    descripcion: "Se recomienda emplear dispositivos hardware en el establecimiento y utilización de la red privada virtual"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.3.r4.1"
+    measure: mp.com.3
+    refuerzo: mp.com.3.r4
+    item: "mp.com.3.r4.1"
+    descripcion: "Se emplearán productos certificados conforme a lo establecido en [op.pl.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.3.r5.1"
+    measure: mp.com.3
+    refuerzo: mp.com.3.r5
+    item: "mp.com.3.r5.1"
+    descripcion: "Se emplearán cifradores que cumplan con los requisitos establecidos en la guía CCN-STIC que sea de aplicación"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.1"
+    measure: mp.com.4
+    item: "mp.com.4.1"
+    descripcion: "El tráfico por la red se segregará para que cada equipo solamente tenga acceso a la información que necesita"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-mp.com.4-01, EV-mp.com.4-02, EV-mp.com.4-03]
+  - code: "CHK-mp.com.4.2"
+    measure: mp.com.4
+    item: "mp.com.4.2"
+    descripcion: "Si se emplean comunicaciones inalámbricas, será en un segmento separado"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.com.4-01, EV-mp.com.4-02, EV-mp.com.4-03]
+  - code: "CHK-mp.com.4.r1.1"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r1
+    item: "mp.com.4.r1.1"
+    descripcion: "Los segmentos de red se implementarán por medio de redes de área local virtuales (Virtual Local Area Network, VLAN)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r1.2"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r1
+    item: "mp.com.4.r1.2"
+    descripcion: "La red que conforma el sistema deberá segregarse en distintas subredes contemplando como mínimo:"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r1.2a"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r1
+    item: "a)"
+    item_padre: "mp.com.4.r1.2"
+    descripcion: "Usuarios"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r1.2b"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r1
+    item: "b)"
+    item_padre: "mp.com.4.r1.2"
+    descripcion: "Servicios"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r1.2c"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r1
+    item: "c)"
+    item_padre: "mp.com.4.r1.2"
+    descripcion: "Administración"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r2.1"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r2
+    item: "mp.com.4.r2.1"
+    descripcion: "Los segmentos de red se implementarán por medio de redes privadas virtuales (Virtual Private Network, VPN)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r3.1"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r3
+    item: "mp.com.4.r3.1"
+    descripcion: "Los segmentos de red se implementarán con medios físicos separados"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r4.1"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r4
+    item: "mp.com.4.r4.1"
+    descripcion: "Control de entrada de los usuarios que llegan a cada segmento y control de entrada y salida de la información disponible en cada segmento"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-mp.com.4.r4.2"
+    measure: mp.com.4
+    refuerzo: mp.com.4.r4
+    item: "mp.com.4.r4.2"
+    descripcion: "El punto de interconexión estará particularmente asegurado, mantenido y monitorizado, (como en [mp.com.1])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []

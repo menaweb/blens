@@ -1,0 +1,615 @@
+# Seed BLENS · Plantillas de evidencia — familia op.exp (Explotación)
+# Especificación: docs/evidencias_por_herramienta.md · Modelos: EvidenceTemplate / ProductEvidenceHint (CLAUDE.md §7.1)
+#
+# option_group: varias plantillas alternativas cubren el mismo requisito → basta UNA.
+#   preferencia 1 = la más sólida ante el auditor.
+# applies_if: JSON Logic con las mismas variables que las preguntas (categoria_orden, nivel_orden.X, hechos.X).
+# vigencia_dias: caducidad de la evidencia, no de la medida.
+# generable: true → BLENS produce el documento (M3) en lugar de pedirlo.
+
+version: 1
+familia: op.exp
+
+templates:
+
+  # ------------------------------------------------------------------ op.exp.1
+  - code: EV-op.exp.1-01
+    measure: op.exp.1
+    option_group: op.exp.1.inventario
+    preferencia: 1
+    titulo: "Inventario de activos exportado"
+    tipo: EXPORT_CONFIG
+    formatos: [xlsx, csv, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.1"
+    applies_if: {in: [{var: "hechos.inventario"}, ["herramienta", "excel", "parcial", "proveedor"]]}
+    instrucciones: "Exporta el inventario completo de equipos, servidores y aplicaciones en alcance, con su responsable."
+    criterios_aceptacion:
+      - "Se ve la fecha de generación"
+      - "Incluye equipos, servidores y aplicaciones, no solo una categoría"
+      - "Cada activo tiene responsable o departamento"
+      - "El número de activos es coherente con el tamaño declarado de la organización"
+    rechazos_tipicos:
+      - "Inventario que solo lista servidores cuando hay 60 puestos en alcance"
+      - "Sin columna de responsable: nadie puede parchear ni renovar"
+      - "Fecha de hace más de un año"
+    product_hints:
+      - match: {producto: "Microsoft Intune"}
+        instrucciones: "Centro de administración de Intune → Dispositivos → Todos los dispositivos → Exportar"
+      - match: {producto: "GLPI"}
+        instrucciones: "Parque → Ordenadores → Exportar en CSV o PDF"
+
+  - code: EV-op.exp.1-02
+    measure: op.exp.1
+    option_group: op.exp.1.inventario
+    preferencia: 2
+    titulo: "Captura del inventario en pantalla"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.1"
+    applies_if: {in: [{var: "hechos.inventario"}, ["herramienta", "excel", "parcial", "proveedor"]]}
+    instrucciones: "Captura la pantalla del inventario donde se vea el total de activos y las columnas principales."
+    criterios_aceptacion:
+      - "Se ve el nombre de la herramienta o el fichero"
+      - "Se ve el total de registros"
+      - "Se ve la fecha del sistema"
+    rechazos_tipicos:
+      - "Captura recortada sin contexto ni fecha"
+
+  - code: EV-op.exp.1-03
+    measure: op.exp.1
+    refuerzo: op.exp.1.r2
+    titulo: "Última revisión del inventario"
+    tipo: ACTA
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    generable: true
+    instrucciones: "Registro de la última comprobación de que el inventario está al día: fecha, quién la hizo y qué se corrigió."
+    criterios_aceptacion:
+      - "Fecha dentro del periodo declarado de revisión"
+      - "Consta quién la realizó"
+      - "Se indican altas y bajas detectadas, o que no hubo ninguna"
+    rechazos_tipicos:
+      - "Se declara revisión semestral y la última es de hace dos años"
+
+  - code: EV-op.exp.1-04
+    measure: op.exp.1
+    refuerzo: op.exp.1.r4
+    titulo: "Lista de componentes software (SBOM)"
+    tipo: EXPORT_CONFIG
+    formatos: [json, xml, pdf]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.1"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 3]}, {"==": [{var: "hechos.sbom"}, true]}]}
+    instrucciones: "SBOM de las aplicaciones propias o el que publique el fabricante, en formato CycloneDX o SPDX."
+    criterios_aceptacion:
+      - "Identifica la aplicación y su versión"
+      - "Lista componentes con sus versiones"
+
+  # ------------------------------------------------------------ op.exp.2 y .3
+  - code: EV-op.exp.2-01
+    measure: op.exp.2
+    option_group: op.exp.2.config_base
+    preferencia: 1
+    titulo: "Configuración de seguridad base aplicada"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.2"
+    applies_if: {in: [{var: "hechos.bastionado"}, ["guia_reconocida", "propia", "proveedor"]]}
+    instrucciones: "Export de las directivas aplicadas (GPO, perfiles de Intune, playbook de Ansible) o informe de cumplimiento de bastionado."
+    criterios_aceptacion:
+      - "Se identifica a qué equipos se aplica"
+      - "Se ve la fecha"
+      - "Se reconocen medidas concretas: usuarios por defecto, servicios innecesarios, opciones de seguridad"
+    rechazos_tipicos:
+      - "Se aporta la guía del CCN sin ninguna prueba de haberla aplicado"
+      - "Se aporta solo un documento de intenciones"
+    product_hints:
+      - match: {producto: "Active Directory"}
+        instrucciones: "En un controlador de dominio: gpresult /h informe.html, o Administración de directivas de grupo → Guardar informe"
+      - match: {producto: "Microsoft Intune"}
+        instrucciones: "Intune → Dispositivos → Cumplimiento y Directivas de configuración → exportar el informe por directiva"
+      - match: {producto: "CLARA"}
+        instrucciones: "Ejecuta CLARA sobre una muestra de equipos y adjunta su informe de cumplimiento"
+
+  - code: EV-op.exp.2-02
+    measure: op.exp.2
+    option_group: op.exp.2.config_base
+    preferencia: 2
+    titulo: "Documento de configuración base más captura de aplicación"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.2"
+    applies_if: {in: [{var: "hechos.bastionado"}, ["propia", "costumbre"]]}
+    generable: true
+    instrucciones: "Documento con la configuración base que aplicáis, acompañado de una captura que demuestre que está aplicada en al menos un equipo de cada tipo."
+    criterios_aceptacion:
+      - "El documento está aprobado y fechado"
+      - "La captura corresponde a un equipo real en producción"
+
+  - code: EV-op.exp.3-01
+    measure: op.exp.3
+    refuerzo: op.exp.3.r1
+    titulo: "Trazabilidad de los cambios de configuración"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, pdf, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.3"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Muestra de 3 a 5 cambios de configuración del periodo con su autor y fecha (historial del repositorio, tickets o registro del sistema)."
+    criterios_aceptacion:
+      - "Se ve quién hizo el cambio y cuándo"
+      - "Los casos son del periodo auditado"
+      - "Se entiende qué se cambió"
+    rechazos_tipicos:
+      - "Cambios anónimos hechos con una cuenta compartida de administrador"
+
+  # ------------------------------------------------------------------ op.exp.4
+  - code: EV-op.exp.4-01
+    measure: op.exp.4
+    option_group: op.exp.4.estado_parches
+    preferencia: 1
+    titulo: "Informe de estado de actualizaciones"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, xlsx]
+    obligatoria: true
+    vigencia_dias: 30
+    carpeta_paquete: "05_[op]/op.exp.4"
+    applies_if: {in: [{var: "hechos.parcheo"}, ["centralizado", "proveedor"]]}
+    instrucciones: "Informe de la herramienta de parcheo con el estado por equipo: al día, pendientes y críticos sin aplicar."
+    criterios_aceptacion:
+      - "Se ve el total de equipos y cuántos están al día"
+      - "Se distinguen los parches críticos"
+      - "Fecha del informe dentro del último mes"
+    rechazos_tipicos:
+      - "\"Se actualiza automáticamente\" sin ningún informe"
+      - "Parches críticos pendientes desde hace meses sin justificación ni plazo"
+      - "El informe cubre los puestos pero no los servidores"
+    product_hints:
+      - match: {producto: "Microsoft Intune"}
+        instrucciones: "Intune → Informes → Windows Update → Informe de conformidad de actualizaciones → Exportar"
+      - match: {producto: "WSUS"}
+        instrucciones: "Consola de WSUS → Informes → Estado de actualizaciones del equipo → Exportar a PDF"
+
+  - code: EV-op.exp.4-02
+    measure: op.exp.4
+    option_group: op.exp.4.estado_parches
+    preferencia: 2
+    titulo: "Captura del panel de actualizaciones"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 30
+    carpeta_paquete: "05_[op]/op.exp.4"
+    applies_if: {in: [{var: "hechos.parcheo"}, ["centralizado", "automatico_local", "manual"]]}
+    instrucciones: "Captura del panel donde se vea el porcentaje de equipos al día y los pendientes."
+    criterios_aceptacion:
+      - "Se ve el total y los pendientes"
+      - "Se ve la fecha del sistema"
+
+  - code: EV-op.exp.4-03
+    measure: op.exp.4
+    titulo: "Procedimiento de actualizaciones con plazos"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.exp.4"
+    generable: true
+    instrucciones: "Procedimiento que fije los plazos por criticidad, quién decide y cómo se tratan las excepciones."
+    criterios_aceptacion:
+      - "Aprobado y fechado"
+      - "Los plazos coinciden con lo declarado en el perfilado"
+      - "Contempla excepciones con justificación y caducidad"
+    rechazos_tipicos:
+      - "El procedimiento promete 72 horas y el informe muestra parches críticos de 6 meses"
+
+  - code: EV-op.exp.4-04
+    measure: op.exp.4
+    refuerzo: op.exp.4.r1
+    titulo: "Prueba en preproducción antes de actualizar"
+    tipo: REGISTRO
+    formatos: [pdf, png, csv]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.4"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Evidencia de que las actualizaciones pasan primero por un entorno o grupo piloto: anillos de despliegue, ticket de prueba o registro del grupo piloto."
+    criterios_aceptacion:
+      - "Se identifica el entorno o grupo de prueba"
+      - "Se ve al menos un caso real del periodo"
+
+  # ------------------------------------------------------------------ op.exp.5
+  - code: EV-op.exp.5-01
+    measure: op.exp.5
+    titulo: "Muestra de cambios aprobados"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.5"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "De 3 a 5 cambios del periodo con su petición, la prueba realizada y la aprobación. Si usáis una herramienta, exporta los tickets completos."
+    criterios_aceptacion:
+      - "Cada caso muestra quién pidió, quién aprobó y cuándo"
+      - "Consta la prueba o validación previa"
+      - "Son cambios reales del periodo auditado, no ejemplos"
+    rechazos_tipicos:
+      - "Aprobación del mismo que ejecuta el cambio, sin separación"
+      - "Tickets cerrados sin ninguna prueba ni resultado"
+    product_hints:
+      - match: {producto: "Jira Service Management"}
+        instrucciones: "Filtra por tipo de solicitud Cambio en el periodo y exporta los tickets a PDF con su historial de aprobación"
+
+  - code: EV-op.exp.5-02
+    measure: op.exp.5
+    refuerzo: op.exp.5.r1
+    titulo: "Plan de vuelta atrás en las peticiones de cambio"
+    tipo: REGISTRO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.5"
+    applies_if: {">=": [{var: "categoria_orden"}, 3]}
+    instrucciones: "Muestra de cambios donde se vea el plan de vuelta atrás previsto antes de ejecutar."
+    criterios_aceptacion:
+      - "El plan consta antes de la ejecución, no después"
+
+  # ------------------------------------------------------------------ op.exp.6
+  - code: EV-op.exp.6-01
+    measure: op.exp.6
+    option_group: op.exp.6.cobertura
+    preferencia: 1
+    titulo: "Inventario de la consola del antivirus"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {"!=": [{var: "hechos.antimalware"}, "no"]}
+    instrucciones: "Exporta el listado de equipos de la consola con su estado de protección y la fecha de última comunicación."
+    criterios_aceptacion:
+      - "Se ve el total de equipos protegidos"
+      - "Coincide con el total declarado en el inventario, o se explica la diferencia"
+      - "Incluye servidores, no solo puestos"
+      - "No hay equipos sin comunicar desde hace semanas"
+    rechazos_tipicos:
+      - "Captura de un solo equipo"
+      - "Cobertura del 80 % sin explicar el 20 % restante"
+      - "Equipos en estado inactivo desde hace meses"
+    product_hints:
+      - match: {producto: "Microsoft Defender for Endpoint"}
+        instrucciones: "Portal de Defender → Activos → Dispositivos → Exportar. Añade también Gestión de configuración para ver la cobertura"
+      - match: {fabricante: "ESET"}
+        instrucciones: "ESET PROTECT → Ordenadores → Exportar a CSV; y en Informes, el de estado de protección"
+      - match: {fabricante: "Sophos"}
+        instrucciones: "Sophos Central → Dispositivos → Exportar; e Informes → Resumen de estado"
+
+  - code: EV-op.exp.6-02
+    measure: op.exp.6
+    option_group: op.exp.6.cobertura
+    preferencia: 2
+    titulo: "Captura del panel de cobertura"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {"!=": [{var: "hechos.antimalware"}, "no"]}
+    instrucciones: "Captura del panel principal donde se vean los equipos protegidos frente al total y el estado de las firmas."
+    criterios_aceptacion:
+      - "Se ve el nombre de la consola y la organización"
+      - "Se ve el total y los protegidos"
+      - "Se ve la fecha del sistema"
+
+  - code: EV-op.exp.6-03
+    measure: op.exp.6
+    option_group: op.exp.6.cobertura
+    preferencia: 3
+    titulo: "Informe del proveedor que gestiona el antivirus"
+    tipo: DOCUMENTO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {"==": [{var: "hechos.antimalware"}, "proveedor"]}
+    instrucciones: "Informe periódico del proveedor con la cobertura y las detecciones del periodo, en su papelería y fechado."
+    criterios_aceptacion:
+      - "Identifica al proveedor y el periodo"
+      - "Da cifras de cobertura, no solo texto genérico"
+
+  - code: EV-op.exp.6-04
+    measure: op.exp.6
+    titulo: "Política del antivirus aplicada"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {"!=": [{var: "hechos.antimalware"}, "no"]}
+    instrucciones: "Captura de la política aplicada: protección en tiempo real, análisis programado y qué hace al detectar algo."
+    criterios_aceptacion:
+      - "Se ve el nombre de la política y a qué grupo se aplica"
+      - "Protección en tiempo real activada"
+      - "Consta la acción ante detección"
+
+  - code: EV-op.exp.6-05
+    measure: op.exp.6
+    refuerzo: op.exp.6.r1
+    titulo: "Análisis periódico completo"
+    tipo: REGISTRO
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Evidencia del análisis programado: calendario configurado y resultado de las últimas ejecuciones."
+    criterios_aceptacion:
+      - "Se ve la periodicidad configurada"
+      - "Se ve el resultado de al menos una ejecución reciente"
+
+  - code: EV-op.exp.6-06
+    measure: op.exp.6
+    titulo: "Detecciones del periodo y su tratamiento"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, pdf]
+    obligatoria: false
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {"!=": [{var: "hechos.antimalware"}, "no"]}
+    instrucciones: "Export de las detecciones del último trimestre con el estado de cada una (bloqueada, en cuarentena, resuelta)."
+    criterios_aceptacion:
+      - "Consta el estado de resolución de cada detección"
+    rechazos_tipicos:
+      - "Detecciones en estado pendiente desde hace semanas"
+
+  - code: EV-op.exp.6-07
+    measure: op.exp.6
+    refuerzo: op.exp.6.r3
+    titulo: "Restricción de ejecución (lista blanca)"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.6"
+    applies_if: {">=": [{var: "categoria_orden"}, 3]}
+    instrucciones: "Captura o export de la configuración que limita qué programas pueden ejecutarse, y a qué equipos se aplica."
+    criterios_aceptacion:
+      - "Se ve el alcance: a qué equipos aplica"
+      - "Se ve el modo: bloqueo real, no solo auditoría"
+    rechazos_tipicos:
+      - "Lista blanca configurada en modo auditoría y presentada como bloqueo"
+
+  # ------------------------------------------------------------ op.exp.7 y .9
+  - code: EV-op.exp.7-01
+    measure: op.exp.7
+    titulo: "Procedimiento de gestión de incidentes"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.exp.7"
+    generable: true
+    instrucciones: "Procedimiento con clasificación de incidentes, quién hace qué, escalado, plazos y a quién se notifica fuera."
+    criterios_aceptacion:
+      - "Aprobado y fechado"
+      - "Incluye teléfonos o contactos concretos, no roles abstractos"
+      - "Contempla la notificación externa aplicable a vuestro tipo de entidad"
+
+  - code: EV-op.exp.9-01
+    measure: op.exp.9
+    option_group: op.exp.9.registro
+    preferencia: 1
+    titulo: "Registro de incidentes del periodo"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.9"
+    instrucciones: "Export del registro de incidentes del periodo auditado, con fecha, tipo, impacto, sistema afectado y resolución."
+    criterios_aceptacion:
+      - "Cubre todo el periodo auditado"
+      - "Consta fecha de detección y de resolución"
+      - "Se identifica el sistema o activo afectado"
+    rechazos_tipicos:
+      - "Registro vacío con la explicación de que no ha pasado nada: nadie se lo cree"
+      - "Solo se registran las averías de informática, no los incidentes de seguridad"
+
+  - code: EV-op.exp.9-02
+    measure: op.exp.9
+    titulo: "Un incidente completo de ejemplo"
+    tipo: REGISTRO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.9"
+    instrucciones: "Toma un incidente real del periodo y aporta su recorrido completo: detección, análisis, contención, resolución y lecciones aprendidas."
+    criterios_aceptacion:
+      - "Se ve la cronología con fechas y horas"
+      - "Consta quién intervino"
+      - "Consta el cierre y, si procede, la acción de mejora"
+
+  - code: EV-op.exp.7-02
+    measure: op.exp.7
+    refuerzo: op.exp.7.r1
+    titulo: "Notificación externa de incidentes"
+    tipo: EMAIL
+    formatos: [pdf, png, eml]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.7"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Si hubo un incidente notificable, aporta el justificante de la notificación. Si no hubo, aporta el procedimiento con el canal identificado y la prueba de que tenéis acceso a ese canal."
+    criterios_aceptacion:
+      - "Se identifica el destinatario correcto para vuestro tipo de entidad"
+      - "Si hubo notificación, consta la fecha y el acuse"
+    rechazos_tipicos:
+      - "Se declara notificar al CCN-CERT sin tener acceso al canal ni saber cómo se hace"
+
+  # ------------------------------------------------------------------ op.exp.8
+  - code: EV-op.exp.8-01
+    measure: op.exp.8
+    option_group: op.exp.8.fuentes
+    preferencia: 1
+    titulo: "Fuentes de registro integradas"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, pdf, png]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.8"
+    applies_if: {and: [{">=": [{var: "nivel_orden.T"}, 1]}, {"==": [{var: "hechos.registro_actividad"}, "centralizado"]}]}
+    instrucciones: "Listado o captura de las fuentes que envían registros, con su estado de ingesta."
+    criterios_aceptacion:
+      - "Aparecen los servidores y el directorio, no solo los cortafuegos"
+      - "Se ve el estado: recibiendo o sin datos"
+      - "Fecha visible"
+    rechazos_tipicos:
+      - "El sistema central solo recibe registros de red y deja fuera los servidores de aplicaciones"
+      - "Fuentes sin datos desde hace meses"
+    product_hints:
+      - match: {producto: "Microsoft Sentinel"}
+        instrucciones: "Sentinel → Conectores de datos: captura el listado con el estado y la última recepción"
+      - match: {producto: "Wazuh"}
+        instrucciones: "Wazuh → Agents: exporta el listado con estado y última comunicación"
+
+  - code: EV-op.exp.8-02
+    measure: op.exp.8
+    option_group: op.exp.8.fuentes
+    preferencia: 2
+    titulo: "Captura de la configuración de auditoría en cada sistema"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.8"
+    applies_if: {and: [{">=": [{var: "nivel_orden.T"}, 1]}, {in: [{var: "hechos.registro_actividad"}, ["local", "parcial"]]}]}
+    instrucciones: "Capturas de la configuración de auditoría activada en los sistemas principales, uno por tipo."
+    criterios_aceptacion:
+      - "Se identifica el sistema de cada captura"
+      - "Se ve que se registran accesos y acciones de administrador"
+
+  - code: EV-op.exp.8-03
+    measure: op.exp.8
+    refuerzo: op.exp.8.r3
+    titulo: "Retención de los registros configurada"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.8"
+    applies_if: {">=": [{var: "nivel_orden.T"}, 2]}
+    instrucciones: "Captura de la configuración de retención, con el plazo visible."
+    criterios_aceptacion:
+      - "El plazo coincide con el declarado en vuestra normativa"
+    rechazos_tipicos:
+      - "La política dice un año y la herramienta está configurada a 30 días"
+
+  - code: EV-op.exp.8-04
+    measure: op.exp.8
+    refuerzo: op.exp.8.r4
+    titulo: "Protección de los registros frente a manipulación"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.8"
+    applies_if: {">=": [{var: "nivel_orden.T"}, 2]}
+    instrucciones: "Evidencia de quién puede leer y borrar los registros: permisos configurados, almacenamiento de solo lectura o inmutable."
+    criterios_aceptacion:
+      - "Se ve que los administradores de los sistemas no pueden borrar sus propios registros"
+    rechazos_tipicos:
+      - "Cualquier administrador local puede vaciar el registro de seguridad"
+
+  - code: EV-op.exp.8-05
+    measure: op.exp.8
+    refuerzo: op.exp.8.r2
+    titulo: "Sincronización horaria"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.8"
+    applies_if: {">=": [{var: "nivel_orden.T"}, 2]}
+    instrucciones: "Captura de la configuración del servidor de hora (NTP) y del estado de sincronización en los sistemas principales."
+    criterios_aceptacion:
+      - "Se ve la fuente de hora usada"
+      - "Se ve que los sistemas están sincronizados"
+
+  - code: EV-op.exp.8-06
+    measure: op.exp.8
+    refuerzo: op.exp.8.r1
+    titulo: "Revisión de los registros"
+    tipo: REGISTRO
+    formatos: [pdf, png, csv]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.exp.8"
+    applies_if: {">=": [{var: "nivel_orden.T"}, 2]}
+    instrucciones: "Evidencia de que alguien mira los registros: alertas configuradas, informe periódico del SOC o acta de revisión."
+    criterios_aceptacion:
+      - "Consta la periodicidad o el servicio continuo"
+      - "Se ve al menos un caso real tratado en el periodo"
+    rechazos_tipicos:
+      - "Se guardan registros durante un año y nadie los ha abierto nunca"
+
+  # ----------------------------------------------------------------- op.exp.10
+  - code: EV-op.exp.10-01
+    measure: op.exp.10
+    titulo: "Custodia de claves y credenciales de administración"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.10"
+    instrucciones: "Captura del gestor de contraseñas, la bóveda o el servicio de claves donde se custodian, con el control de acceso visible."
+    criterios_aceptacion:
+      - "Se ve quién tiene acceso"
+      - "Las credenciales no están en documentos ni en el código"
+      - "Consta un procedimiento de custodia y recuperación"
+    rechazos_tipicos:
+      - "Contraseñas de administración en un Excel compartido"
+      - "Claves en un repositorio de código"
+      - "Solo las sabe una persona y no hay copia custodiada"
+
+  - code: EV-op.exp.10-02
+    measure: op.exp.10
+    titulo: "Inventario de certificados con su caducidad"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.exp.10"
+    instrucciones: "Listado de certificados en uso (web, sede, firma, VPN) con su emisor, caducidad y responsable."
+    criterios_aceptacion:
+      - "Consta la fecha de caducidad de cada certificado"
+      - "Ninguno está caducado, o consta el plan de renovación"
+
+  - code: EV-op.exp.10-03
+    measure: op.exp.10
+    refuerzo: op.exp.10.r1
+    titulo: "Algoritmos y versiones en uso"
+    tipo: DOCUMENTO
+    formatos: [pdf, png, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.exp.10"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Informe de configuración criptográfica: versiones de TLS y cifradores admitidos en vuestros servicios, y revisión frente a los algoritmos recomendados por el CCN."
+    criterios_aceptacion:
+      - "Se identifica el servicio analizado"
+      - "Fecha del análisis dentro del año"
+      - "No se admiten versiones obsoletas, o consta la excepción justificada"
+    rechazos_tipicos:
+      - "Servicios que aún aceptan TLS 1.0 o 1.1 sin justificación"

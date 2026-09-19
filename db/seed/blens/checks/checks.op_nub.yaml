@@ -1,0 +1,67 @@
+# Seed BLENS · Checks de verificación — familia op.nub
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.nub
+checks:
+  - code: "CHK-op.nub.1.1"
+    measure: op.nub.1
+    item: "op.nub.1.1"
+    descripcion: "Los sistemas que suministran un servicio en la nube a organismos del sector público deberán cumplir con el conjunto de medidas de seguridad en función del modelo de servicio en la nube que presten: Software como…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.nub.1-01, EV-op.nub.1-02, EV-op.nub.1-03]
+  - code: "CHK-op.nub.1.2"
+    measure: op.nub.1
+    item: "op.nub.1.2"
+    descripcion: "Cuando se utilicen servicios en la nube suministrados por terceros, los sistemas de información que los soportan deberán ser conformes con el ENS o cumplir con las medidas desarrolladas en una guía CCN-STIC que…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.nub.1-01, EV-op.nub.1-02, EV-op.nub.1-03]
+  - code: "CHK-op.nub.1.2a"
+    measure: op.nub.1
+    item: "a)"
+    item_padre: "op.nub.1.2"
+    descripcion: "Auditoría de pruebas de penetración (pentesting)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.nub.1-01, EV-op.nub.1-02, EV-op.nub.1-03]
+  - code: "CHK-op.nub.1.2b"
+    measure: op.nub.1
+    item: "b)"
+    item_padre: "op.nub.1.2"
+    descripcion: "Transparencia"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.nub.1-01, EV-op.nub.1-02, EV-op.nub.1-03]
+  - code: "CHK-op.nub.1.2c"
+    measure: op.nub.1
+    item: "c)"
+    item_padre: "op.nub.1.2"
+    descripcion: "Cifrado y gestión de claves"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.nub.1-01, EV-op.nub.1-02, EV-op.nub.1-03]
+  - code: "CHK-op.nub.1.2d"
+    measure: op.nub.1
+    item: "d)"
+    item_padre: "op.nub.1.2"
+    descripcion: "Jurisdicción de los datos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.nub.1-01, EV-op.nub.1-02, EV-op.nub.1-03]
+  - code: "CHK-op.nub.1.r1.1"
+    measure: op.nub.1
+    refuerzo: op.nub.1.r1
+    item: "op.nub.1.r1.1"
+    descripcion: "Cuando se utilicen servicios en la nube suministrados por terceros, estos deberán estar certificados bajo una metodología de certificación reconocida por el Organismo de Certificación del Esquema Nacional de Evaluación…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.nub.1-04]
+  - code: "CHK-op.nub.1.r1.2"
+    measure: op.nub.1
+    refuerzo: op.nub.1.r1
+    item: "op.nub.1.r1.2"
+    descripcion: "Si el servicio en la nube es un servicio de seguridad deberá cumplir con los requisitos establecidos en [op.pl.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.nub.1-04]
+  - code: "CHK-op.nub.1.r2.1"
+    measure: op.nub.1
+    refuerzo: op.nub.1.r2
+    item: "op.nub.1.r2.1"
+    descripcion: "La configuración de seguridad de los sistemas que proporcionan estos servicios deberá realizarse según la correspondiente guía CCN-STIC de Configuración de Seguridad Específica, orientadas tanto al usuario como al…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.nub.1-05]

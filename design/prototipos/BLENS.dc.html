@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; height:100vh; min-height:720px; overflow:hidden; background:#F8FAFC">
+
+  <aside style="width:286px; flex:0 0 286px; display:flex; flex-direction:column; background:#FFFFFF; border-right:1px solid #E2E8F0">
+    <div style="padding:16px; border-bottom:1px solid #E2E8F0; display:flex; flex-direction:column; gap:12px">
+      <span style="display:flex; align-items:center; gap:10px">
+        <span style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:13px; font-weight:700">B</span>
+        <span style="font-size:14px; font-weight:600; color:#0F172A">BLENS</span>
+      </span>
+      <button type="button" style="display:flex; align-items:center; gap:10px; width:100%; padding:8px 10px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; cursor:pointer; text-align:left; font-family:inherit" style-hover="background:#F0FDFA; border-color:#14A79B">
+        <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+        <span style="display:flex; flex-direction:column; gap:1px; min-width:0; flex:1">
+          <span style="font-size:13px; font-weight:600; color:#0F172A; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">Sede electrónica</span>
+          <span style="font-size:12px; color:#475569">Ayto. de Valverde · Media</span>
+        </span>
+        <span style="font-size:12px; color:#94A3B8">▾</span>
+      </button>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px">
+        <span style="font-size:12px; color:#475569">Listo para auditoría</span>
+        <span style="font-size:14px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">31 %</span>
+      </div>
+    </div>
+
+    <nav style="flex:1; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:1px">
+      <sc-for list="{{ navegacion }}" as="n" hint-placeholder-count="14">
+        <button type="button" onClick="{{ n.onClick }}" style="{{ n.caja }}">
+          <span style="{{ n.texto }}">{{ n.nombre }}</span>
+          <span style="{{ n.marca }}">{{ n.pendiente }}</span>
+        </button>
+      </sc-for>
+    </nav>
+
+    <div style="padding:12px 16px; border-top:1px solid #E2E8F0; display:flex; flex-direction:column; gap:6px">
+      <span style="font-size:12px; font-weight:600; color:#475569">Fuera de la aplicación</span>
+      <sc-for list="{{ externas }}" as="e" hint-placeholder-count="3">
+        <a href="{{ e.url }}" style="font-size:13px; font-weight:500">{{ e.nombre }}</a>
+      </sc-for>
+    </div>
+  </aside>
+
+  <main style="flex:1; min-width:0; overflow-y:auto">
+    <div style="max-width:880px; margin:0 auto; padding:28px 32px 72px; display:flex; flex-direction:column; gap:18px">
+
+      <div style="display:flex; flex-direction:column; gap:8px">
+        <span style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#475569">{{ grupoActual }}</span>
+        <h1 style="margin:0; font-size:24px; line-height:1.3; font-weight:600; letter-spacing:-0.01em; color:#0F172A">{{ tituloActual }}</h1>
+        <p style="margin:0; font-size:14px; line-height:1.6; color:#475569; max-width:660px; text-wrap:pretty">{{ descripcionActual }}</p>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+        <a href="{{ urlActual }}" style="display:inline-flex; align-items:center; font-size:14px; font-weight:600; color:#FFFFFF; background:#0F766E; border-radius:6px; padding:10px 16px">Abrir la pantalla</a>
+        <span style="{{ chipEstadoActual }}">{{ estadoActual }}</span>
+      </div>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:12px">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Qué resuelve</span>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ puntos }}" as="p" hint-placeholder-count="3">
+            <span style="display:flex; align-items:flex-start; gap:10px">
+              <span style="flex:0 0 auto; margin-top:7px; width:5px; height:5px; border-radius:50%; background:#14A79B"></span>
+              <span style="font-size:14px; line-height:1.55; color:#475569">{{ p.t }}</span>
+            </span>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="{{ zonaRelacionadas }}">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Desde aquí se sigue a</span>
+        <div style="display:flex; flex-direction:column; gap:1px">
+          <sc-for list="{{ relacionadas }}" as="r" hint-placeholder-count="2">
+            <button type="button" onClick="{{ r.onClick }}" style="display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:10px 12px; border:0; border-radius:6px; background:transparent" style-hover="background:#F8FAFC">
+              <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                <span style="font-size:13px; font-weight:500; color:#0F172A">{{ r.nombre }}</span>
+                <span style="font-size:12px; color:#475569">{{ r.porque }}</span>
+              </span>
+              <span style="font-size:13px; color:#0F766E; flex:0 0 auto">Ir ›</span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <p style="margin:0; font-size:12px; line-height:1.55; color:#475569">Cada pantalla es un prototipo independiente con datos de ejemplo del Ayuntamiento de Valverde. Esta vista solo sirve para recorrerlas con la navegación del brief.</p>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:860}}">
+class Component extends DCLogic {
+  state = { sel: 0 };
+
+  pantallas() {
+    return [
+      { g: "Inicio", n: "Dashboard", f: "Dashboard.dc.html", sub: false,
+        d: "El panel de entrada: dónde está la organización, qué le falta y qué hacer ahora. Incluye el estado vacío de un cliente nuevo.",
+        k: ["Indicador de listo para auditoría con sus tres componentes separados y la advertencia de que no es una declaración de conformidad.",
+            "Madurez por familia como rejilla de medidas y ranking de dónde se pierde más, con acción directa.",
+            "Avisos agrupados: evidencias que caducan, certificados de proveedor y tareas vencidas."],
+        r: [[1, "para empezar: de la categoría sale todo lo demás"], [3, "responder el perfilado es lo que mueve el indicador"]] },
+      { g: "Mi sistema", n: "Categorización", f: "Categorizacion.dc.html", sub: false,
+        d: "Asistente de cinco pasos, uno por dimensión, que se usa sin cuenta. Es la puerta del producto.",
+        k: ["Cada dimensión con cuatro opciones descritas como situaciones reconocibles, no como jerga.",
+            "Resultado con la categoría, por qué dimensiones sale y qué implica en medidas, evidencias y documentos.",
+            "Si ninguna dimensión aplica, no inventa categoría: avisa de que el alcance está mal delimitado."],
+        r: [[2, "la categoría determina qué medidas aplican"], [3, "con la Declaración hecha empieza el perfilado"]] },
+      { g: "Mi sistema", n: "Declaración de Aplicabilidad", f: "Declaracion de Aplicabilidad.dc.html", sub: false,
+        d: "Qué medidas y refuerzos aplican, cuáles no y por qué, con flujo de aprobación y versión.",
+        k: ["Origen de la aplicabilidad de cada fila: categoría o nivel de una dimensión concreta.",
+            "Justificación obligatoria para no aplicar, y refuerzos con selección abierta marcados.",
+            "No se puede enviar a aprobación con decisiones pendientes o justificaciones en blanco."],
+        r: [[4, "lo aplicable pasa al checklist con su objetivo"]] },
+      { g: "Mi sistema", n: "Perfilado", f: "Perfilado - Ficha de pregunta.dc.html", sub: false,
+        d: "El corazón del producto: preguntas en lenguaje llano sobre cómo trabaja la organización hoy.",
+        k: ["Cada pregunta con sus cuatro apoyos: texto, por qué se pregunta, dónde mirarlo y opciones reales.",
+            "Glosario al pasar el ratón y botón de preguntárselo a otra persona; no existe la opción no lo sé.",
+            "Guardado automático visible y progreso por bloques con minutos y responsable."],
+        r: [[4, "las respuestas fijan la madurez declarada"], [5, "y abren los requisitos de evidencia que tocan"]] },
+      { g: "Cumplimiento", n: "Medidas", f: "Checklist de medidas.dc.html", sub: false,
+        d: "Tabla densa de trabajo diario: madurez actual frente a objetivo, con edición en línea.",
+        k: ["Delta con semáforo según la distancia al umbral de la categoría.",
+            "Aviso de madurez no soportada cuando no hay evidencia validada detrás.",
+            "Filtros que se recalculan al editar y vista cómoda o densa."],
+        r: [[5, "una madurez sin evidencia validada no suma"], [0, "el efecto se ve en el indicador"]] },
+      { g: "Cumplimiento", n: "Evidencias", f: "Carpeta de evidencias.dc.html", sub: false,
+        d: "La carpeta que el auditor va a pedir, en dos vistas del mismo contenido.",
+        k: ["Árbol con la estructura del paquete de auditoría y el estado de cada carpeta.",
+            "Lista filtrable por estado, responsable y caduca pronto.",
+            "Detalle de requisito aparte, con opciones alternativas y criterios de aceptación."],
+        r: [[6, "abrir un requisito para aportarlo bien"], [12, "es lo que el auditor revisa medida a medida"]] },
+      { g: "Cumplimiento", n: "Detalle de requisito", f: "Requisito de evidencia.dc.html", sub: true,
+        d: "Dónde se gana o se pierde la usabilidad: qué hay que demostrar y cómo aportarlo bien a la primera.",
+        k: ["Tres opciones alternativas ordenadas por solidez, con la preferida destacada.",
+            "Criterios marcables de qué debe verse y aviso de rechazos típicos antes de subir.",
+            "Nota para el auditor e historial con versiones, validaciones y caducidad."],
+        r: [[5, "volver a la carpeta completa"]] },
+      { g: "Riesgos", n: "Activos y dependencias", f: "Activos y dependencias.dc.html", sub: false,
+        d: "El grafo donde la competencia falla: dependencias entre servicios, aplicaciones e infraestructura.",
+        k: ["Porcentaje de dependencia visible en cada arista y selección múltiple de nodos.",
+            "Detección de ciclos con mensaje claro y las aristas implicadas resaltadas.",
+            "Alternativa en tabla, recorrible con teclado."],
+        r: [[8, "las dependencias alimentan el cálculo de riesgo"]] },
+      { g: "Riesgos", n: "Amenazas y tratamiento", f: "Amenazas y tratamiento.dc.html", sub: false,
+        d: "Riesgo intrínseco frente a residual por dimensión, con simulador de salvaguardas.",
+        k: ["Si una salvaguarda sube de nivel, dice cuánto baja el riesgo y recuerda que el intrínseco no cambia.",
+            "Una salvaguarda con madurez no soportada reduce la mitad.",
+            "Decisión de tratamiento con responsable, plazo y umbral aceptado."],
+        r: [[4, "el tratamiento se ejecuta subiendo madurez"], [12, "las decisiones quedan a la vista del auditor"]] },
+      { g: "Componentes y proveedores", n: "Componentes y proveedores", f: "Componentes y proveedores.dc.html", sub: false,
+        d: "Las tres vías de cumplimiento de op.pl.5 y los proveedores con acceso al sistema.",
+        k: ["Cada componente con su vía: CPSTIC, artículo 19 o compensatoria justificada.",
+            "Aviso cuando el certificado de un proveedor no cubre el servicio que presta.",
+            "Acciones con modal de subida para aportar o renovar certificados."],
+        r: [[12, "un certificado caducado es hallazgo"]] },
+      { g: "Documentos", n: "Documentos", f: "Documentos.dc.html", sub: false,
+        d: "Documentación obligatoria por estado, con versiones, comparación y editor del texto generado.",
+        k: ["Estados de borrador, en revisión, vigente y obsoleto, con la acción que toca en cada uno.",
+            "Editor del documento generado, con los datos que se rellenan solos del sistema.",
+            "Comparación con la versión anterior, solo donde hay versión con la que comparar."],
+        r: [[2, "la Declaración es uno de los documentos obligatorios"]] },
+      { g: "Incidentes y acciones", n: "Incidentes y acciones", f: "Incidentes y acciones.dc.html", sub: false,
+        d: "Registro de incidentes y plan de acciones con responsable, plazo y estado.",
+        k: ["Checks de notificación al CCN-CERT y a la AEPD con sus plazos, marcables con fecha y autor.",
+            "Acciones con su origen: auditoría, incidente, medida o componente.",
+            "Vencida es condición de plazo, no estado: el flujo sigue siendo abierta, en curso o hecha."],
+        r: [[9, "muchas acciones nacen de un componente o proveedor"], [0, "las tareas vencidas salen en los avisos"]] },
+      { g: "Auditoría", n: "Acceso del auditor", f: "Portal del auditor.dc.html", sub: false,
+        d: "Interfaz distinta y minimalista para quien decide si el cliente se certifica.",
+        k: ["Checks por medida con su resultado, motivo obligatorio y hallazgo compuesto.",
+            "Evidencias con procedencia, huella, versiones y muestreo con semilla registrada.",
+            "Revisada o revisada con salvedades, nunca con checks sin resolver."],
+        r: [[5, "el auditor mira las evidencias aportadas"], [10, "y la documentación vigente"]] }
+    ];
+  }
+
+  externasLista() {
+    return [
+      { nombre: "Panel interno del CPSTIC", url: "Admin%20CPSTIC.dc.html" },
+      { nombre: "Página pública de confianza", url: "Pagina%20publica%20de%20confianza.dc.html" }
+    ];
+  }
+
+  renderVals() {
+    const s = this.state, ps = this.pantallas(), a = ps[s.sel];
+
+    const navegacion = [];
+    ps.forEach((p, i) => {
+      const grupoConHijos = ps.filter((x) => x.g === p.g).length > 1;
+      const primero = ps.findIndex((x) => x.g === p.g) === i;
+      if (primero && grupoConHijos) {
+        navegacion.push({
+          nombre: p.g, pendiente: "", onClick: () => {},
+          caja: "display:block; width:100%; text-align:left; font-family:inherit; cursor:default; padding:12px 12px 4px; border:0; background:transparent",
+          texto: "font-size:12px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#94A3B8",
+          marca: "display:none"
+        });
+      }
+      const sangria = grupoConHijos ? (p.sub ? 34 : 22) : 12;
+      navegacion.push({
+        nombre: p.n, pendiente: "",
+        onClick: () => this.setState({ sel: i }),
+        caja: `display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:8px 12px 8px ${sangria}px; border:0; border-radius:6px; background:${i === s.sel ? "#F0FDFA" : "transparent"}; box-shadow:${i === s.sel ? "inset 2px 0 0 #0F766E" : "none"}`,
+        texto: `font-size:13px; font-weight:${i === s.sel ? 600 : 500}; color:${i === s.sel ? "#0B4F4A" : p.sub ? "#475569" : "#0F172A"}; overflow:hidden; text-overflow:ellipsis; white-space:nowrap`,
+        marca: "display:none"
+      });
+    });
+
+    return {
+      navegacion, externas: this.externasLista(),
+      grupoActual: a.g, tituloActual: a.n, descripcionActual: a.d,
+      urlActual: encodeURI(a.f),
+      estadoActual: "prototipo con datos de ejemplo",
+      chipEstadoActual: "display:inline-flex; align-items:center; font-size:12px; font-weight:500; border-radius:5px; padding:4px 9px; white-space:nowrap; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0",
+      puntos: a.k.map((t) => ({ t })),
+      zonaRelacionadas: `display:${a.r && a.r.length ? "flex" : "none"}; flex-direction:column; gap:10px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px`,
+      relacionadas: (a.r || []).map((x) => ({
+        nombre: ps[x[0]].n,
+        porque: x[1],
+        onClick: () => this.setState({ sel: x[0] })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

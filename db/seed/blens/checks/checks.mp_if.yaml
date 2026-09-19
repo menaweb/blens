@@ -1,0 +1,73 @@
+# Seed BLENS · Checks de verificación — familia mp.if
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.if
+checks:
+  - code: "CHK-mp.if.1.1"
+    measure: mp.if.1
+    item: "mp.if.1.1"
+    descripcion: "El equipamiento del Centro de Proceso de Datos (CPD) se instalará, en la medida de lo posible, en áreas separadas, específicas para su función"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.if.1-01, EV-mp.if.1-02, EV-mp.if.1-03, EV-mp.if.1-04]
+  - code: "CHK-mp.if.1.2"
+    measure: mp.if.1
+    item: "mp.if.1.2"
+    descripcion: "Se controlarán los accesos a las áreas indicadas de forma que sólo se pueda acceder por las entradas previstas"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.if.1-01, EV-mp.if.1-02, EV-mp.if.1-03, EV-mp.if.1-04]
+  - code: "CHK-mp.if.2.1"
+    measure: mp.if.2
+    item: "mp.if.2.1"
+    descripcion: "El procedimiento de control de acceso identificará a las personas que accedan a los locales donde hay equipamiento esencial que forme parte del sistema de información del CPD, registrando las correspondientes entradas y…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.if.2-01, EV-mp.if.2-02, EV-mp.if.2-03]
+  - code: "CHK-mp.if.3.1"
+    measure: mp.if.3
+    item: "mp.if.3.1"
+    descripcion: "Las condiciones de temperatura y humedad"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.if.3-01, EV-mp.if.3-02, EV-mp.if.3-03]
+  - code: "CHK-mp.if.3.2"
+    measure: mp.if.3
+    item: "mp.if.3.2"
+    descripcion: "La protección frente a las amenazas identificadas en el análisis de riesgos"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.if.3-01, EV-mp.if.3-02, EV-mp.if.3-03]
+  - code: "CHK-mp.if.3.3"
+    measure: mp.if.3
+    item: "mp.if.3.3"
+    descripcion: "La protección del cableado frente a incidentes fortuitos o deliberados"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.if.3-01, EV-mp.if.3-02, EV-mp.if.3-03]
+  - code: "CHK-mp.if.4.1"
+    measure: mp.if.4
+    item: "mp.if.4.1"
+    descripcion: "Los locales donde se ubiquen los sistemas de información y sus componentes esenciales dispondrán de tomas de energía eléctrica, de modo que se garantice el suministro y el correcto funcionamiento de las luces de…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.if.4-01, EV-mp.if.4-02]
+  - code: "CHK-mp.if.4.r1.1"
+    measure: mp.if.4
+    refuerzo: mp.if.4.r1
+    item: "mp.if.4.r1.1"
+    descripcion: "En caso de fallo del suministro principal, el abastecimiento eléctrico deberá estar garantizado durante el tiempo suficiente para una terminación ordenada de los procesos y la salvaguarda de la información"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.if.4-03]
+  - code: "CHK-mp.if.5.1"
+    measure: mp.if.5
+    item: "mp.if.5.1"
+    descripcion: "Los locales donde se ubiquen los sistemas de información y sus componentes esenciales se protegerán frente a incendios atendiendo, al menos, a la normativa industrial de aplicación"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.if.5-01, EV-mp.if.5-02]
+  - code: "CHK-mp.if.6.1"
+    measure: mp.if.6
+    item: "mp.if.6.1"
+    descripcion: "Los locales donde se ubiquen los sistemas de información y sus componentes esenciales se protegerán frente a incidentes causados por el agua"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.if.6-01]
+  - code: "CHK-mp.if.7.1"
+    measure: mp.if.7
+    item: "mp.if.7.1"
+    descripcion: "Se llevará un registro pormenorizado de cualquier entrada y salida de equipamiento esencial, incluyendo la identificación de la persona que autoriza el movimiento"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.if.7-01, EV-mp.if.7-02]

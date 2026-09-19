@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Evidencias</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · 118 requisitos</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <span style="display:flex; gap:2px; padding:2px; background:#F1F5F9; border-radius:6px">
+        <button type="button" onClick="{{ verArbol }}" style="{{ botonArbol }}">Árbol de carpetas</button>
+        <button type="button" onClick="{{ verLista }}" style="{{ botonLista }}">Lista de requisitos</button>
+      </span>
+      <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer; white-space:nowrap">Generar paquete</button>
+    </div>
+  </header>
+
+  <div style="flex:1; padding:24px 28px 64px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box; display:flex; flex-direction:column; gap:16px">
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px">
+      <sc-for list="{{ totales }}" as="t" hint-placeholder-count="4">
+        <span style="{{ t.caja }}">
+          <span style="font-size:24px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">{{ t.n }}</span>
+          <span style="font-size:12px; line-height:1.4; color:#475569">{{ t.t }}</span>
+        </span>
+      </sc-for>
+    </div>
+
+    <section style="{{ zonaArbol }}">
+      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 18px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Estructura del paquete de auditoría</span>
+        <span style="font-size:12px; color:#475569">La misma que se entrega al auditor.</span>
+      </div>
+      <div style="display:flex; flex-direction:column">
+        <sc-for list="{{ carpetas }}" as="c" hint-placeholder-count="9">
+          <div style="display:flex; flex-direction:column">
+            <button type="button" onClick="{{ c.onClick }}" style="{{ c.caja }}">
+              <span style="display:flex; align-items:center; gap:10px; min-width:0; flex:1 1 300px">
+                <span style="font-size:12px; color:#94A3B8; width:10px; flex:0 0 auto">{{ c.flecha }}</span>
+                <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:#0F172A; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ c.nombre }}</span>
+              </span>
+              <span style="display:flex; align-items:center; gap:14px; flex:0 0 auto; flex-wrap:wrap; justify-content:flex-end">
+                <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">{{ c.resueltos }} de {{ c.total }} resueltos</span>
+                <span style="{{ c.avisoCaduca }}">{{ c.caducan }}</span>
+                <span style="width:88px; height:5px; border-radius:3px; background:#E2E8F0; overflow:hidden; flex:0 0 auto">
+                  <span style="{{ c.barra }}"></span>
+                </span>
+              </span>
+            </button>
+            <div style="{{ c.hijos }}">
+              <sc-for list="{{ c.requisitos }}" as="r" hint-placeholder-count="3">
+                <span style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 18px 9px 40px; border-top:1px solid #F1F5F9; flex-wrap:wrap">
+                  <span style="display:flex; align-items:center; gap:10px; min-width:0; flex:1 1 280px">
+                    <a href="#" style="font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ r.nombre }}</a>
+                    <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ r.medida }}</span>
+                  </span>
+                  <span style="{{ r.chip }}">{{ r.estado }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="{{ zonaLista }}">
+      <div style="display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+        <input type="text" placeholder="Buscar requisito" style="font-family:inherit; font-size:13px; padding:7px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#F8FAFC; color:#0F172A; flex:1 1 200px; min-width:0" />
+        <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="6">
+          <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+        </sc-for>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Qué se pide</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:104px; white-space:nowrap">Medida</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:112px; white-space:nowrap">Responsable</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:96px; white-space:nowrap">Vence</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:116px; white-space:nowrap">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ requisitos }}" as="r" hint-placeholder-count="8">
+              <tr style="{{ r.fila }}">
+                <td style="{{ r.celdaTexto }}">
+                  <span style="display:flex; flex-direction:column; gap:2px">
+                    <a href="#" style="font-size:14px; font-weight:500">{{ r.nombre }}</a>
+                    <span style="font-size:12px; color:#475569">{{ r.carpeta }}</span>
+                  </span>
+                </td>
+                <td style="{{ r.celdaMono }}">{{ r.medida }}</td>
+                <td style="{{ r.celda }}">{{ r.responsable }}</td>
+                <td style="{{ r.celdaNum }}">{{ r.vence }}</td>
+                <td style="{{ r.celdaFin }}"><span style="{{ r.chip }}">{{ r.estado }}</span></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 18px; border-top:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+        <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ conteoLista }}</span>
+        <span style="display:flex; align-items:center; gap:10px">
+          <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:7px 11px; cursor:pointer" style-hover="background:#F0FDFA">Exportar la lista</button>
+          <button type="button" onClick="{{ alternarDensidad }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:7px 11px; cursor:pointer" style-hover="background:#F1F5F9">{{ textoDensidad }}</button>
+        </span>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { vista: "arbol", abierta: 5, filtro: 0, comoda: false };
+
+  chip(t) {
+    const c = {
+      pendiente: ["#64748B", "#F8FAFC", "pendiente"], aportada: ["#1D4ED8", "#EFF6FF", "aportada"],
+      revision: ["#1D4ED8", "#EFF6FF", "en revisión"], validada: ["#15803D", "#F0FDF4", "validada"],
+      rechazada: ["#B91C1C", "#FEF2F2", "rechazada"], caducada: ["#7C2D12", "#FEF6F0", "caducada"],
+      noaplica: ["#64748B", "#F8FAFC", "no aplica"]
+    }[t];
+    return { estilo: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:3px 8px; white-space:nowrap`, texto: c[2] };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const arbol = s.vista === "arbol";
+    const pad = s.comoda ? "14px" : "10px";
+
+    const datosCarpetas = [
+      ["00_Gobernanza", 14, 9, 1], ["01_Alcance_y_Categorizacion", 6, 6, 0],
+      ["02_Analisis_de_Riesgos", 8, 3, 0], ["03_Declaracion_de_Aplicabilidad", 4, 4, 0],
+      ["04_org", 12, 5, 2], ["05_op", 46, 11, 3], ["06_mp", 22, 6, 1],
+      ["07_Auditoria_y_Mejora", 5, 0, 0], ["99_Indice", 1, 1, 0]
+    ];
+
+    const hijosPorCarpeta = {
+      5: [
+        ["Inventario de la consola del antivirus", "op.exp.6", "validada"],
+        ["Informe mensual de alertas", "op.exp.6", "caducada"],
+        ["Registro de cambios aprobados", "op.exp.4", "pendiente"],
+        ["Política de actualización de firmas", "op.exp.6", "validada"],
+        ["Listado de cuentas con privilegios", "op.acc.4", "revision"]
+      ],
+      0: [
+        ["Política de seguridad firmada", "org.1", "validada"],
+        ["Nombramiento del responsable de seguridad", "org.1", "validada"],
+        ["Normativa de seguridad difundida al personal", "org.2", "pendiente"]
+      ],
+      1: [
+        ["Alcance del sistema aprobado", "—", "validada"],
+        ["Acta de categorización", "—", "validada"]
+      ],
+      2: [
+        ["Inventario de activos valorado", "op.pl.1", "revision"],
+        ["Informe de análisis de riesgos", "op.pl.1", "pendiente"],
+        ["Aceptación de riesgos residuales", "op.pl.1", "pendiente"]
+      ],
+      3: [
+        ["Declaración de Aplicabilidad firmada", "—", "validada"],
+        ["Justificación de las medidas no aplicables", "—", "validada"]
+      ],
+      4: [
+        ["Contrato con cláusulas ENS de Nexia", "org.4", "aportada"],
+        ["Procedimiento de gestión de incidentes", "org.3", "validada"],
+        ["Registro de revisiones de la política", "org.2", "pendiente"]
+      ],
+      6: [
+        ["Prueba de restauración de copias", "mp.info.6", "pendiente"],
+        ["Registro de accesos al CPD", "mp.if.1", "noaplica"],
+        ["Registro de formación en seguridad", "mp.per.3", "pendiente"]
+      ],
+      7: [
+        ["Informe de auditoría anterior", "—", "pendiente"],
+        ["Plan de acciones correctivas", "—", "pendiente"]
+      ],
+      8: [
+        ["Índice del paquete de auditoría", "—", "validada"]
+      ]
+    };
+
+    const carpetas = datosCarpetas.map((c, i) => {
+      const abierta = s.abierta === i && arbol;
+      const pct = Math.round((c[2] / c[1]) * 100);
+      const hijos = hijosPorCarpeta[i] || [];
+      return {
+        nombre: c[0], total: c[1], resueltos: c[2],
+        caducan: c[3] === 1 ? "1 caduca pronto" : `${c[3]} caducan pronto`,
+        flecha: abierta ? "▾" : "▸",
+        onClick: () => this.setState({ abierta: s.abierta === i ? null : i }),
+        caja: `display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; font-family:inherit; text-align:left; cursor:pointer; padding:${pad} 18px; border:0; border-top:${i === 0 ? "0" : "1px solid #F1F5F9"}; background:${abierta ? "#F0FDFA" : "#FFFFFF"}; flex-wrap:wrap`,
+        barra: `display:block; height:100%; width:${pct}%; border-radius:3px; background:${pct === 100 ? "#15803D" : "#0F766E"}`,
+        avisoCaduca: `display:${c[3] ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; color:#B45309; background:#FFFBEB; border:1px solid #B4530933; border-radius:5px; padding:2px 7px; white-space:nowrap`,
+        hijos: `display:${abierta && hijos.length ? "block" : "none"}; background:#FFFFFF`,
+        requisitos: hijos.map((h) => {
+          const ch = this.chip(h[2]);
+          return { nombre: h[0], medida: h[1], estado: ch.texto, chip: ch.estilo };
+        })
+      };
+    });
+
+    const base = `padding:${pad} 10px; border-bottom:1px solid #F1F5F9; vertical-align:top; color:#0F172A; line-height:1.5`;
+    const datosReq = [
+      ["Inventario de la consola del antivirus", "05_op / op.exp.6", "op.exp.6", "Marta Ruiz", "11/12/2026", "validada"],
+      ["Informe mensual de alertas", "05_op / op.exp.6", "op.exp.6", "Jorge Peña", "31/08/2026", "caducada"],
+      ["Listado de cuentas con privilegios", "05_op / op.acc.4", "op.acc.4", "Marta Ruiz", "30/09/2026", "revision"],
+      ["Registro de formación en seguridad", "06_mp / mp.per.3", "mp.per.3", "Ana Castaño", "15/10/2026", "pendiente"],
+      ["Contrato con cláusulas ENS de Nexia", "04_org / org.4", "org.4", "Ana Castaño", "12/10/2026", "aportada"],
+      ["Acta de aprobación de la Declaración", "03_DdA", "—", "Ana Castaño", "sin caducidad", "validada"],
+      ["Prueba de restauración de copias", "06_mp / mp.info.6", "mp.info.6", "Jorge Peña", "04/10/2026", "pendiente"],
+      ["Registro de accesos al CPD", "06_mp / mp.if.1", "mp.if.1", "Jorge Peña", "no aplica", "noaplica"],
+      ["Captura del panel de cobertura", "05_op / op.exp.6", "op.exp.6", "Marta Ruiz", "11/12/2026", "rechazada"]
+    ];
+    const criterios = [null, "caduca", ["pendiente"], ["revision"], ["rechazada"], ["noaplica"]];
+    const crit = criterios[s.filtro];
+    const filtrados = datosReq.filter((r) => {
+      if (!crit) return true;
+      if (crit === "caduca") return r[5] === "caducada" || (r[4] !== "sin caducidad" && r[4] !== "no aplica" && parseInt(r[4].slice(3, 5), 10) <= 10);
+      return crit.includes(r[5]);
+    });
+    const requisitos = filtrados.map((r) => {
+      const ch = this.chip(r[5]);
+      return {
+        nombre: r[0], carpeta: r[1], medida: r[2], responsable: r[3], vence: r[4],
+        estado: ch.texto, chip: ch.estilo,
+        fila: `background:${r[5] === "caducada" ? "#FEF6F0" : r[5] === "rechazada" ? "#FEF2F2" : "#FFFFFF"}`,
+        celda: base, celdaTexto: base + "; padding-left:16px; max-width:0",
+        celdaMono: base + "; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569",
+        celdaNum: base + "; font-variant-numeric:tabular-nums; color:#475569; white-space:nowrap",
+        celdaFin: base + "; padding-right:16px; white-space:nowrap"
+      };
+    });
+
+    const filtrosBase = [["Todos", 118], ["Caduca pronto", 7], ["Pendientes", 54], ["En revisión", 9], ["Rechazados", 3], ["No aplican", 6]];
+    const filtros = filtrosBase.map((f, i) => ({
+      nombre: f[0], n: f[1],
+      onClick: () => this.setState({ filtro: i }),
+      estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+    }));
+
+    const cajaT = "display:flex; flex-direction:column; gap:3px; padding:14px 16px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px";
+    return {
+      carpetas, requisitos, filtros,
+      totales: [
+        { n: "31", t: "validados y en vigor", caja: cajaT },
+        { n: "54", t: "pendientes de aportar", caja: cajaT },
+        { n: "7", t: "caducan en 30 días", caja: cajaT + "; border-left:3px solid #B45309" },
+        { n: "3", t: "rechazados con motivo", caja: cajaT + "; border-left:3px solid #B91C1C" }
+      ],
+      verArbol: () => this.setState({ vista: "arbol" }),
+      verLista: () => this.setState({ vista: "lista" }),
+      botonArbol: `font-family:inherit; font-size:13px; font-weight:${arbol ? 600 : 500}; cursor:pointer; padding:6px 11px; border:0; border-radius:5px; background:${arbol ? "#FFFFFF" : "transparent"}; color:${arbol ? "#0B4F4A" : "#475569"}; white-space:nowrap`,
+      botonLista: `font-family:inherit; font-size:13px; font-weight:${arbol ? 500 : 600}; cursor:pointer; padding:6px 11px; border:0; border-radius:5px; background:${arbol ? "transparent" : "#FFFFFF"}; color:${arbol ? "#475569" : "#0B4F4A"}; white-space:nowrap`,
+      zonaArbol: `display:${arbol ? "block" : "none"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      zonaLista: `display:${arbol ? "none" : "block"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      conteoLista: filtrados.length === 1 ? "Mostrando 1 requisito de 118" : `Mostrando ${filtrados.length} de 118 requisitos${s.filtro ? " · filtro activo" : ""}`,
+      alternarDensidad: () => this.setState({ comoda: !s.comoda }),
+      textoDensidad: s.comoda ? "Vista densa" : "Vista cómoda"
+    };
+  }
+}
+</script>
+</body>
+</html>

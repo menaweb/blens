@@ -1,0 +1,239 @@
+# Seed BLENS · Checks de verificación — familia mp.s
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.s
+checks:
+  - code: "CHK-mp.s.1.1"
+    measure: mp.s.1
+    item: "mp.s.1.1"
+    descripcion: "La información distribuida por medio de correo electrónico se protegerá, tanto en el cuerpo de los mensajes como en los anexos"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.1.2"
+    measure: mp.s.1
+    item: "mp.s.1.2"
+    descripcion: "Se protegerá la información de encaminamiento de mensajes y establecimiento de conexiones"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.1.3"
+    measure: mp.s.1
+    item: "mp.s.1.3"
+    descripcion: "Correo no solicitado, en su expresión inglesa «spam»"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.1.4"
+    measure: mp.s.1
+    item: "mp.s.1.4"
+    descripcion: "Código dañino, constituidos por virus, gusanos, troyanos, espías, u otros de naturaleza análoga"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.1.5"
+    measure: mp.s.1
+    item: "mp.s.1.5"
+    descripcion: "Código móvil de tipo micro-aplicación, en su expresión inglesa «applet»"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.1.6"
+    measure: mp.s.1
+    item: "mp.s.1.6"
+    descripcion: "Limitaciones al uso como soporte de comunicaciones privadas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.1.7"
+    measure: mp.s.1
+    item: "mp.s.1.7"
+    descripcion: "Actividades de concienciación y formación relativas al uso del correo electrónico"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.s.1-01, EV-mp.s.1-02]
+  - code: "CHK-mp.s.2.1"
+    measure: mp.s.2
+    item: "mp.s.2.1"
+    descripcion: "Cuando la información requiera control de acceso se garantizará la imposibilidad de acceder a la información obviando la autenticación, en particular, tomando medidas en los siguientes aspectos:"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.1a"
+    measure: mp.s.2
+    item: "a)"
+    item_padre: "mp.s.2.1"
+    descripcion: "Se evitará que el servidor ofrezca acceso a los documentos por vías alternativas al protocolo determinado"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.1b"
+    measure: mp.s.2
+    item: "b)"
+    item_padre: "mp.s.2.1"
+    descripcion: "Se prevendrán ataques de manipulación del localizador uniforme de recursos (Uniform Resource Locator, URL)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.1c"
+    measure: mp.s.2
+    item: "c)"
+    item_padre: "mp.s.2.1"
+    descripcion: "Se prevendrán ataques de manipulación de fragmentos de información que se almacena en el disco duro del visitante de una página web a través de su navegador, a petición del servidor de la página, conocido en…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.1d"
+    measure: mp.s.2
+    item: "d)"
+    item_padre: "mp.s.2.1"
+    descripcion: "Se prevendrán ataques de inyección de código"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.2"
+    measure: mp.s.2
+    item: "mp.s.2.2"
+    descripcion: "Se prevendrán intentos de escalado de privilegios"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.3"
+    measure: mp.s.2
+    item: "mp.s.2.3"
+    descripcion: "Se prevendrán ataques de cross site scripting"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.2-01, EV-mp.s.2-03]
+  - code: "CHK-mp.s.2.r1.1"
+    measure: mp.s.2
+    refuerzo: mp.s.2.r1
+    item: "mp.s.2.r1.1"
+    descripcion: "Se realizarán auditorías continuas de seguridad de «caja negra» sobre las aplicaciones web durante la fase de desarrollo y antes de la fase de producción"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-mp.s.2-02]
+  - code: "CHK-mp.s.2.r1.2"
+    measure: mp.s.2
+    refuerzo: mp.s.2.r1
+    item: "mp.s.2.r1.2"
+    descripcion: "La frecuencia de estas auditorías de seguridad quedará definida en el procedimiento de auditoría"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.2-02]
+  - code: "CHK-mp.s.2.r2.1"
+    measure: mp.s.2
+    refuerzo: mp.s.2.r2
+    item: "mp.s.2.r2.1"
+    descripcion: "Se realizarán auditorías de seguridad de «caja blanca» sobre las aplicaciones web durante la fase de desarrollo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.s.2.r2.2"
+    measure: mp.s.2
+    refuerzo: mp.s.2.r2
+    item: "mp.s.2.r2.2"
+    descripcion: "Se emplearán metodologías definidas y herramientas automáticas de detección de vulnerabilidades en la realización de las auditorías de seguridad sobre las aplicaciones web"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.s.2.r2.3"
+    measure: mp.s.2
+    refuerzo: mp.s.2.r2
+    item: "mp.s.2.r2.3"
+    descripcion: "Una vez finalizada una auditoría de seguridad, se analizarán los resultados y se solventarán las vulnerabilidades encontradas mediante los procedimientos definidos [op.exp.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.s.2.r3.1"
+    measure: mp.s.2
+    refuerzo: mp.s.2.r3
+    item: "mp.s.2.r3.1"
+    descripcion: "Se prevendrán ataques de manipulación de programas o dispositivos que realizan una acción en representación de otros, conocidos en terminología inglesa como \"proxies\" y, sistemas especiales de almacenamiento de alta…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.s.3.1"
+    measure: mp.s.3
+    item: "mp.s.3.1"
+    descripcion: "Se establecerá una normativa de utilización, definiendo el uso que se autoriza y las limitaciones de uso personal. En particular, se concretará el uso permitido de conexiones cifradas"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.2"
+    measure: mp.s.3
+    item: "mp.s.3.2"
+    descripcion: "Se llevarán a cabo regularmente actividades de concienciación sobre higiene en la navegación web, fomentando el uso seguro y alertando de usos incorrectos"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.3"
+    measure: mp.s.3
+    item: "mp.s.3.3"
+    descripcion: "Se formará al personal encargado de la administración del sistema en monitorización del servicio y respuesta a incidentes"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.4"
+    measure: mp.s.3
+    item: "mp.s.3.4"
+    descripcion: "Se protegerá la información de resolución de direcciones web y de establecimiento de conexiones"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.5"
+    measure: mp.s.3
+    item: "mp.s.3.5"
+    descripcion: "Se protegerá a la organización en general y al puesto de trabajo en particular frente a problemas que se materializan vía navegación web"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.6"
+    measure: mp.s.3
+    item: "mp.s.3.6"
+    descripcion: "Se protegerá contra la actuación de programas dañinos tales como páginas activas, descargas de código ejecutable, etc., previniendo la exposición del sistema a vectores de ataque del tipo spyware, ransomware, etc"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.7"
+    measure: mp.s.3
+    item: "mp.s.3.7"
+    descripcion: "Se establecerá una política ejecutiva de control de cookies, en particular, para evitar la contaminación entre uso personal y uso organizativo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.3-01]
+  - code: "CHK-mp.s.3.r1.1"
+    measure: mp.s.3
+    refuerzo: mp.s.3.r1
+    item: "mp.s.3.r1.1"
+    descripcion: "Se registrará el uso de la navegación web, estableciendo los elementos que se registran, el periodo de retención de estos registros y el uso que el organismo prevé hacer de ellos"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.s.3-02]
+  - code: "CHK-mp.s.3.r1.2"
+    measure: mp.s.3
+    refuerzo: mp.s.3.r1
+    item: "mp.s.3.r1.2"
+    descripcion: "Se establecerá una función para la ruptura de canales cifrados a fin de inspeccionar su contenido, indicando qué se analiza, qué se registra, durante cuánto tiempo se retienen los registros y qué uso prevé hacer el…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.s.3-02]
+  - code: "CHK-mp.s.3.r1.3"
+    measure: mp.s.3
+    refuerzo: mp.s.3.r1
+    item: "mp.s.3.r1.3"
+    descripcion: "Se establecerá una lista negra de destinos vetados"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.3-02]
+  - code: "CHK-mp.s.3.r2.1"
+    measure: mp.s.3
+    refuerzo: mp.s.3.r2
+    item: "mp.s.3.r2.1"
+    descripcion: "Se establecerá una lista blanca de destinos accesibles. Todo acceso fuera de los lugares señalados en la lista blanca estará vetado, salvo autorización singular expresa"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.s.4.1"
+    measure: mp.s.4
+    item: "mp.s.4.1"
+    descripcion: "Se planificará y dotará al sistema de capacidad suficiente para atender con holgura a la carga prevista"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.4-01]
+  - code: "CHK-mp.s.4.2"
+    measure: mp.s.4
+    item: "mp.s.4.2"
+    descripcion: "Se desplegarán tecnologías para prevenir los ataques conocidos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.4-01]
+  - code: "CHK-mp.s.4.r1.1"
+    measure: mp.s.4
+    refuerzo: mp.s.4.r1
+    item: "mp.s.4.r1.1"
+    descripcion: "Se establecerá un sistema de detección y tratamiento de ataques de denegación de servicio (DoS y DDoS)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.4-02]
+  - code: "CHK-mp.s.4.r1.2"
+    measure: mp.s.4
+    refuerzo: mp.s.4.r1
+    item: "mp.s.4.r1.2"
+    descripcion: "Se establecerán procedimientos de reacción a los ataques, incluyendo la comunicación con el proveedor de comunicaciones"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.s.4-02]
+  - code: "CHK-mp.s.4.r2.1"
+    measure: mp.s.4
+    refuerzo: mp.s.4.r2
+    item: "mp.s.4.r2.1"
+    descripcion: "Se detectará y se evitará el lanzamiento de ataques desde las propias instalaciones perjudicando a terceros"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []

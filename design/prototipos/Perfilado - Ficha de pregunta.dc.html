@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1, "cv05" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; height:100vh; min-height:720px; overflow:hidden; background:#F8FAFC">
+
+  <aside style="width:296px; flex:0 0 296px; display:flex; flex-direction:column; background:#FFFFFF; border-right:1px solid #E2E8F0">
+    <div style="padding:16px; border-bottom:1px solid #E2E8F0; display:flex; flex-direction:column; gap:12px">
+      <button type="button" style="display:flex; align-items:center; gap:10px; width:100%; padding:8px 10px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; cursor:pointer; text-align:left; font-family:inherit" style-hover="background:#F0FDFA; border-color:#14A79B">
+        <span style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600; letter-spacing:0.02em">AV</span>
+        <span style="display:flex; flex-direction:column; gap:1px; min-width:0; flex:1">
+          <span style="font-size:14px; font-weight:600; color:#0F172A; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">Sede electrónica</span>
+          <span style="font-size:12px; color:#475569">Ayto. de Valverde · Media</span>
+        </span>
+        <span style="font-size:12px; color:#94A3B8">▾</span>
+      </button>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px">
+        <span style="font-size:12px; color:#475569">Listo para auditoría</span>
+        <span style="font-size:14px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">31 %</span>
+      </div>
+    </div>
+
+    <div style="padding:16px 16px 8px; display:flex; flex-direction:column; gap:6px">
+      <div style="display:flex; align-items:baseline; justify-content:space-between">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Perfilado</span>
+        <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ respondidasTotal }} de {{ preguntasTotal }}</span>
+      </div>
+      <div style="height:4px; border-radius:2px; background:#E2E8F0; overflow:hidden">
+        <div style="{{ barraGlobal }}"></div>
+      </div>
+      <span style="font-size:12px; color:#475569">Quedan unos {{ minutosRestantes }} minutos</span>
+    </div>
+
+    <nav style="flex:1; overflow-y:auto; padding:8px 8px 24px; display:flex; flex-direction:column; gap:1px">
+      <sc-for list="{{ bloques }}" as="b" hint-placeholder-count="9">
+        <button type="button" onClick="{{ b.onClick }}" style="{{ b.estilo }}">
+          <span style="display:flex; align-items:center; gap:8px">
+            <span style="{{ b.punto }}"></span>
+            <span style="{{ b.titulo }}">{{ b.nombre }}</span>
+          </span>
+          <span style="display:flex; align-items:center; gap:8px; padding-left:16px">
+            <span style="flex:1; height:3px; border-radius:2px; background:#E2E8F0; overflow:hidden">
+              <span style="{{ b.barra }}"></span>
+            </span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">{{ b.hechas }}/{{ b.total }}</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">{{ b.min }} min</span>
+            <span style="{{ b.avatar }}">{{ b.iniciales }}</span>
+          </span>
+        </button>
+      </sc-for>
+    </nav>
+  </aside>
+
+  <main style="flex:1; min-width:0; display:flex; flex-direction:column; overflow:hidden">
+    <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 32px; height:56px; flex:0 0 56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+      <div style="display:flex; align-items:center; gap:8px; font-size:14px; color:#475569; min-width:0">
+        <span>Mi sistema</span>
+        <span style="color:#94A3B8">/</span>
+        <span>Perfilado</span>
+        <span style="color:#94A3B8">/</span>
+        <span style="color:#0F172A; font-weight:600">Puestos de trabajo</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px">
+        <span style="{{ estiloGuardado }}">
+          <span style="{{ puntoGuardado }}"></span>{{ textoGuardado }}
+        </span>
+        <button type="button" onClick="{{ salir }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:transparent; border:0; padding:6px 8px; border-radius:6px; cursor:pointer" style-hover="background:#F0FDFA">Guardar y salir</button>
+      </div>
+    </header>
+
+    <div style="flex:1; overflow-y:auto; padding:32px 32px 96px">
+      <div style="max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:24px">
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px">
+          <span style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#475569">Puestos de trabajo · pregunta 4 de 7</span>
+          <span style="{{ chipMedida }}">op.exp.6</span>
+        </div>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:28px 28px 24px; display:flex; flex-direction:column; gap:20px; box-shadow:0 1px 2px rgba(15,23,42,0.04)">
+
+          <h1 style="margin:0; font-size:20px; line-height:1.35; font-weight:600; letter-spacing:-0.01em; color:#0F172A; text-wrap:pretty">¿Los ordenadores y servidores tienen antivirus?</h1>
+
+          <div style="display:grid; grid-template-columns:1fr; gap:12px">
+            <div style="display:flex; gap:12px; padding:14px 16px; background:#F8FAFC; border-radius:6px">
+              <span style="flex:0 0 auto; font-size:12px; font-weight:600; color:#0B4F4A; width:104px; padding-top:1px">Por qué se pregunta</span>
+              <p style="margin:0; font-size:14px; line-height:1.55; color:#475569; text-wrap:pretty">El auditor comprobará que están protegidos <strong style="color:#0F172A; font-weight:600">todos</strong>, y que el antivirus está actualizado y alguien mira sus avisos.</p>
+            </div>
+            <div style="display:flex; gap:12px; padding:14px 16px; background:#F8FAFC; border-radius:6px">
+              <span style="flex:0 0 auto; font-size:12px; font-weight:600; color:#0B4F4A; width:104px; padding-top:1px">Cómo saberlo</span>
+              <div style="display:flex; flex-direction:column; gap:8px; min-width:0">
+                <p style="margin:0; font-size:14px; line-height:1.55; color:#475569; text-wrap:pretty">Si usáis Microsoft 365, entrad en el portal de Defender, en Dispositivos. Si tenéis otro (ESET, Sophos, CrowdStrike, SentinelOne), su consola muestra cuántos equipos aparecen.</p>
+                <span style="display:inline-flex; align-items:center; gap:6px; align-self:flex-start; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:4px 8px">Portal de Defender → Activos → Dispositivos</span>
+                <span style="font-size:12px; color:#475569">Según las herramientas que declarasteis en «Inventario».</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:8px">
+            <span style="font-size:12px; font-weight:600; color:#0B4F4A">Elegid la situación que más se parece a la vuestra</span>
+
+            <button type="button" onClick="{{ elegir0 }}" style="{{ op0 }}">
+              <span style="{{ radio0 }}"><span style="{{ dot0 }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:16px; font-weight:500; color:#0F172A">Uno contratado</span>
+                <span style="font-size:14px; line-height:1.5; color:#475569">Defender para Empresas, ESET, Sophos… normalmente un <span onMouseEnter="{{ verEdr }}" onMouseLeave="{{ ocultarTermino }}" style="position:relative; color:#0F172A; border-bottom:1px dashed #94A3B8; cursor:help">EDR<span style="{{ tipEdr }}"><strong style="display:block; font-size:12px; font-weight:600; color:#FFFFFF; margin-bottom:4px">EDR</strong>Antivirus avanzado que además vigila comportamientos sospechosos y permite responder en remoto.</span></span> con consola propia.</span>
+              </span>
+            </button>
+
+            <button type="button" onClick="{{ elegir1 }}" style="{{ op1 }}">
+              <span style="{{ radio1 }}"><span style="{{ dot1 }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:16px; font-weight:500; color:#0F172A">El que trae Windows</span>
+                <span style="font-size:14px; line-height:1.5; color:#475569">Microsoft Defender activado por defecto en cada equipo, sin consola central.</span>
+              </span>
+            </button>
+
+            <button type="button" onClick="{{ elegir2 }}" style="{{ op2 }}">
+              <span style="{{ radio2 }}"><span style="{{ dot2 }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:16px; font-weight:500; color:#0F172A">Solo en algunos equipos</span>
+                <span style="font-size:14px; line-height:1.5; color:#475569">Hay antivirus en los puestos, pero no en todos o no en los servidores.</span>
+              </span>
+            </button>
+
+            <button type="button" onClick="{{ elegir3 }}" style="{{ op3 }}">
+              <span style="{{ radio3 }}"><span style="{{ dot3 }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:16px; font-weight:500; color:#0F172A">Lo gestiona nuestro proveedor</span>
+                <span style="font-size:14px; line-height:1.5; color:#475569">La empresa de informática lo instala y vigila; nosotros no entramos en la consola.</span>
+              </span>
+            </button>
+
+            <button type="button" onClick="{{ elegir4 }}" style="{{ op4 }}">
+              <span style="{{ radio4 }}"><span style="{{ dot4 }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:16px; font-weight:500; color:#0F172A">No hay antivirus</span>
+                <span style="font-size:14px; line-height:1.5; color:#475569">Ningún equipo tiene protección instalada, o no nos consta.</span>
+              </span>
+            </button>
+          </div>
+
+          <div style="{{ avisoCadena }}">
+            <span style="flex:0 0 auto; width:18px; height:18px; border-radius:50%; background:#CCFBF1; color:#0B4F4A; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px">+</span>
+            <span style="font-size:14px; line-height:1.5; color:#0B4F4A">Esta respuesta añade una pregunta a este bloque: <strong style="font-weight:600">¿cuántos equipos hay en total y cuántos aparecen en la consola?</strong></span>
+          </div>
+
+          <div style="{{ avisoTarea }}">
+            <span style="font-size:14px; line-height:1.5; color:#475569">Se lo has preguntado a <strong style="color:#0F172A; font-weight:600">{{ personaElegida }}</strong>. Tarea creada hoy, con aviso en 2 días. La pregunta queda como pendiente de respuesta.</span>
+            <button type="button" onClick="{{ deshacerTarea }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:transparent; border:0; padding:0; cursor:pointer; text-decoration:underline; align-self:flex-start">Deshacer</button>
+          </div>
+        </section>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap">
+          <div style="position:relative">
+            <button type="button" onClick="{{ alternarPanel }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:9px 14px; cursor:pointer" style-hover="background:#F0FDFA">Preguntárselo a otra persona</button>
+            <div style="{{ panelPersonas }}">
+              <span style="font-size:14px; font-weight:600; color:#0F172A">¿A quién se lo preguntamos?</span>
+              <div style="display:flex; flex-direction:column; gap:4px">
+                <sc-for list="{{ personas }}" as="p" hint-placeholder-count="3">
+                  <button type="button" onClick="{{ p.onClick }}" style="{{ p.estilo }}">
+                    <span style="{{ p.avatar }}">{{ p.iniciales }}</span>
+                    <span style="display:flex; flex-direction:column; gap:1px; text-align:left">
+                      <span style="font-size:14px; font-weight:500; color:#0F172A">{{ p.nombre }}</span>
+                      <span style="font-size:12px; color:#475569">{{ p.rol }}</span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+              <textarea placeholder="Contexto para esa persona (opcional)" style="font-family:inherit; font-size:14px; color:#0F172A; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; resize:none; height:56px; background:#F8FAFC"></textarea>
+              <div style="display:flex; align-items:center; gap:8px">
+                <button type="button" onClick="{{ crearTarea }}" style="{{ botonCrear }}">Crear tarea y seguir</button>
+                <button type="button" onClick="{{ alternarPanel }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#475569; background:transparent; border:0; padding:9px 10px; border-radius:6px; cursor:pointer" style-hover="background:#F1F5F9">Cancelar</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:12px">
+            <button type="button" onClick="{{ anterior }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#475569; background:transparent; border:0; padding:9px 12px; border-radius:6px; cursor:pointer" style-hover="background:#F1F5F9">Anterior</button>
+            <button type="button" onClick="{{ siguiente }}" style="{{ botonSiguiente }}">Siguiente pregunta</button>
+          </div>
+        </div>
+
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#475569; text-align:center">Todo se guarda solo. Podéis salir y volver por donde ibais.</p>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;densidad&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cómoda&quot;,&quot;alta&quot;],&quot;default&quot;:&quot;cómoda&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Presentación&quot;},&quot;mostrarCodigo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Presentación&quot;}}">
+class Component extends DCLogic {
+  state = {
+    seleccion: null, panel: false, persona: null, tareaPersona: null,
+    guardado: "idle", termino: null, bloqueActivo: 8, hora: "12:41"
+  };
+
+  datosBloques() {
+    return [
+      ["Organización y alcance", 6, 6, 5, "MR"], ["Servicios e información", 8, 8, 7, "MR"],
+      ["Gobernanza", 5, 5, 4, "AC"], ["Dónde vive el sistema", 4, 4, 3, "JP"],
+      ["Instalaciones", 5, 5, 4, "JP"], ["Proveedores y nube", 9, 9, 8, "AC"],
+      ["Inventario", 7, 7, 6, "JP"], ["Identidades y acceso", 8, 8, 7, "MR"],
+      ["Puestos de trabajo", 7, 3, 6, "MR"], ["Explotación", 9, 0, 9, "JP"],
+      ["Red", 6, 0, 5, "JP"], ["Registro e incidentes", 7, 0, 7, "MR"],
+      ["Copias y continuidad", 6, 0, 6, "JP"], ["Información y soportes", 5, 0, 5, "AC"],
+      ["Desarrollo", 4, 0, 4, "—"], ["Servicios expuestos", 5, 0, 5, "JP"],
+      ["Personas", 4, 0, 4, "AC"], ["Estado de cumplimiento", 6, 0, 6, "MR"]
+    ];
+  }
+
+  guardar() {
+    clearTimeout(this._t1); clearTimeout(this._t2);
+    this.setState({ guardado: "guardando" });
+    this._t1 = setTimeout(() => this.setState({ guardado: "guardado" }), 700);
+  }
+
+  componentWillUnmount() { clearTimeout(this._t1); clearTimeout(this._t2); }
+
+  renderVals() {
+    const s = this.state;
+    const compacto = this.props.densidad === "alta";
+    const datos = this.datosBloques();
+    const total = datos.reduce((a, b) => a + b[1], 0);
+    const hechas = datos.reduce((a, b) => a + b[2], 0);
+    const min = datos.reduce((a, b) => a + (b[2] === 0 ? b[3] : b[3] * (1 - b[2] / b[1])), 0);
+
+    const bloques = datos.map((b, i) => {
+      const activo = i === s.bloqueActivo;
+      const pct = Math.round((b[2] / b[1]) * 100);
+      const completo = b[2] === b[1];
+      return {
+        nombre: b[0], total: b[1], hechas: b[2], min: b[3], iniciales: b[4],
+        onClick: () => this.setState({ bloqueActivo: i }),
+        estilo: `display:flex; flex-direction:column; gap:${compacto ? 4 : 6}px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:${compacto ? "7px 10px" : "9px 10px"}; border:0; border-radius:6px; background:${activo ? "#F0FDFA" : "transparent"}; box-shadow:${activo ? "inset 2px 0 0 #0F766E" : "none"}`,
+        punto: `width:7px; height:7px; border-radius:50%; flex:0 0 auto; background:${completo ? "#15803D" : b[2] > 0 ? "#14A79B" : "#CBD5E1"}`,
+        titulo: `font-size:14px; font-weight:${activo ? 600 : 500}; color:${activo ? "#0B4F4A" : "#0F172A"}; overflow:hidden; text-overflow:ellipsis; white-space:nowrap`,
+        barra: `display:block; height:100%; width:${pct}%; border-radius:2px; background:${completo ? "#15803D" : "#14A79B"}`,
+        avatar: `display:flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#E2E8F0; color:#475569; font-size:12px; font-weight:600; flex:0 0 auto`
+      };
+    });
+
+    const gente = [["Marta Ruiz", "Sistemas · responsable del bloque", "MR"], ["Jorge Peña", "Proveedor IT externo", "JP"], ["Ana Castaño", "Secretaría general", "AC"]];
+    const personas = gente.map((p, i) => ({
+      nombre: p[0], rol: p[1], iniciales: p[2],
+      onClick: () => this.setState({ persona: i }),
+      estilo: `display:flex; align-items:center; gap:10px; width:100%; padding:8px 10px; font-family:inherit; cursor:pointer; border-radius:6px; border:1.5px solid ${s.persona === i ? "#0F766E" : "transparent"}; background:${s.persona === i ? "#F0FDFA" : "transparent"}`,
+      avatar: "display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:#E2E8F0; color:#475569; font-size:12px; font-weight:600; flex:0 0 auto"
+    }));
+
+    const respondida = s.seleccion !== null;
+    const opt = (i) => {
+      const sel = s.seleccion === i;
+      return `display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:${compacto ? "11px 14px" : "14px 16px"}; border-radius:6px; border:1.5px solid ${sel ? "#0F766E" : "#E2E8F0"}; background:${sel ? "#F0FDFA" : "#FFFFFF"}; transition:border-color 160ms ease, background 160ms ease`;
+    };
+    const radio = (i) => `flex:0 0 auto; margin-top:2px; width:18px; height:18px; border-radius:50%; border:1.5px solid ${s.seleccion === i ? "#0F766E" : "#94A3B8"}; display:flex; align-items:center; justify-content:center; background:#FFFFFF`;
+    const dot = (i) => `width:9px; height:9px; border-radius:50%; background:#0F766E; opacity:${s.seleccion === i ? 1 : 0}`;
+
+    const elegir = (i) => () => { this.setState({ seleccion: i, tareaPersona: null }); this.guardar(); };
+
+    const textos = { idle: "Guardado automático activo", guardando: "Guardando…", guardado: "Guardado a las " + s.hora };
+    const colorG = s.guardado === "guardando" ? "#B45309" : "#475569";
+
+    const vals = {
+      bloques, personas, preguntasTotal: total, respondidasTotal: hechas,
+      minutosRestantes: Math.round(min / 5) * 5,
+      barraGlobal: `height:100%; width:${Math.round((hechas / total) * 100)}%; background:#0F766E; border-radius:2px`,
+      chipMedida: `display:${(this.props.mostrarCodigo ?? true) ? "inline-flex" : "none"}; align-items:center; gap:6px; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569; background:#F1F5F9; border-radius:5px; padding:3px 7px`,
+      textoGuardado: textos[s.guardado], estiloGuardado: `display:inline-flex; align-items:center; gap:7px; font-size:12px; color:${colorG}`,
+      puntoGuardado: `width:6px; height:6px; border-radius:50%; background:${s.guardado === "guardando" ? "#B45309" : "#15803D"}`,
+      verEdr: () => this.setState({ termino: "edr" }),
+      ocultarTermino: () => this.setState({ termino: null }),
+      tipEdr: `position:absolute; right:0; top:calc(100% + 8px); width:min(260px, 62vw); padding:10px 12px; background:#0F172A; color:#CBD5E1; font-size:12px; line-height:1.5; font-weight:400; border-radius:6px; box-shadow:0 8px 24px rgba(15,23,42,0.18); z-index:30; display:${s.termino === "edr" ? "block" : "none"}`,
+      avisoCadena: `display:${s.seleccion === 0 || s.seleccion === 3 ? "flex" : "none"}; gap:10px; padding:12px 14px; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:6px`,
+      avisoTarea: `display:${s.tareaPersona !== null ? "flex" : "none"}; flex-direction:column; gap:6px; padding:12px 14px; background:#F8FAFC; border-left:2px solid #B45309; border-radius:6px`,
+      personaElegida: s.tareaPersona !== null ? gente[s.tareaPersona][0] : "",
+      panelPersonas: `display:${s.panel ? "flex" : "none"}; position:absolute; bottom:calc(100% + 8px); left:0; width:340px; flex-direction:column; gap:12px; padding:16px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; box-shadow:0 12px 32px rgba(15,23,42,0.14); z-index:20`,
+      alternarPanel: () => this.setState({ panel: !s.panel }),
+      crearTarea: () => { if (s.persona === null) return; this.setState({ panel: false, tareaPersona: s.persona, seleccion: null }); this.guardar(); },
+      deshacerTarea: () => this.setState({ tareaPersona: null }),
+      botonCrear: `font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:${s.persona === null ? "#64748B" : "#0F766E"}; border:0; border-radius:6px; padding:9px 14px; cursor:${s.persona === null ? "not-allowed" : "pointer"}`,
+      botonSiguiente: `font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:${respondida || s.tareaPersona !== null ? "#0F766E" : "#64748B"}; border:0; border-radius:6px; padding:9px 16px; cursor:${respondida || s.tareaPersona !== null ? "pointer" : "not-allowed"}`,
+      siguiente: () => { if (respondida || s.tareaPersona !== null) this.guardar(); },
+      anterior: () => {}, salir: () => {}
+    };
+    for (let i = 0; i < 5; i++) { vals["op" + i] = opt(i); vals["radio" + i] = radio(i); vals["dot" + i] = dot(i); vals["elegir" + i] = elegir(i); }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

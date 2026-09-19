@@ -1,0 +1,115 @@
+# Seed BLENS · Checks de verificación — familia mp.per
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.per
+checks:
+  - code: "CHK-mp.per.1.1"
+    measure: mp.per.1
+    item: "mp.per.1.1"
+    descripcion: "Para cada puesto de trabajo, relacionado directamente con el manejo de información o servicios, se definirán las responsabilidades en materia de seguridad, que estarán basadas en el análisis de riesgos"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-mp.per.1-01]
+  - code: "CHK-mp.per.1.2"
+    measure: mp.per.1
+    item: "mp.per.1.2"
+    descripcion: "Se definirán los requisitos que deben satisfacer las personas que vayan a ocupar el puesto de trabajo, en particular, en términos de confidencialidad…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.per.1-01]
+  - code: "CHK-mp.per.1.r1.1"
+    measure: mp.per.1
+    refuerzo: mp.per.1.r1
+    item: "mp.per.1.r1.1"
+    descripcion: "Los administradores de seguridad/sistema tendrán una Habilitación Personal de Seguridad (HPS) otorgada por la autoridad competente, como consecuencia de los resultados del análisis de riesgos previo o como requisito de…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.per.2.1"
+    measure: mp.per.2
+    item: "mp.per.2.1"
+    descripcion: "Las medidas disciplinarias a que haya lugar"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.2-01, EV-mp.per.2-03]
+  - code: "CHK-mp.per.2.2"
+    measure: mp.per.2
+    item: "mp.per.2.2"
+    descripcion: "Contemplando tanto el periodo durante el cual se desempeña el puesto, como las obligaciones en caso de término de la asignación, o traslado a otro puesto de trabajo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.2-01, EV-mp.per.2-03]
+  - code: "CHK-mp.per.2.3"
+    measure: mp.per.2
+    item: "mp.per.2.3"
+    descripcion: "El deber de confidencialidad respecto de los datos a los que tenga acceso, tanto durante el periodo que esté adscrito al puesto de trabajo, como posteriormente a su terminación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.per.2-01, EV-mp.per.2-03]
+  - code: "CHK-mp.per.2.4"
+    measure: mp.per.2
+    item: "mp.per.2.4"
+    descripcion: "En caso de personal contratado a través de un tercero:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.2-01, EV-mp.per.2-03]
+  - code: "CHK-mp.per.2.4.1"
+    measure: mp.per.2
+    item: "mp.per.2.4.1"
+    item_padre: "mp.per.2.4"
+    descripcion: "Se establecerán los deberes y obligaciones de cada parte y del personal contratado"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-mp.per.2-01, EV-mp.per.2-03]
+  - code: "CHK-mp.per.2.4.2"
+    measure: mp.per.2
+    item: "mp.per.2.4.2"
+    item_padre: "mp.per.2.4"
+    descripcion: "Se establecerá el procedimiento de resolución de incidentes relacionados con el incumplimiento de las obligaciones"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.2-01, EV-mp.per.2-03]
+  - code: "CHK-mp.per.2.r1.1"
+    measure: mp.per.2
+    refuerzo: mp.per.2.r1
+    item: "mp.per.2.r1.1"
+    descripcion: "Se ha de obtener la confirmación expresa de que los usuarios conocen las instrucciones de seguridad necesarias y obligatorias y su aceptación, así como los procedimientos necesarios para llevarlas a cabo de manera…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.2-02]
+  - code: "CHK-mp.per.3.1"
+    measure: mp.per.3
+    item: "mp.per.3.1"
+    descripcion: "La normativa de seguridad relativa al buen uso de los equipos o sistemas y las técnicas de ingeniería social más habituales"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.3-01, EV-mp.per.3-02, EV-mp.per.3-03]
+  - code: "CHK-mp.per.3.2"
+    measure: mp.per.3
+    item: "mp.per.3.2"
+    descripcion: "La identificación de incidentes, actividades o comportamientos sospechosos que deban ser reportados para su tratamiento por personal especializado"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.per.3-01, EV-mp.per.3-02, EV-mp.per.3-03]
+  - code: "CHK-mp.per.3.3"
+    measure: mp.per.3
+    item: "mp.per.3.3"
+    descripcion: "El procedimiento para informar sobre incidentes de seguridad, sean reales o falsas alarmas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.3-01, EV-mp.per.3-02, EV-mp.per.3-03]
+  - code: "CHK-mp.per.4.1"
+    measure: mp.per.4
+    item: "mp.per.4.1"
+    descripcion: "Se formará regularmente al personal en aquellas materias relativas a seguridad de la información que requiera el desempeño de sus funciones, en particular en lo relativo a:"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-mp.per.4-01]
+  - code: "CHK-mp.per.4.1a"
+    measure: mp.per.4
+    item: "a)"
+    item_padre: "mp.per.4.1"
+    descripcion: "Configuración de sistemas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.4-01]
+  - code: "CHK-mp.per.4.1b"
+    measure: mp.per.4
+    item: "b)"
+    item_padre: "mp.per.4.1"
+    descripcion: "Detección y reacción ante incidentes"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.per.4-01]
+  - code: "CHK-mp.per.4.1c"
+    measure: mp.per.4
+    item: "c)"
+    item_padre: "mp.per.4.1"
+    descripcion: "Gestión de la información en cualquier soporte en el que se encuentre. Se cubrirán al menos las siguientes actividades: almacenamiento, transferencia, copias, distribución y destrucción"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.per.4-01]

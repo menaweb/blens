@@ -1,0 +1,489 @@
+# Seed BLENS · Plantillas de evidencia — familias mp.com, mp.s y op.mon
+# Especificación: docs/evidencias_por_herramienta.md §3.2, §3.3, §3.8, §3.9, §3.10
+
+version: 1
+familias: [mp.com, mp.s, op.mon]
+
+templates:
+
+  # ================================================================== mp.com.1
+  - code: EV-mp.com.1-01
+    measure: mp.com.1
+    option_group: mp.com.1.reglas
+    preferencia: 1
+    titulo: "Configuración del cortafuegos perimetral"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, txt]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.com.1"
+    instrucciones: "Export del conjunto de reglas del cortafuegos, o del grupo de seguridad si estáis en la nube."
+    criterios_aceptacion:
+      - "Se ve la política por defecto de denegación"
+      - "Las reglas tienen descripción o justificación"
+      - "Se identifica el equipo y la fecha"
+    rechazos_tipicos:
+      - "Reglas de todo a todo sin justificar"
+      - "Reglas temporales abiertas hace años"
+      - "Firmware fuera de soporte del fabricante"
+    product_hints:
+      - match: {fabricante: "Fortinet"}
+        instrucciones: "FortiGate → Policy & Objects → Firewall Policy → exportar, o System → Configuration → Backup"
+      - match: {producto: "Azure"}
+        instrucciones: "Portal de Azure → Grupos de seguridad de red → Reglas de entrada y salida → Exportar a CSV"
+
+  - code: EV-mp.com.1-02
+    measure: mp.com.1
+    option_group: mp.com.1.reglas
+    preferencia: 2
+    titulo: "Captura de la tabla de reglas"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.com.1"
+    instrucciones: "Captura de la lista de reglas donde se vea la denegación por defecto al final."
+    criterios_aceptacion:
+      - "Se ve la regla de denegación por defecto"
+      - "Se identifica el dispositivo"
+
+  - code: EV-mp.com.1-03
+    measure: mp.com.1
+    titulo: "Revisión de reglas del cortafuegos"
+    tipo: ACTA
+    formatos: [pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.1"
+    applies_if: {"!=": [{var: "hechos.revision_reglas"}, "nunca"]}
+    instrucciones: "Registro de la última revisión de reglas: quién, cuándo y qué reglas se retiraron o corrigieron."
+    criterios_aceptacion:
+      - "Fecha dentro del periodo declarado"
+      - "Consta el resultado: reglas eliminadas o confirmadas"
+
+  # ================================================================== mp.com.2
+  - code: EV-mp.com.2-01
+    measure: mp.com.2
+    titulo: "Cifrado de las comunicaciones"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, png, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.2"
+    applies_if: {">=": [{var: "nivel_orden.C"}, 1]}
+    instrucciones: "Evidencia de que el tráfico con información sensible va cifrado: configuración de TLS en las webs, de la VPN y de los enlaces entre sedes."
+    criterios_aceptacion:
+      - "Se identifica el servicio analizado"
+      - "Se ven las versiones de protocolo admitidas"
+      - "No se admiten versiones obsoletas, o consta la excepción justificada"
+    rechazos_tipicos:
+      - "Servicios que siguen aceptando TLS 1.0 o 1.1"
+      - "Sede electrónica con certificado caducado"
+
+  - code: EV-mp.com.2-02
+    measure: mp.com.2
+    refuerzo: mp.com.2.r1
+    titulo: "Algoritmos autorizados en las comunicaciones"
+    tipo: DOCUMENTO
+    formatos: [pdf, png, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.2"
+    applies_if: {">=": [{var: "nivel_orden.C"}, 2]}
+    instrucciones: "Informe de análisis de la configuración criptográfica con la revisión frente a los algoritmos recomendados vigentes."
+    criterios_aceptacion:
+      - "Lista los cifradores admitidos"
+      - "Fecha del análisis dentro del año"
+
+  # ================================================================== mp.com.3
+  - code: EV-mp.com.3-01
+    measure: mp.com.3
+    titulo: "Protección de integridad y autenticidad en tránsito"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.3"
+    applies_if: {">=": [{var: "nivel_orden.IA"}, 1]}
+    instrucciones: "Evidencia de que las comunicaciones garantizan quién está al otro lado y que nada se altera: certificados de servidor, autenticación mutua o VPN configurada."
+    criterios_aceptacion:
+      - "Se identifica el canal protegido"
+      - "Se ve el mecanismo de autenticación del extremo"
+
+  - code: EV-mp.com.3-02
+    measure: mp.com.3
+    refuerzo: mp.com.3.r1
+    titulo: "Configuración de la red privada virtual"
+    tipo: CAPTURA
+    formatos: [png, pdf, txt]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.3"
+    applies_if: {">=": [{var: "nivel_orden.IA"}, 2]}
+    instrucciones: "Configuración de la VPN: protocolo, cifrado, autenticación y usuarios autorizados."
+    criterios_aceptacion:
+      - "Se ve el protocolo y el cifrado usados"
+      - "Consta el segundo factor exigido"
+
+  # ================================================================== mp.com.4
+  - code: EV-mp.com.4-01
+    measure: mp.com.4
+    option_group: mp.com.4.segmentacion
+    preferencia: 1
+    titulo: "Segmentación de la red documentada"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.4"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Diagrama de zonas con las VLAN o subredes, y las reglas que controlan el tráfico entre ellas."
+    criterios_aceptacion:
+      - "Se distinguen al menos servidores, puestos, gestión e invitados"
+      - "Se ve el control de tráfico entre zonas, no solo la separación nominal"
+      - "Coincide con el documento de arquitectura"
+    rechazos_tipicos:
+      - "VLAN separadas que se comunican sin ningún filtro entre ellas"
+      - "Red plana donde un puesto llega directamente a la consola de gestión"
+
+  - code: EV-mp.com.4-02
+    measure: mp.com.4
+    option_group: mp.com.4.segmentacion
+    preferencia: 2
+    titulo: "Configuración de VLAN y reglas entre zonas"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, txt, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.com.4"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Export de la configuración de VLAN y de las reglas de filtrado entre segmentos."
+    criterios_aceptacion:
+      - "Se ven las VLAN definidas y su propósito"
+
+  - code: EV-mp.com.4-03
+    measure: mp.com.4
+    titulo: "Separación de la red inalámbrica"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.com.4"
+    applies_if: {"!=": [{var: "hechos.wifi"}, "no"]}
+    instrucciones: "Configuración de las redes wifi: método de autenticación y a qué red interna llega cada una."
+    criterios_aceptacion:
+      - "La red de invitados está aislada de la interna"
+      - "Se ve el método de autenticación de la wifi corporativa"
+    rechazos_tipicos:
+      - "Wifi con clave compartida que da acceso directo a la red de servidores"
+
+  # ==================================================================== mp.s.1
+  - code: EV-mp.s.1-01
+    measure: mp.s.1
+    titulo: "Protecciones del correo electrónico"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.1"
+    instrucciones: "Capturas de las políticas antispam, antimalware y antiphishing activas, con su alcance."
+    criterios_aceptacion:
+      - "Se ve que la política se aplica a todo el dominio"
+      - "Se identifica el servicio y la fecha"
+    product_hints:
+      - match: {producto: "Microsoft 365"}
+        instrucciones: "Portal de Defender → Directivas y reglas → Directivas de amenazas → captura antispam, antimalware y antiphishing"
+      - match: {producto: "Google Workspace"}
+        instrucciones: "Consola de administración → Aplicaciones → Gmail → Seguridad y Spam, phishing y software malicioso"
+
+  - code: EV-mp.s.1-02
+    measure: mp.s.1
+    titulo: "Registros SPF, DKIM y DMARC del dominio"
+    tipo: EXPORT_CONFIG
+    formatos: [png, pdf, txt]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.1"
+    instrucciones: "Captura de los registros DNS del dominio, o del resultado de una herramienta de comprobación pública."
+    criterios_aceptacion:
+      - "Aparecen los tres registros para el dominio de correo"
+      - "La política DMARC está en cuarentena o rechazo"
+      - "Se identifica el dominio consultado y la fecha"
+    rechazos_tipicos:
+      - "Solo SPF, sin DKIM ni DMARC"
+      - "DMARC en modo monitorización presentado como protección activa"
+
+  # ==================================================================== mp.s.2
+  - code: EV-mp.s.2-01
+    measure: mp.s.2
+    titulo: "Relación de servicios publicados en internet"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.2"
+    generable: true
+    instrucciones: "Listado de webs, sedes, aplicaciones y API accesibles desde internet, con quién las mantiene."
+    criterios_aceptacion:
+      - "Coincide con lo declarado en el perfilado y en la arquitectura"
+      - "Consta el responsable de cada servicio"
+    rechazos_tipicos:
+      - "Aplicaciones publicadas que no figuran en ninguna lista ni inventario"
+
+  - code: EV-mp.s.2-02
+    measure: mp.s.2
+    refuerzo: mp.s.2.r1
+    titulo: "Informe de pruebas de seguridad web"
+    tipo: DOCUMENTO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Informe de test de intrusión o de análisis de vulnerabilidades sobre los servicios publicados, con el plan de corrección."
+    criterios_aceptacion:
+      - "Identifica qué direcciones se analizaron y cuándo"
+      - "Los hallazgos altos y críticos tienen estado y plazo"
+      - "Fecha dentro del último año"
+    rechazos_tipicos:
+      - "Informe de hace tres años presentado como vigente"
+      - "Hallazgos críticos sin corregir ni justificar"
+      - "Se analizó la web institucional pero no la sede electrónica"
+
+  - code: EV-mp.s.2-03
+    measure: mp.s.2
+    titulo: "Configuración del cortafuegos de aplicación web"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Captura del WAF: qué servicios protege, qué reglas aplica y si está en modo bloqueo."
+    criterios_aceptacion:
+      - "Se ve el modo de funcionamiento: bloqueo, no solo detección"
+      - "Se identifican los servicios protegidos"
+    rechazos_tipicos:
+      - "WAF en modo detección presentado como protección"
+
+  # ==================================================================== mp.s.3
+  - code: EV-mp.s.3-01
+    measure: mp.s.3
+    titulo: "Filtrado de navegación"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.3"
+    applies_if: {"!=": [{var: "hechos.navegacion"}, "no"]}
+    instrucciones: "Captura de la política de filtrado: categorías bloqueadas, a quién se aplica y si queda registro."
+    criterios_aceptacion:
+      - "Se ven las categorías bloqueadas"
+      - "Se ve el alcance: a qué equipos o usuarios aplica"
+
+  - code: EV-mp.s.3-02
+    measure: mp.s.3
+    refuerzo: mp.s.3.r1
+    titulo: "Monitorización de la navegación"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, pdf, png]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.s.3"
+    applies_if: {">=": [{var: "categoria_orden"}, 3]}
+    instrucciones: "Informe de actividad de navegación del periodo, con los intentos bloqueados."
+    criterios_aceptacion:
+      - "Cubre el periodo auditado"
+      - "Se ven bloqueos reales, no un informe vacío"
+
+  # ==================================================================== mp.s.4
+  - code: EV-mp.s.4-01
+    measure: mp.s.4
+    titulo: "Protección frente a denegación de servicio"
+    tipo: CONTRATO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.4"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    instrucciones: "Contrato o configuración del servicio de protección frente a ataques de denegación de servicio, con lo que cubre."
+    criterios_aceptacion:
+      - "Identifica qué servicios protege"
+      - "Consta el alcance y los umbrales del servicio"
+      - "Vigente en el periodo auditado"
+    rechazos_tipicos:
+      - "Afirmar que lo cubre el operador sin ninguna cláusula que lo diga"
+
+  - code: EV-mp.s.4-02
+    measure: mp.s.4
+    refuerzo: mp.s.4.r1
+    titulo: "Detección y reacción ante denegación de servicio"
+    tipo: REGISTRO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.s.4"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    instrucciones: "Evidencia del mecanismo de detección y del procedimiento de reacción, o informe de un ataque mitigado."
+    criterios_aceptacion:
+      - "Se ve cómo se detecta y quién actúa"
+
+  # ================================================================== op.mon.1
+  - code: EV-op.mon.1-01
+    measure: op.mon.1
+    option_group: op.mon.1.deteccion
+    preferencia: 1
+    titulo: "Sistema de detección de intrusión configurado"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.mon.1"
+    applies_if: {"!=": [{var: "hechos.deteccion"}, "no"]}
+    instrucciones: "Captura del sistema de detección activo: prevención de intrusiones del cortafuegos, reglas del SIEM o alertas del EDR, con su alcance."
+    criterios_aceptacion:
+      - "Se ve que está en modo activo, no solo instalado"
+      - "Se identifica qué protege"
+      - "Fecha visible"
+    rechazos_tipicos:
+      - "Módulo de prevención de intrusiones con licencia caducada"
+      - "Sistema en modo escucha que no bloquea ni alerta a nadie"
+
+  - code: EV-op.mon.1-02
+    measure: op.mon.1
+    option_group: op.mon.1.deteccion
+    preferencia: 2
+    titulo: "Informe del servicio de vigilancia contratado"
+    tipo: DOCUMENTO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.mon.1"
+    applies_if: {"==": [{var: "hechos.deteccion_soc"}, true]}
+    instrucciones: "Informe periódico del SOC con las alertas tratadas en el periodo."
+    criterios_aceptacion:
+      - "Identifica al proveedor y el periodo"
+      - "Incluye alertas concretas y su resolución"
+
+  - code: EV-op.mon.1-03
+    measure: op.mon.1
+    titulo: "Alertas gestionadas (muestra)"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.mon.1"
+    applies_if: {"!=": [{var: "hechos.deteccion"}, "no"]}
+    instrucciones: "De 3 a 5 alertas reales del periodo con lo que se hizo con cada una."
+    criterios_aceptacion:
+      - "Consta la fecha, la alerta y su resolución"
+      - "Son casos reales, no ejemplos de manual"
+    rechazos_tipicos:
+      - "Sistema de detección que lleva meses generando alertas que nadie ha abierto"
+
+  - code: EV-op.mon.1-04
+    measure: op.mon.1
+    refuerzo: op.mon.1.r2
+    titulo: "Procedimientos de respuesta a alertas"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.mon.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 3]}
+    generable: true
+    instrucciones: "Guías de actuación por tipo de alerta: quién actúa, qué pasos sigue y cuándo escala."
+    criterios_aceptacion:
+      - "Cubre los tipos de alerta más frecuentes"
+      - "Indica criterios de escalado"
+
+  # ================================================================== op.mon.2
+  - code: EV-op.mon.2-01
+    measure: op.mon.2
+    titulo: "Cuadro de indicadores de seguridad"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.mon.2"
+    generable: true
+    instrucciones: "Indicadores recogidos en el periodo: incidentes, parcheo, formación, madurez de las medidas, con su evolución."
+    criterios_aceptacion:
+      - "Los indicadores tienen valores reales, no solo definición"
+      - "Cubren al menos un año o el periodo transcurrido"
+      - "Se ve quién los recoge y con qué frecuencia"
+    rechazos_tipicos:
+      - "Cuadro de indicadores definido pero sin ningún dato medido"
+
+  - code: EV-op.mon.2-02
+    measure: op.mon.2
+    titulo: "Envío del informe INES"
+    tipo: REGISTRO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.mon.2"
+    applies_if: {"!=": [{var: "hechos.ines"}, "no"]}
+    instrucciones: "Justificante del último envío del informe del estado de la seguridad al CCN, con su fecha."
+    criterios_aceptacion:
+      - "Consta la fecha de envío y el ejercicio al que corresponde"
+
+  - code: EV-op.mon.2-03
+    measure: op.mon.2
+    refuerzo: op.mon.2.r1
+    titulo: "Evaluación de la efectividad de las medidas"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.mon.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Análisis de si las medidas implantadas están funcionando: indicadores comparados con los objetivos y decisiones derivadas."
+    criterios_aceptacion:
+      - "Compara resultado con objetivo"
+      - "Concreta decisiones de mejora"
+
+  # ================================================================== op.mon.3
+  - code: EV-op.mon.3-01
+    measure: op.mon.3
+    titulo: "Canal de vigilancia de amenazas"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.mon.3"
+    applies_if: {"!=": [{var: "hechos.vigilancia"}, "no"]}
+    instrucciones: "Evidencia de las suscripciones a avisos de seguridad: CCN-CERT, INCIBE, fabricantes o proveedor."
+    criterios_aceptacion:
+      - "Se identifica la fuente y el destinatario de los avisos"
+
+  - code: EV-op.mon.3-02
+    measure: op.mon.3
+    titulo: "Tratamiento de un aviso de seguridad"
+    tipo: REGISTRO
+    formatos: [pdf, png, eml]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.mon.3"
+    applies_if: {"!=": [{var: "hechos.vigilancia"}, "no"]}
+    instrucciones: "Un aviso recibido en el periodo y lo que se hizo: comprobación de si afectaba, decisión y acción."
+    criterios_aceptacion:
+      - "Se ve el aviso original y la fecha"
+      - "Consta la comprobación de si os afectaba y qué se hizo"
+    rechazos_tipicos:
+      - "Estar suscrito a los boletines sin ninguna prueba de haber actuado ante uno"
+
+  - code: EV-op.mon.3-03
+    measure: op.mon.3
+    refuerzo: op.mon.3.r1
+    titulo: "Correlación de eventos"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.mon.3"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Evidencia de reglas que combinan fuentes distintas para detectar lo que por separado no se ve, o el servicio del SOC que lo hace."
+    criterios_aceptacion:
+      - "Se ven reglas que cruzan al menos dos fuentes"
+      - "Se identifica el sistema o servicio que correlaciona"

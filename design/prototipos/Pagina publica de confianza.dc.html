@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <div style="{{ barraPropietario }}">
+    <span style="font-size:12px; color:#CBD5E1">Vista previa de tu página pública · solo tú ves esta barra</span>
+    <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+      <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#FFFFFF; background:rgba(255,255,255,0.12); border-radius:5px; padding:3px 8px">blens.es/confianza/ayto-valverde</span>
+      <button type="button" onClick="{{ alternarVista }}" style="font-family:inherit; font-size:12px; font-weight:500; color:#0F172A; background:#FFFFFF; border:0; border-radius:6px; padding:5px 10px; cursor:pointer">Ver como visitante</button>
+    </span>
+  </div>
+
+  <div style="{{ barraVisitante }}">
+    <span style="font-size:12px; color:#475569">Página publicada por la organización y verificada por BLENS</span>
+    <button type="button" onClick="{{ alternarVista }}" style="font-family:inherit; font-size:12px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:5px 10px; cursor:pointer">Volver a la vista de edición</button>
+  </div>
+
+  <header style="background:#0B4F4A; color:#FFFFFF">
+    <div style="max-width:900px; margin:0 auto; padding:40px 28px; display:flex; flex-direction:column; gap:16px">
+      <span style="display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+        <span style="display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; background:#FFFFFF; color:#0B4F4A; font-size:14px; font-weight:700">AV</span>
+        <span style="font-size:14px; color:#CCFBF1">Ayuntamiento de Valverde</span>
+      </span>
+      <h1 style="margin:0; font-size:32px; line-height:1.2; font-weight:600; letter-spacing:-0.02em">Sede electrónica</h1>
+      <p style="margin:0; font-size:16px; line-height:1.55; color:#CCFBF1; max-width:620px; text-wrap:pretty">Estado de conformidad con el Esquema Nacional de Seguridad del sistema que da soporte a los trámites en línea del municipio.</p>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px">
+        <span style="display:inline-flex; align-items:center; font-size:14px; font-weight:600; color:#0B4F4A; background:#FFFFFF; border-radius:6px; padding:7px 12px">Conformidad ENS · categoría Media</span>
+        <span style="display:inline-flex; align-items:center; font-size:13px; color:#FFFFFF; border:1px solid rgba(255,255,255,0.4); border-radius:6px; padding:7px 12px">Certificada el 12/03/2026 · válida hasta 12/03/2028</span>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1">
+    <div style="max-width:900px; margin:0 auto; padding:28px 28px 72px; display:flex; flex-direction:column; gap:18px">
+
+      <section style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px">
+        <sc-for list="{{ datos }}" as="d" hint-placeholder-count="4">
+          <span style="display:flex; flex-direction:column; gap:4px; padding:16px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px">
+            <span style="font-size:12px; color:#475569">{{ d.k }}</span>
+            <span style="{{ d.estilo }}">{{ d.v }}</span>
+          </span>
+        </sc-for>
+      </section>
+
+      <section style="{{ seccionAlcance }}">
+        <span style="font-size:16px; font-weight:600; color:#0F172A">Alcance de la certificación</span>
+        <p style="margin:0; font-size:14px; line-height:1.6; color:#475569; text-wrap:pretty">Sede electrónica y registro electrónico del Ayuntamiento de Valverde, incluidos el gestor de expedientes, la base de datos de tramitación y la infraestructura que los soporta. Quedan fuera la intranet municipal y los sistemas de la policía local, que se certifican por separado.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <sc-for list="{{ etiquetas }}" as="e" hint-placeholder-count="4">
+            <span style="display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:4px 9px">{{ e.t }}</span>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="{{ seccionDocumentos }}">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <span style="font-size:16px; font-weight:600; color:#0F172A">Documentación acreditativa</span>
+          <span style="font-size:12px; color:#475569">Lo que suele pedirse en una licitación.</span>
+        </div>
+        <div style="display:flex; flex-direction:column">
+          <sc-for list="{{ documentos }}" as="doc" hint-placeholder-count="4">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px solid #F1F5F9; flex-wrap:wrap">
+              <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                <span style="font-size:14px; font-weight:500; color:#0F172A">{{ doc.nombre }}</span>
+                <span style="font-size:12px; color:#475569">{{ doc.detalle }}</span>
+              </span>
+              <a href="#" style="font-size:13px; font-weight:500; flex:0 0 auto">{{ doc.accion }}</a>
+            </span>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px">
+        <span style="font-size:16px; font-weight:600; color:#0F172A">Verificar esta página</span>
+        <p style="margin:0; font-size:14px; line-height:1.6; color:#475569; text-wrap:pretty">Los datos se actualizan solos desde el expediente de la organización. Cualquiera puede comprobar que el certificado sigue vigente introduciendo su número en el verificador, o contrastarlo con la entidad de certificación.</p>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+          <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:#0F172A; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:8px 11px">ENS-M-2026-00417</span>
+          <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 14px; cursor:pointer">Verificar el certificado</button>
+        </div>
+        <span style="font-size:12px; line-height:1.5; color:#475569">Última comprobación automática: 19/09/2026. Si el certificado caduca o se revoca, esta página lo refleja en 24 horas.</span>
+      </section>
+
+      <section style="{{ seccionContacto }}">
+        <span style="font-size:16px; font-weight:600; color:#0F172A">Contacto de seguridad</span>
+        <p style="margin:0; font-size:14px; line-height:1.6; color:#475569; text-wrap:pretty">Para comunicar una vulnerabilidad o un incidente que afecte a este servicio, escribe al buzón de seguridad. Se responde en un día hábil y no se emprenden acciones contra quien informa de buena fe.</p>
+        <span style="display:inline-flex; align-self:flex-start; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:6px; padding:8px 11px">seguridad@valverde.es</span>
+      </section>
+
+      <section style="{{ cajaEdicion }}">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Qué se publica y qué no</span>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ ajustes }}" as="a" hint-placeholder-count="4">
+            <button type="button" onClick="{{ a.onClick }}" style="{{ a.caja }}">
+              <span style="{{ a.interruptor }}"><span style="{{ a.bola }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:2px; text-align:left; min-width:0">
+                <span style="font-size:13px; font-weight:500; color:#0F172A">{{ a.nombre }}</span>
+                <span style="font-size:12px; line-height:1.45; color:#475569">{{ a.detalle }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+        <span style="font-size:12px; line-height:1.5; color:#475569">Nunca se publican el indicador de listo para auditoría, los hallazgos ni el detalle de medidas: son información interna y su lectura fuera de contexto perjudica sin informar.</span>
+      </section>
+
+      <p style="margin:0; font-size:12px; line-height:1.55; color:#475569; text-align:center">Publicado por el Ayuntamiento de Valverde. La conformidad con el ENS la declara la entidad de certificación acreditada, no BLENS.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1100,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { visitante: false, ajustes: { alcance: true, documentos: true, fecha: true, contacto: false } };
+
+  renderVals() {
+    const s = this.state, v = s.visitante;
+
+    const datos = [
+      ["Categoría del sistema", "Media", "grande", true],
+      ["Entidad de certificación", "Audidat Certificación", "normal", true],
+      ["Última auditoría", "12/03/2026", "mono", s.ajustes.fecha],
+      ["Próxima auditoría", "marzo de 2028", "normal", s.ajustes.fecha]
+    ].filter((d) => d[3]).map((d) => ({
+      k: d[0], v: d[1],
+      estilo: d[2] === "grande"
+        ? "font-size:20px; font-weight:600; color:#0F172A"
+        : d[2] === "mono"
+          ? "font-family:'JetBrains Mono', ui-monospace, monospace; font-size:14px; color:#0F172A; font-variant-numeric:tabular-nums"
+          : "font-size:14px; font-weight:500; color:#0F172A"
+    }));
+
+    const ajustesDef = [
+      ["alcance", "Alcance de la certificación", "El texto del alcance tal y como figura en el certificado."],
+      ["documentos", "Documentación descargable", "Certificado y declaración de conformidad en PDF."],
+      ["fecha", "Fechas de auditoría", "Fecha de la última certificación y de la próxima prevista."],
+      ["contacto", "Contacto de seguridad", "Buzón para comunicar vulnerabilidades. Recomendado en licitaciones."]
+    ].map((a) => {
+      const on = s.ajustes[a[0]];
+      return {
+        nombre: a[1], detalle: a[2],
+        onClick: () => this.setState({ ajustes: Object.assign({}, s.ajustes, { [a[0]]: !on }) }),
+        caja: "display:flex; align-items:flex-start; gap:12px; width:100%; font-family:inherit; cursor:pointer; padding:10px 12px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF",
+        interruptor: `flex:0 0 auto; margin-top:1px; width:34px; height:20px; border-radius:10px; padding:2px; box-sizing:border-box; display:flex; justify-content:${on ? "flex-end" : "flex-start"}; background:${on ? "#0F766E" : "#CBD5E1"}`,
+        bola: "width:16px; height:16px; border-radius:50%; background:#FFFFFF"
+      };
+    });
+
+    return {
+      datos, ajustes: ajustesDef,
+      etiquetas: ["Sede electrónica", "Registro electrónico", "Gestor de expedientes", "Infraestructura de soporte"].map((t) => ({ t })),
+      documentos: [
+        { nombre: "Certificado de conformidad ENS", detalle: "PDF · emitido por Audidat Certificación el 12/03/2026", accion: "Descargar" },
+        { nombre: "Declaración de conformidad", detalle: "PDF · firmada por el responsable del sistema", accion: "Descargar" },
+        { nombre: "Distintivo de conformidad", detalle: "Imagen para incluir en la sede y en las ofertas", accion: "Descargar" },
+        { nombre: "Alcance detallado", detalle: "Sistemas y servicios incluidos y excluidos", accion: "Ver" }
+      ],
+      seccionAlcance: `display:${s.ajustes.alcance ? "flex" : "none"}; flex-direction:column; gap:14px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:20px`,
+      seccionDocumentos: `display:${s.ajustes.documentos ? "flex" : "none"}; flex-direction:column; gap:14px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:20px`,
+      seccionContacto: `display:${s.ajustes.contacto ? "flex" : "none"}; flex-direction:column; gap:12px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:20px`,
+      alternarVista: () => this.setState({ visitante: !v }),
+      barraPropietario: `display:${v ? "none" : "flex"}; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:10px 28px; background:#0F172A`,
+      barraVisitante: `display:${v ? "flex" : "none"}; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:10px 28px; background:#FFFFFF; border-bottom:1px solid #E2E8F0`,
+      cajaEdicion: `display:${v ? "none" : "flex"}; flex-direction:column; gap:12px; padding:18px; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:8px`
+    };
+  }
+}
+</script>
+</body>
+</html>

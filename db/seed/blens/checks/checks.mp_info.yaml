@@ -1,0 +1,181 @@
+# Seed BLENS · Checks de verificación — familia mp.info
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.info
+checks:
+  - code: "CHK-mp.info.1.1"
+    measure: mp.info.1
+    item: "mp.info.1.1"
+    descripcion: "Cuando el sistema trate datos personales, el responsable de seguridad recogerá los requisitos de protección de datos que sean fijados por el responsable o por el encargado del tratamiento, contando con el asesoramiento…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.1-01, EV-mp.info.1-02, EV-mp.info.1-03]
+  - code: "CHK-mp.info.2.1"
+    measure: mp.info.2
+    item: "mp.info.2.1"
+    descripcion: "Para calificar la información se estará a lo establecido legalmente por las leyes y tratados internacionales de los que España es miembro y su normativa de aplicación cuando se trate de materias clasificadas…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.2-01, EV-mp.info.2-02]
+  - code: "CHK-mp.info.2.2"
+    measure: mp.info.2
+    item: "mp.info.2.2"
+    descripcion: "La política de seguridad establecerá quién es el responsable de cada información manejada por el sistema"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-mp.info.2-01, EV-mp.info.2-02]
+  - code: "CHK-mp.info.2.3"
+    measure: mp.info.2
+    item: "mp.info.2.3"
+    descripcion: "La política de seguridad recogerá, directa o indirectamente, los criterios que, en cada organización, determinarán el nivel de seguridad requerido, dentro del marco establecido en el artículo 40 y los criterios…"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-mp.info.2-01, EV-mp.info.2-02]
+  - code: "CHK-mp.info.2.4"
+    measure: mp.info.2
+    item: "mp.info.2.4"
+    descripcion: "El responsable de cada información seguirá los criterios determinados en el apartado anterior para asignar a cada información el nivel de seguridad requerido, y será responsable de su documentación y aprobación formal"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-mp.info.2-01, EV-mp.info.2-02]
+  - code: "CHK-mp.info.2.5"
+    measure: mp.info.2
+    item: "mp.info.2.5"
+    descripcion: "El responsable de cada información en cada momento tendrá en exclusiva la potestad de modificar el nivel de seguridad requerido, de acuerdo a los apartados anteriores"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-mp.info.2-01, EV-mp.info.2-02]
+  - code: "CHK-mp.info.3.1"
+    measure: mp.info.3
+    item: "mp.info.3.1"
+    descripcion: "Se empleará cualquier tipo de firma electrónica de los previstos en el vigente ordenamiento jurídico, entre ellos, los sistemas de código seguro de verificación vinculados a la Administración Pública, órgano, organismo…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.3-01]
+  - code: "CHK-mp.info.3.r1.1"
+    measure: mp.info.3
+    refuerzo: mp.info.3.r1
+    item: "mp.info.3.r1.1"
+    descripcion: "Cuando se empleen sistemas de firma electrónica avanzada basados en certificados, estos serán cualificados"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.info.3.r2.1"
+    measure: mp.info.3
+    refuerzo: mp.info.3.r2
+    item: "mp.info.3.r2.1"
+    descripcion: "Se emplearán algoritmos y parámetros autorizados por el CCN o por un esquema nacional o europeo que resulte de aplicación…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.3-02]
+  - code: "CHK-mp.info.3.r3.1"
+    measure: mp.info.3
+    refuerzo: mp.info.3.r3
+    item: "mp.info.3.r3.1"
+    descripcion: "Cuando proceda, se garantizará la verificación y validación de la firma electrónica durante el tiempo requerido por la actividad administrativa que aquélla soporte, sin perjuicio de que se pueda ampliar este período de…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.3-03]
+  - code: "CHK-mp.info.3.r4.1"
+    measure: mp.info.3
+    refuerzo: mp.info.3.r4
+    item: "mp.info.3.r4.1"
+    descripcion: "Se usará firma electrónica avanzada basada en certificados cualificados complementada por un segundo factor del tipo ‘algo que se sabe’ o ‘algo que se es’"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.info.3.r5.1"
+    measure: mp.info.3
+    refuerzo: mp.info.3.r5
+    item: "mp.info.3.r5.1"
+    descripcion: "Se usará firma electrónica cualificada, empleando productos certificados conforme a lo establecido en op.pl.5"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.info.4.1"
+    measure: mp.info.4
+    item: "mp.info.4.1"
+    descripcion: "Los sellos de tiempo se aplicarán a aquella información que sea susceptible de ser utilizada como evidencia electrónica en el futuro"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.info.4-01]
+  - code: "CHK-mp.info.4.2"
+    measure: mp.info.4
+    item: "mp.info.4.2"
+    descripcion: "Los datos pertinentes para la verificación posterior de la fecha serán tratados con la misma seguridad que la información fechada a efectos de disponibilidad, integridad y confidencialidad"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.info.4-01]
+  - code: "CHK-mp.info.4.3"
+    measure: mp.info.4
+    item: "mp.info.4.3"
+    descripcion: "Se renovarán regularmente los sellos de tiempo hasta que la información protegida ya no sea requerida por el proceso administrativo al que da soporte, en su caso"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-mp.info.4-01]
+  - code: "CHK-mp.info.4.4"
+    measure: mp.info.4
+    item: "mp.info.4.4"
+    descripcion: "Se emplearán ‘sellos cualificados de tiempo electrónicos’ atendiendo a lo dispuesto en el Reglamento (UE) n.º 910/2014 y normativa de desarrollo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.4-01]
+  - code: "CHK-mp.info.4.r1.1"
+    measure: mp.info.4
+    refuerzo: mp.info.4.r1
+    item: "mp.info.4.r1.1"
+    descripcion: "Se utilizarán productos certificados según op.pl.5"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.info.4.r1.2"
+    measure: mp.info.4
+    refuerzo: mp.info.4.r1
+    item: "mp.info.4.r1.2"
+    descripcion: "Se asignará una fecha y hora a un documento electrónico, conforme a lo establecido en la guía CCN-STIC Criptología de empleo en el ENS"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.info.5.1"
+    measure: mp.info.5
+    item: "mp.info.5.1"
+    descripcion: "En el proceso de limpieza de documentos, se retirará de estos toda la información adicional contenida en campos ocultos, metadatos, comentarios o revisiones anteriores, salvo cuando dicha información sea pertinente para…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.info.5-01, EV-mp.info.5-02]
+  - code: "CHK-mp.info.6.1"
+    measure: mp.info.6
+    item: "mp.info.6.1"
+    descripcion: "Se realizarán copias de seguridad que permitan recuperar datos perdidos, accidental o intencionadamente…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.6-01, EV-mp.info.6-02, EV-mp.info.6-03, EV-mp.info.6-06]
+  - code: "CHK-mp.info.6.2"
+    measure: mp.info.6
+    item: "mp.info.6.2"
+    descripcion: "Los procedimientos de respaldo establecidos indicarán:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.6-01, EV-mp.info.6-02, EV-mp.info.6-03, EV-mp.info.6-06]
+  - code: "CHK-mp.info.6.2a"
+    measure: mp.info.6
+    item: "a)"
+    item_padre: "mp.info.6.2"
+    descripcion: "Frecuencia de las copias"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.info.6-01, EV-mp.info.6-02, EV-mp.info.6-03, EV-mp.info.6-06]
+  - code: "CHK-mp.info.6.2b"
+    measure: mp.info.6
+    item: "b)"
+    item_padre: "mp.info.6.2"
+    descripcion: "Requisitos de almacenamiento en el propio lugar"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.6-01, EV-mp.info.6-02, EV-mp.info.6-03, EV-mp.info.6-06]
+  - code: "CHK-mp.info.6.2c"
+    measure: mp.info.6
+    item: "c)"
+    item_padre: "mp.info.6.2"
+    descripcion: "Requisitos de almacenamiento en otros lugares"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.6-01, EV-mp.info.6-02, EV-mp.info.6-03, EV-mp.info.6-06]
+  - code: "CHK-mp.info.6.2d"
+    measure: mp.info.6
+    item: "d)"
+    item_padre: "mp.info.6.2"
+    descripcion: "Controles para el acceso autorizado a las copias de respaldo"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-mp.info.6-01, EV-mp.info.6-02, EV-mp.info.6-03, EV-mp.info.6-06]
+  - code: "CHK-mp.info.6.r1.1"
+    measure: mp.info.6
+    refuerzo: mp.info.6.r1
+    item: "mp.info.6.r1.1"
+    descripcion: "Los procedimientos de copia de seguridad y restauración deben probarse regularmente. Su frecuencia dependerá de la criticidad de los datos y del impacto que cause la falta de disponibilidad"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-mp.info.6-04]
+  - code: "CHK-mp.info.6.r2.1"
+    measure: mp.info.6
+    refuerzo: mp.info.6.r2
+    item: "mp.info.6.r2.1"
+    descripcion: "Al menos, una de las copias de seguridad se almacenará de forma separada en lugar diferente, de tal manera que un incidente no pueda afectar tanto al repositorio original como a la copia simultáneamente"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.info.6-05]

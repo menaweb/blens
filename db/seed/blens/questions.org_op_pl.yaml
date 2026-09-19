@@ -1,0 +1,568 @@
+# Seed BLENS · Preguntas de perfilado — familias org (Marco organizativo) y op.pl (Planificación)
+# Especificación: docs/cuestionario_perfilado.md (§1bis redacción, bloques B00, B02 y B07)
+#
+# B00 recoge de momento SOLO las dos preguntas de las que dependen condiciones de otros bloques
+# (B0.1 tipo de entidad y B0.4 ciclo). El resto de B0 del cuestionario (motivo, alcance, sedes,
+# volumen, teletrabajo, subcontratación…) sigue pendiente de implementar.
+#
+# APLICABILIDAD: org.1 a org.4, op.pl.1, op.pl.2 y op.pl.3 aplican en TODAS las categorías.
+#   op.pl.5 solo en MEDIA y ALTA · op.pl.4 por nivel de Disponibilidad.
+# Variables: categoria_orden (1/2/3) · nivel_orden.D
+#
+# Nota: es el bloque con más documentación generable. Cuando el cliente responde "no",
+# lo normal no es un gap doloroso: es que BLENS le genera el documento (M3).
+
+version: 1
+familias: [org, op.pl]
+bloques:
+  - code: B00
+    titulo: Organización y alcance
+    minutos_estimados: 2
+  - code: B02
+    titulo: Gobernanza y documentación
+    minutos_estimados: 10
+  - code: B07
+    titulo: Planificación y arquitectura
+    minutos_estimados: 8
+
+questions:
+
+  # ==================================================================== B00 · org.1
+  # Emiten hechos de los que dependen condiciones de otros ficheros del seed:
+  #   entidad_tipo → op.mon.ines (questions.mp_com_mp_s_op_mon.yaml)
+  #   ciclo        → org.distintivo (este fichero)
+  - code: org.entidad
+    bloque: B00
+    orden: 1
+    tipo: SINGLE
+    texto: "¿Qué tipo de organización sois?"
+    por_que: "Decide si os obliga el reporte anual a INES, a quién se notifican los incidentes y con qué lenguaje se redactan las plantillas. El ENS también alcanza a las empresas privadas que prestan servicios a la Administración (art. 2.3)."
+    como_saberlo: "Es la naturaleza jurídica de la entidad, no la del cliente para el que trabajáis."
+    a_quien_preguntar: "Secretaría o dirección"
+    minutos_estimados: 1
+    opciones:
+      - code: age
+        label: "Administración General del Estado"
+        emits: {entidad_tipo: age}
+      - code: ccaa
+        label: "Comunidad autónoma"
+        emits: {entidad_tipo: ccaa}
+      - code: local
+        label: "Entidad local (ayuntamiento, diputación, comarca)"
+        emits: {entidad_tipo: local}
+      - code: universidad
+        label: "Universidad o centro de investigación público"
+        emits: {entidad_tipo: universidad}
+      - code: otra_publica
+        label: "Otra entidad del sector público"
+        emits: {entidad_tipo: otra_publica}
+      - code: proveedor_publico
+        label: "Empresa privada que presta servicios al sector público"
+        emits: {entidad_tipo: proveedor_publico}
+      - code: otra_privada
+        label: "Otra organización privada"
+        emits: {entidad_tipo: otra_privada}
+
+  - code: org.ciclo
+    bloque: B00
+    orden: 2
+    tipo: SINGLE
+    texto: "¿Es vuestra primera vez con el ENS o ya lo habéis pasado antes?"
+    por_que: "Si es una renovación, el auditor pedirá el informe de la auditoría anterior y el estado de las no conformidades abiertas. Si es la primera vez, esas evidencias no existen y no se os pedirán."
+    como_saberlo: "Mira si tenéis una declaración o certificación de conformidad anterior, aunque esté caducada."
+    a_quien_preguntar: "Responsable de seguridad o quien llevara el proyecto anterior"
+    minutos_estimados: 1
+    opciones:
+      - code: primera
+        label: "Primera vez"
+        emits: {ciclo: primera}
+      - code: renovacion
+        label: "Renovación de una conformidad anterior"
+        emits: {ciclo: renovacion}
+      - code: adecuacion
+        label: "Ya nos adecuamos antes, pero sin declarar ni certificar"
+        emits: {ciclo: adecuacion}
+
+  # ==================================================================== org.1
+  - code: org.politica
+    bloque: B02
+    orden: 10
+    tipo: SINGLE
+    texto: "¿Tenéis una política de seguridad aprobada por la dirección?"
+    por_que: "Es el documento que abre cualquier auditoría ENS. El auditor no solo pide el documento: pide el acta o resolución que lo aprueba y prueba de que se ha difundido."
+    como_saberlo: "Busca un documento llamado «Política de Seguridad de la Información» y mira si tiene firma, fecha y órgano que lo aprobó."
+    a_quien_preguntar: "Secretaría, dirección o el responsable de seguridad"
+    minutos_estimados: 2
+    opciones:
+      - code: aprobada_vigente
+        label: "Sí, aprobada y revisada en los últimos años"
+        emits: {politica: vigente}
+      - code: aprobada_antigua
+        label: "Sí, pero es antigua y no se ha revisado"
+        emits: {politica: antigua}
+      - code: borrador
+        label: "Hay un borrador sin aprobar"
+        emits: {politica: borrador}
+      - code: "no"
+        label: "No hay"
+        emits: {politica: "no"}
+
+  - code: org.politica.aprobacion
+    bloque: B02
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Quién la aprobó y cuándo?"
+    por_que: "La política la aprueba el órgano de gobierno, no el departamento de informática. Si la firmó solo el informático, el auditor lo señalará."
+    como_saberlo: "Mira la última página del documento o el acta del pleno, consejo o comité de dirección."
+    show_if: {in: [{var: "hechos.politica"}, ["vigente", "antigua"]]}
+    minutos_estimados: 1
+    opciones:
+      - code: organo_gobierno
+        label: "El pleno, consejo o dirección"
+        emits: {politica_aprobador: organo_gobierno}
+      - code: comite_seguridad
+        label: "El comité de seguridad"
+        emits: {politica_aprobador: comite}
+      - code: ti
+        label: "El responsable de informática"
+        emits: {politica_aprobador: ti}
+      - code: no_consta
+        label: "No consta quién la aprobó"
+        emits: {politica_aprobador: "no"}
+
+  - code: org.roles
+    bloque: B02
+    orden: 12
+    tipo: MULTI
+    texto: "¿Qué responsables de seguridad están designados por escrito?"
+    por_que: "El ENS exige diferenciar los papeles de la información, el servicio, la seguridad y el sistema. El auditor comprueba además que el responsable de seguridad y el del sistema no sean la misma persona."
+    como_saberlo: "Busca nombramientos, resoluciones o el anexo de la política donde figuren los nombres."
+    minutos_estimados: 2
+    opciones:
+      - code: rinfo
+        label: "Responsable de la Información"
+        emits: {rol_informacion: true}
+      - code: rserv
+        label: "Responsable del Servicio"
+        emits: {rol_servicio: true}
+      - code: rseg
+        label: "Responsable de Seguridad"
+        emits: {rol_seguridad: true}
+      - code: rsis
+        label: "Responsable del Sistema"
+        emits: {rol_sistema: true}
+      - code: ninguno
+        label: "No hay designaciones por escrito"
+        emits: {roles_designados: "no"}
+
+  - code: org.separacion_rseg
+    bloque: B02
+    orden: 13
+    tipo: SINGLE
+    texto: "¿El Responsable de Seguridad y el Responsable del Sistema son la misma persona?"
+    por_que: "Deben ser distintos: quien opera el sistema no puede ser quien vigila su seguridad. Es un hallazgo habitual en organizaciones pequeñas."
+    como_saberlo: "Compara los dos nombramientos."
+    show_if: {"!=": [{var: "hechos.roles_designados"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: distintas
+        label: "Son personas distintas"
+        emits: {separacion_rseg: true}
+      - code: misma
+        label: "Es la misma persona"
+        emits: {separacion_rseg: false}
+
+  - code: org.comite
+    bloque: B02
+    orden: 14
+    tipo: SINGLE
+    texto: "¿Hay un comité de seguridad que se reúna?"
+    por_que: "El auditor pedirá las actas. Un comité que existe en el papel y no se reúne es peor que no tenerlo."
+    como_saberlo: "Piensa si hay reuniones periódicas donde se hable de seguridad, con acta o al menos con convocatoria y acuerdos."
+    minutos_estimados: 2
+    opciones:
+      - code: trimestral
+        label: "Sí, se reúne cada tres meses o más a menudo"
+        emits: {comite: trimestral, comite_dias: 120}
+      - code: anual
+        label: "Sí, una o dos veces al año"
+        emits: {comite: anual, comite_dias: 365}
+      - code: papel
+        label: "Está constituido pero no se reúne"
+        emits: {comite: papel}
+      - code: "no"
+        label: "No hay comité"
+        emits: {comite: "no"}
+
+  # ==================================================================== org.2
+  - code: org.normativa
+    bloque: B02
+    orden: 20
+    tipo: MULTI
+    texto: "¿Qué normas de uso tenéis escritas para el personal?"
+    por_que: "Es org.2. El auditor pedirá la norma y, sobre todo, prueba de que el personal la conoce y la ha aceptado."
+    como_saberlo: "Busca documentos de uso aceptable, condiciones de uso de los equipos o el anexo que se firma al incorporarse."
+    minutos_estimados: 2
+    opciones:
+      - code: uso_equipos
+        label: "Uso de equipos y puesto de trabajo"
+        emits: {norma_equipos: true}
+      - code: correo_internet
+        label: "Correo electrónico e internet"
+        emits: {norma_correo: true}
+      - code: contrasenas
+        label: "Contraseñas y credenciales"
+        emits: {norma_credenciales: true}
+      - code: teletrabajo
+        label: "Teletrabajo y dispositivos móviles"
+        emits: {norma_teletrabajo: true}
+      - code: ninguna
+        label: "No hay normas escritas"
+        emits: {normativa: "no"}
+
+  - code: org.normativa.difusion
+    bloque: B02
+    orden: 21
+    tipo: SINGLE
+    texto: "¿Cómo sabéis que cada persona conoce esas normas?"
+    por_que: "Tener la norma no basta: hay que demostrar que se ha comunicado y aceptado. Es donde falla casi todo el mundo."
+    como_saberlo: "Piensa si se firma algo al incorporarse, si se envió por correo con acuse o si está en la intranet sin más."
+    show_if: {"!=": [{var: "hechos.normativa"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: firma
+        label: "Cada persona firma un documento"
+        emits: {normativa_difusion: firma}
+      - code: acuse
+        label: "Se envía y queda registro de lectura"
+        emits: {normativa_difusion: acuse}
+      - code: intranet
+        label: "Está publicada en la intranet"
+        emits: {normativa_difusion: publicada}
+      - code: "no"
+        label: "No hay constancia"
+        emits: {normativa_difusion: "no"}
+
+  # ==================================================================== org.3
+  - code: org.procedimientos
+    bloque: B02
+    orden: 30
+    tipo: MULTI
+    texto: "¿Qué procedimientos de seguridad tenéis escritos?"
+    por_que: "Es org.3: las tareas críticas no pueden depender de que una persona se acuerde de cómo se hacen."
+    como_saberlo: "Piensa en lo que haría otra persona si mañana faltara quien lo hace habitualmente."
+    minutos_estimados: 3
+    opciones:
+      - code: altas_bajas
+        label: "Altas y bajas de usuarios"
+        emits: {proc_altas_bajas: true}
+      - code: copias
+        label: "Copias de seguridad y restauración"
+        emits: {proc_copias: true}
+      - code: incidentes
+        label: "Gestión de incidentes"
+        emits: {proc_incidentes_doc: true}
+      - code: cambios
+        label: "Cambios y actualizaciones"
+        emits: {proc_cambios: true}
+      - code: continuidad
+        label: "Recuperación ante desastres"
+        emits: {proc_continuidad: true}
+      - code: ninguno
+        label: "No hay procedimientos escritos"
+        emits: {procedimientos: "no"}
+
+  - code: org.procedimientos.validacion
+    bloque: B02
+    orden: 31
+    tipo: SINGLE
+    texto: "¿Se comprueba que esos procedimientos funcionan de verdad?"
+    por_que: "Es el refuerzo de validación de procedimientos. Un procedimiento que nadie ha ejecutado suele estar desactualizado."
+    como_saberlo: "Vale una prueba, un simulacro o la constancia de haberlo seguido en un caso real."
+    show_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.procedimientos"}, "no"]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: probados
+        label: "Sí, se prueban o se han usado en casos reales"
+        emits: {procedimientos_validados: true}
+      - code: revisados
+        label: "Se revisan sobre el papel"
+        emits: {procedimientos_validados: revisados}
+      - code: "no"
+        label: "No se comprueban"
+        emits: {procedimientos_validados: false}
+
+  # ==================================================================== org.4
+  - code: org.autorizacion
+    bloque: B02
+    orden: 40
+    tipo: MULTI
+    texto: "Antes de poner algo nuevo en marcha, ¿hay que pedir permiso a alguien?"
+    por_que: "Es org.4, el proceso de autorización. Cubre equipos nuevos, aplicaciones, servicios en la nube, instalaciones y accesos."
+    como_saberlo: "Piensa qué pasaría si mañana un departamento contrata por su cuenta una herramienta en la nube: ¿se enteraría alguien?"
+    minutos_estimados: 2
+    opciones:
+      - code: equipos
+        label: "Sí, para equipos nuevos"
+        emits: {autoriza_equipos: true}
+      - code: software
+        label: "Sí, para aplicaciones o servicios nuevos"
+        emits: {autoriza_software: true}
+      - code: nube
+        label: "Sí, para contratar servicios en la nube"
+        emits: {autoriza_nube: true}
+      - code: instalaciones
+        label: "Sí, para instalaciones o traslados"
+        emits: {autoriza_instalaciones: true}
+      - code: "no"
+        label: "Cada uno instala o contrata lo que necesita"
+        emits: {autorizacion: "no"}
+
+  - code: org.categorizacion.revision
+    bloque: B02
+    orden: 45
+    tipo: SINGLE
+    texto: "¿Se revisa cada año que la categoría del sistema sigue siendo la correcta?"
+    por_que: "El Anexo I del RD 311/2022 obliga a reevaluar la categoría anualmente, o antes si hay cambios significativos. Es un olvido habitual: se categoriza una vez y no se vuelve a mirar."
+    como_saberlo: "Busca un acta o documento fechado donde se confirme o cambie la categoría."
+    minutos_estimados: 1
+    opciones:
+      - code: anual
+        label: "Sí, todos los años"
+        emits: {revision_categorizacion: anual}
+      - code: cambios
+        label: "Solo cuando hay cambios grandes"
+        emits: {revision_categorizacion: cambios}
+      - code: "no"
+        label: "Se hizo una vez y no se ha revisado"
+        emits: {revision_categorizacion: "no"}
+
+  - code: org.distintivo
+    bloque: B02
+    orden: 46
+    tipo: SINGLE
+    texto: "¿Publicáis en vuestra web o sede el distintivo de conformidad con el ENS?"
+    por_que: "El artículo 38.2 obliga a dar publicidad a las declaraciones y certificaciones de conformidad. Se olvida casi siempre y es fácil de corregir."
+    como_saberlo: "Mira el pie de vuestra web o el apartado de la sede electrónica donde estén los sellos y certificados."
+    show_if: {"!=": [{var: "hechos.ciclo"}, "primera"]}
+    minutos_estimados: 1
+    opciones:
+      - code: publicado
+        label: "Sí, está publicado"
+        emits: {distintivo_publicado: true}
+      - code: "no"
+        label: "No está publicado"
+        emits: {distintivo_publicado: false}
+      - code: sin_conformidad
+        label: "Todavía no tenemos conformidad"
+        emits: {distintivo_publicado: "na"}
+
+  # =================================================================== op.pl.1
+  - code: op.pl.riesgos
+    bloque: B07
+    orden: 10
+    tipo: SINGLE
+    texto: "¿Tenéis un análisis de riesgos del sistema?"
+    por_que: "Es obligatorio en todas las categorías (op.pl.1) y sostiene la Declaración de Aplicabilidad. Sin él, las exclusiones de medidas no se pueden justificar."
+    como_saberlo: "Busca un informe con activos, amenazas y riesgos. Puede estar hecho con PILAR, con una hoja de cálculo o por una consultora."
+    minutos_estimados: 2
+    opciones:
+      - code: formal_reciente
+        label: "Sí, de los últimos dos años"
+        emits: {analisis_riesgos: reciente}
+      - code: antiguo
+        label: "Sí, pero es antiguo"
+        emits: {analisis_riesgos: antiguo}
+      - code: informal
+        label: "Hay algo informal, sin metodología"
+        emits: {analisis_riesgos: informal}
+      - code: "no"
+        label: "No hay"
+        emits: {analisis_riesgos: "no"}
+
+  - code: op.pl.riesgos.metodologia
+    bloque: B07
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Con qué método se hizo?"
+    por_que: "En Media hace falta un análisis semiformal y en Alta uno formal, con metodología reconocida y resultados reproducibles."
+    como_saberlo: "Mira la portada del informe: suele indicar MAGERIT, ISO 27005 u otra metodología, y la herramienta usada."
+    show_if: {in: [{var: "hechos.analisis_riesgos"}, ["reciente", "antiguo", "informal"]]}
+    minutos_estimados: 1
+    opciones:
+      - code: magerit_pilar
+        label: "MAGERIT con PILAR"
+        emits: {ar_metodologia: magerit_pilar}
+      - code: magerit_otro
+        label: "MAGERIT con otra herramienta"
+        emits: {ar_metodologia: magerit_otro}
+      - code: iso
+        label: "ISO 27005 u otra reconocida"
+        emits: {ar_metodologia: iso}
+      - code: propia
+        label: "Método propio"
+        emits: {ar_metodologia: propia}
+
+  - code: op.pl.riesgos.aprobacion
+    bloque: B07
+    orden: 12
+    tipo: SINGLE
+    texto: "¿Quién aceptó los riesgos que quedaron sin tratar?"
+    por_que: "El riesgo residual lo acepta la dirección, no el técnico que hizo el análisis. Es una firma que casi nunca está y que el auditor busca."
+    como_saberlo: "Busca un acta o una firma de aceptación del riesgo residual."
+    show_if: {in: [{var: "hechos.analisis_riesgos"}, ["reciente", "antiguo"]]}
+    minutos_estimados: 1
+    opciones:
+      - code: direccion
+        label: "La dirección o el órgano de gobierno"
+        emits: {ar_aceptacion: direccion}
+      - code: comite
+        label: "El comité de seguridad"
+        emits: {ar_aceptacion: comite}
+      - code: nadie
+        label: "No consta una aceptación formal"
+        emits: {ar_aceptacion: "no"}
+
+  # =================================================================== op.pl.2
+  - code: op.pl.arquitectura
+    bloque: B07
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Hay un documento o diagrama que explique cómo está montado el sistema?"
+    por_que: "Es op.pl.2. El auditor lo usa para entender el alcance y comprobar que las medidas se aplican donde toca."
+    como_saberlo: "Busca un diagrama de red o de arquitectura, con zonas, servidores, conexiones a internet y accesos de terceros."
+    minutos_estimados: 2
+    opciones:
+      - code: actualizado
+        label: "Sí, actualizado"
+        emits: {arquitectura: actualizado}
+      - code: desactualizado
+        label: "Sí, pero está desfasado"
+        emits: {arquitectura: desactualizado}
+      - code: parcial
+        label: "Hay diagramas sueltos"
+        emits: {arquitectura: parcial}
+      - code: "no"
+        label: "No hay nada dibujado"
+        emits: {arquitectura: "no"}
+
+  - code: op.pl.sgsi
+    bloque: B07
+    orden: 21
+    tipo: SINGLE
+    texto: "¿Existe un sistema de gestión de la seguridad con revisión y mejora continua?"
+    por_que: "Es el refuerzo de sistema de gestión, obligatorio en Media y Alta: que alguien revise periódicamente si lo implantado funciona y decida mejoras."
+    como_saberlo: "Piensa si hay revisiones periódicas con indicadores, acciones de mejora y seguimiento, como en una ISO 27001."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: iso27001
+        label: "Sí, estamos certificados en ISO 27001"
+        emits: {sgsi: iso27001}
+      - code: propio
+        label: "Sí, con revisiones propias documentadas"
+        emits: {sgsi: propio}
+      - code: informal
+        label: "Se revisa, pero sin documentar"
+        emits: {sgsi: informal}
+      - code: "no"
+        label: "No hay revisión periódica"
+        emits: {sgsi: "no"}
+
+  # =================================================================== op.pl.3
+  - code: op.pl.adquisicion
+    bloque: B07
+    orden: 30
+    tipo: SINGLE
+    texto: "Cuando compráis o contratáis algo tecnológico, ¿se incluyen requisitos de seguridad?"
+    por_que: "Es op.pl.3. En el sector público se traduce en los pliegos: el auditor pedirá ver un expediente reciente."
+    como_saberlo: "Mira el último pliego o contrato tecnológico: ¿tiene cláusulas de seguridad, de conformidad ENS o de protección de datos?"
+    minutos_estimados: 2
+    opciones:
+      - code: pliegos
+        label: "Sí, hay cláusulas tipo en los pliegos"
+        emits: {adquisicion: pliegos}
+      - code: caso
+        label: "Se añaden según el caso"
+        emits: {adquisicion: caso}
+      - code: "no"
+        label: "No se incluyen"
+        emits: {adquisicion: "no"}
+
+  # =================================================================== op.pl.4
+  - code: op.pl.capacidad
+    bloque: B07
+    orden: 40
+    tipo: SINGLE
+    texto: "¿Se vigila que no se os acabe el espacio, la memoria o el ancho de banda?"
+    por_que: "Es op.pl.4. El agotamiento de recursos es una de las causas más comunes de caída, y el auditor pedirá ver la vigilancia y la previsión."
+    como_saberlo: "Mira si hay alguna herramienta que avise cuando un disco se llena, o un informe periódico de uso."
+    show_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: monitorizacion
+        label: "Sí, con avisos automáticos"
+        emits: {capacidad: monitorizacion}
+      - code: revision
+        label: "Se revisa de vez en cuando"
+        emits: {capacidad: revision}
+      - code: incidente
+        label: "Nos enteramos cuando falla"
+        emits: {capacidad: reactiva}
+
+  - code: op.pl.capacidad.previsiones
+    bloque: B07
+    orden: 41
+    tipo: SINGLE
+    texto: "¿Se hacen previsiones de crecimiento para anticipar ampliaciones?"
+    por_que: "Es el refuerzo de mejora continua de la gestión de la capacidad, con Disponibilidad media o alta."
+    como_saberlo: "Piensa si al preparar el presupuesto se estima qué recursos harán falta el año siguiente."
+    show_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí, con datos de uso"
+        emits: {capacidad_previsiones: true}
+      - code: "no"
+        label: "No se prevé"
+        emits: {capacidad_previsiones: false}
+
+  # =================================================================== op.pl.5
+  - code: op.pl.componentes
+    bloque: B07
+    orden: 50
+    tipo: SINGLE
+    texto: "Al elegir productos de seguridad, ¿se mira si están en el catálogo CPSTIC del CCN?"
+    por_que: "op.pl.5 aplica en Media y Alta. Si no hay producto cualificado con esa función, hay que justificarlo y compensarlo. Ver el flujo completo en CLAUDE.md §3.2."
+    como_saberlo: "El CPSTIC es el catálogo de productos cualificados del Centro Criptológico Nacional. Si nunca lo habéis consultado, responde que no: BLENS comprobará por vosotros los productos que ya usáis."
+    glosario:
+      CPSTIC: "Catálogo del CCN con los productos de seguridad cualificados para su uso en el ENS"
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: siempre
+        label: "Sí, siempre se consulta"
+        emits: {cpstic_consulta: siempre}
+      - code: aveces
+        label: "A veces"
+        emits: {cpstic_consulta: aveces}
+      - code: "no"
+        label: "No lo conocíamos"
+        emits: {cpstic_consulta: "no"}
+
+  - code: op.pl.servicio_seguridad
+    bloque: B07
+    orden: 51
+    tipo: BOOL
+    texto: "¿Prestáis vosotros algún servicio de seguridad a terceros?"
+    por_que: "Si prestáis un servicio de seguridad bajo el ENS, vuestro producto o servicio debe estar cualificado en el CPSTIC o aportar certificación equivalente."
+    como_saberlo: "Cuenta si ofrecéis a otras entidades servicios como monitorización, copias, alojamiento seguro o gestión de identidades."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí"
+        emits: {presta_servicio_seguridad: true}
+      - code: "no"
+        label: "No"
+        emits: {presta_servicio_seguridad: false}

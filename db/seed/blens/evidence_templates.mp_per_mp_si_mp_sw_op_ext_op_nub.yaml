@@ -1,0 +1,544 @@
+# Seed BLENS · Plantillas de evidencia — familias mp.per, mp.si, mp.sw, op.ext y op.nub
+# Especificación: docs/evidencias_por_herramienta.md §3.13, §3.14, §3.15, §3.16
+
+version: 1
+familias: [mp.per, mp.si, mp.sw, op.ext, op.nub]
+
+templates:
+
+  # ==================================================================== mp.per.1
+  - code: EV-mp.per.1-01
+    measure: mp.per.1
+    titulo: "Caracterización de los puestos con acceso al sistema"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, xlsx]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "06_[mp]/mp.per.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    generable: true
+    instrucciones: "Definición de los puestos con acceso al sistema: funciones, responsabilidades de seguridad y requisitos exigidos."
+    criterios_aceptacion:
+      - "Cubre los puestos técnicos y los de gestión con acceso"
+      - "Incluye las responsabilidades de seguridad de cada uno"
+
+  # ==================================================================== mp.per.2
+  - code: EV-mp.per.2-01
+    measure: mp.per.2
+    titulo: "Modelo de deberes y obligaciones"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "06_[mp]/mp.per.2"
+    generable: true
+    instrucciones: "Documento que recoja el deber de confidencialidad, el uso aceptable y las consecuencias del incumplimiento, para personal propio y externo."
+    criterios_aceptacion:
+      - "Cubre la confidencialidad más allá del fin de la relación"
+      - "Existe versión para personal externo"
+
+  - code: EV-mp.per.2-02
+    measure: mp.per.2
+    refuerzo: mp.per.2.r1
+    titulo: "Firmas de aceptación (muestra)"
+    tipo: DOCUMENTO
+    formatos: [pdf, png, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.per.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Muestra de firmas o acuses de las personas con acceso, incluidas las incorporaciones del periodo y el personal de proveedores."
+    criterios_aceptacion:
+      - "Las firmas están fechadas"
+      - "Incluye a las incorporaciones del periodo auditado"
+      - "Incluye al personal externo con acceso"
+    rechazos_tipicos:
+      - "Solo hay firmas de la plantilla antigua"
+      - "El personal del proveedor de soporte no ha firmado nada"
+
+  - code: EV-mp.per.2-03
+    measure: mp.per.2
+    titulo: "Procedimiento de salida del personal"
+    tipo: REGISTRO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.per.2"
+    applies_if: {"!=": [{var: "hechos.baja_personal"}, "no"]}
+    instrucciones: "Lista de comprobación de bajas y una muestra de salidas del periodo: devolución de equipos, tarjetas y credenciales, y recordatorio de la confidencialidad."
+    criterios_aceptacion:
+      - "Consta la devolución de equipos y credenciales"
+      - "Coincide con la retirada de accesos del directorio"
+
+  # ==================================================================== mp.per.3
+  - code: EV-mp.per.3-01
+    measure: mp.per.3
+    option_group: mp.per.3.participacion
+    preferencia: 1
+    titulo: "Registro de participación en concienciación"
+    tipo: REGISTRO
+    formatos: [csv, pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.per.3"
+    instrucciones: "Informe de la plataforma de formación con las personas que han completado la acción, o lista de asistencia firmada."
+    criterios_aceptacion:
+      - "Se ve la cobertura: participantes frente a plantilla"
+      - "Fecha dentro del último año"
+      - "Incluye las incorporaciones del periodo"
+    rechazos_tipicos:
+      - "Una charla a la que asistieron diez de ochenta personas"
+      - "Convocatoria sin ninguna prueba de asistencia"
+      - "Nada para quien se incorporó después de la sesión anual"
+
+  - code: EV-mp.per.3-02
+    measure: mp.per.3
+    option_group: mp.per.3.participacion
+    preferencia: 2
+    titulo: "Convocatoria y material impartido"
+    tipo: EMAIL
+    formatos: [pdf, png, eml, pptx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.per.3"
+    instrucciones: "Correo de convocatoria con fecha y destinatarios, más el material utilizado."
+    criterios_aceptacion:
+      - "Se ve la fecha y a quién se convocó"
+      - "El material trata riesgos reales de la organización"
+
+  - code: EV-mp.per.3-03
+    measure: mp.per.3
+    titulo: "Resultados de la simulación de phishing"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, png]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.per.3"
+    applies_if: {"==": [{var: "hechos.concienciacion_phishing"}, true]}
+    instrucciones: "Informe de la campaña: enviados, clics, reportes y acciones posteriores con quienes cayeron."
+    criterios_aceptacion:
+      - "Se ven los resultados y qué se hizo después"
+
+  # ==================================================================== mp.per.4
+  - code: EV-mp.per.4-01
+    measure: mp.per.4
+    titulo: "Formación técnica del personal con privilegios"
+    tipo: DOCUMENTO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.per.4"
+    instrucciones: "Certificados, diplomas o registro de la formación específica recibida por administradores y responsables de seguridad."
+    criterios_aceptacion:
+      - "Se identifica la persona, el curso y la fecha"
+      - "La formación guarda relación con las herramientas o funciones que ejerce"
+    rechazos_tipicos:
+      - "Formación general de ofimática presentada como formación de seguridad"
+
+  # ===================================================================== mp.si.1
+  - code: EV-mp.si.1-01
+    measure: mp.si.1
+    titulo: "Marcado de soportes"
+    tipo: FOTO
+    formatos: [png, pdf, jpg]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.si.1"
+    applies_if: {">=": [{var: "nivel_orden.C"}, 2]}
+    instrucciones: "Fotografías de los soportes etiquetados y el criterio de marcado aplicado."
+    criterios_aceptacion:
+      - "La etiqueta identifica contenido y nivel"
+      - "Coincide con la norma de calificación de la información"
+
+  # ===================================================================== mp.si.2
+  - code: EV-mp.si.2-01
+    measure: mp.si.2
+    titulo: "Cifrado de los soportes"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.si.2"
+    applies_if: {">=": [{var: "nivel_orden.CI"}, 2]}
+    instrucciones: "Evidencia del cifrado de discos, soportes extraíbles y cintas de copia, con el alcance cubierto."
+    criterios_aceptacion:
+      - "Se ve qué soportes están cifrados y cuáles no"
+      - "Consta la custodia de las claves de recuperación"
+    rechazos_tipicos:
+      - "Cifrado activo sin saber dónde están las claves de recuperación"
+
+  # ============================================================== mp.si.3 y .4
+  - code: EV-mp.si.3-01
+    measure: mp.si.3
+    titulo: "Custodia de los soportes"
+    tipo: FOTO
+    formatos: [png, pdf, jpg]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.si.3"
+    applies_if: {"!=": [{var: "hechos.soportes"}, "no"]}
+    instrucciones: "Fotografía del armario, caja o sala donde se custodian, y quién tiene acceso."
+    criterios_aceptacion:
+      - "Se ve el cierre o control de acceso"
+      - "Consta quién tiene la llave o el código"
+
+  - code: EV-mp.si.4-01
+    measure: mp.si.4
+    titulo: "Control del transporte de soportes"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.si.4"
+    applies_if: {"!=": [{var: "hechos.soportes"}, "no"]}
+    instrucciones: "Registro de salidas y entradas de soportes: qué salió, quién lo llevó, a dónde y cuándo se devolvió."
+    criterios_aceptacion:
+      - "Se identifica el soporte, el portador y el destino"
+      - "Consta la confirmación de recepción"
+
+  - code: EV-mp.si.4-02
+    measure: mp.si.4
+    titulo: "Control del uso de soportes extraíbles"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.si.4"
+    applies_if: {"!=": [{var: "hechos.control_usb"}, "libre"]}
+    instrucciones: "Captura de la política que bloquea o restringe los soportes extraíbles, con su alcance."
+    criterios_aceptacion:
+      - "Se ve la política aplicada y a qué equipos"
+      - "Se ven las excepciones autorizadas, si las hay"
+
+  # ===================================================================== mp.si.5
+  - code: EV-mp.si.5-01
+    measure: mp.si.5
+    option_group: mp.si.5.destruccion
+    preferencia: 1
+    titulo: "Certificados de destrucción o borrado"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.si.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.C"}, 1]}, {"==": [{var: "hechos.destruccion"}, "certificado"]}]}
+    instrucciones: "Certificados de la empresa que destruye o borra los soportes, con la relación de lo destruido."
+    criterios_aceptacion:
+      - "Identifica los soportes o equipos destruidos"
+      - "Consta la empresa, la fecha y el método"
+
+  - code: EV-mp.si.5-02
+    measure: mp.si.5
+    option_group: mp.si.5.destruccion
+    preferencia: 2
+    titulo: "Registro de borrado seguro"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.si.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.C"}, 1]}, {"==": [{var: "hechos.destruccion"}, "borrado"]}]}
+    instrucciones: "Registro de los borrados realizados: equipo, método, herramienta, fecha y responsable."
+    criterios_aceptacion:
+      - "Se identifica el equipo y el método de borrado"
+      - "El método es de borrado seguro, no un formateo rápido"
+    rechazos_tipicos:
+      - "Formatear el disco y donar el equipo, sin más"
+      - "Equipos retirados a un almacén sin borrar, con información dentro"
+
+  # ===================================================================== mp.sw.1
+  - code: EV-mp.sw.1-01
+    measure: mp.sw.1
+    titulo: "Separación de entornos"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.sw.1"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.desarrollo"}, "no"]}]}
+    instrucciones: "Diagrama o captura que muestre los entornos de desarrollo, pruebas y producción, y quién accede a cada uno."
+    criterios_aceptacion:
+      - "Los entornos están separados de verdad, no solo por nombre"
+      - "Se ve quién tiene acceso a producción"
+    rechazos_tipicos:
+      - "Desarrollar directamente sobre el entorno de producción"
+
+  - code: EV-mp.sw.1-02
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r4
+    titulo: "Tratamiento de los datos de pruebas"
+    tipo: DOCUMENTO
+    formatos: [pdf, png, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.sw.1"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.desarrollo"}, "no"]}]}
+    instrucciones: "Evidencia de que los datos de pruebas son ficticios o están anonimizados. Si se usan datos reales, la autorización y las medidas aplicadas."
+    criterios_aceptacion:
+      - "Se explica el origen de los datos de pruebas"
+      - "Si son reales, consta la autorización y la protección equivalente a producción"
+    rechazos_tipicos:
+      - "Copiar la base de producción a un entorno de pruebas sin protección"
+
+  - code: EV-mp.sw.1-03
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r2
+    titulo: "Metodología de desarrollo seguro"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.sw.1"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.desarrollo"}, "no"]}]}
+    generable: true
+    instrucciones: "Metodología o normas de desarrollo seguro y evidencia de su aplicación: revisiones de código, análisis automáticos o informes de dependencias."
+    criterios_aceptacion:
+      - "Se ve aplicada en desarrollos reales, no solo descrita"
+      - "Incluye tratamiento de los hallazgos"
+
+  - code: EV-mp.sw.1-04
+    measure: mp.sw.1
+    titulo: "Requisitos de seguridad exigidos al desarrollo externo"
+    tipo: CONTRATO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.sw.1"
+    applies_if: {in: [{var: "hechos.desarrollo"}, ["externo", "ambos"]]}
+    instrucciones: "Cláusulas del contrato de desarrollo con los requisitos de seguridad, la propiedad del código y las obligaciones de corrección."
+    criterios_aceptacion:
+      - "Incluye requisitos de seguridad y corrección de vulnerabilidades"
+      - "Define qué ocurre con el código y los datos al terminar"
+
+  # ===================================================================== mp.sw.2
+  - code: EV-mp.sw.2-01
+    measure: mp.sw.2
+    titulo: "Acta de aceptación y puesta en servicio"
+    tipo: ACTA
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.sw.2"
+    generable: true
+    instrucciones: "Acta de la última puesta en servicio: qué se probó, quién lo aceptó y cuándo. Vale también para software comprado."
+    criterios_aceptacion:
+      - "Consta quién acepta y con qué fecha"
+      - "Se ven las pruebas realizadas"
+      - "Es una puesta en servicio real del periodo"
+    rechazos_tipicos:
+      - "Aplicaciones en producción sin ninguna aceptación documentada"
+
+  - code: EV-mp.sw.2-02
+    measure: mp.sw.2
+    refuerzo: mp.sw.2.r1
+    titulo: "Pruebas previas a la puesta en servicio"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.sw.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Resultados de las pruebas funcionales y de seguridad realizadas antes de publicar, en un entorno que no sea producción."
+    criterios_aceptacion:
+      - "Se identifica el entorno de prueba"
+      - "Constan los resultados, incluidos los fallos corregidos"
+
+  # ===================================================================== op.ext.1
+  - code: EV-op.ext.1-01
+    measure: op.ext.1
+    titulo: "Contratos con cláusulas de seguridad y niveles de servicio"
+    tipo: CONTRATO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.ext.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Contratos de los proveedores que acceden al sistema, con sus cláusulas de seguridad, niveles de servicio y, si hay datos personales, el encargo de tratamiento."
+    criterios_aceptacion:
+      - "Incluye obligaciones de seguridad y confidencialidad"
+      - "Define niveles de servicio medibles"
+      - "Vigente durante el periodo auditado"
+      - "Contempla la notificación de incidentes por parte del proveedor"
+    rechazos_tipicos:
+      - "Proveedor con acceso a los servidores trabajando sin contrato escrito"
+      - "Contrato sin ninguna mención a seguridad ni a protección de datos"
+
+  - code: EV-op.ext.1-02
+    measure: op.ext.1
+    titulo: "Certificación ENS de los proveedores"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.ext.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Certificados de conformidad ENS de los proveedores que prestan servicios dentro del alcance, con su categoría y alcance."
+    criterios_aceptacion:
+      - "La categoría del certificado es igual o superior a la del sistema"
+      - "El alcance del certificado cubre el servicio contratado"
+      - "Vigente en el periodo auditado"
+    rechazos_tipicos:
+      - "Presentar una ISO 27001 como si fuera conformidad ENS"
+      - "Certificado cuyo alcance no incluye el servicio que os prestan"
+      - "Certificado caducado"
+
+  - code: EV-op.ext.1-03
+    measure: op.ext.1
+    titulo: "Punto de contacto de seguridad del proveedor"
+    tipo: DOCUMENTO
+    formatos: [pdf, png, eml]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.ext.1"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Designación por escrito del punto de contacto de seguridad de cada proveedor de servicios externalizados, con nombre y vía de contacto (art. 13.5 del RD 311/2022)."
+    criterios_aceptacion:
+      - "Identifica a una persona concreta y cómo contactarla"
+      - "Es el responsable de seguridad del proveedor, forma parte de su área o tiene comunicación directa con ella"
+      - "Cubre a los proveedores críticos del alcance"
+    rechazos_tipicos:
+      - "Dar el contacto comercial como punto de contacto de seguridad"
+
+  # ===================================================================== op.ext.2
+  - code: EV-op.ext.2-01
+    measure: op.ext.2
+    titulo: "Seguimiento del servicio prestado"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.ext.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Informes periódicos del proveedor y actas o correos de seguimiento donde se revise el cumplimiento de lo pactado."
+    criterios_aceptacion:
+      - "Los informes cubren el periodo auditado"
+      - "Se ve que alguien de vuestra organización los revisa"
+      - "Los incumplimientos tienen seguimiento"
+    rechazos_tipicos:
+      - "Informes mensuales que nadie ha abierto"
+
+  # ===================================================================== op.ext.3
+  - code: EV-op.ext.3-01
+    measure: op.ext.3
+    titulo: "Control de la cadena de suministro"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.ext.3"
+    applies_if: {">=": [{var: "categoria_orden"}, 3]}
+    instrucciones: "Identificación de subcontratistas de vuestros proveedores críticos y requisitos que se les trasladan."
+    criterios_aceptacion:
+      - "Identifica quién subcontrata y a quién"
+      - "Consta la obligación de trasladar los requisitos de seguridad"
+
+  # ===================================================================== op.ext.4
+  - code: EV-op.ext.4-01
+    measure: op.ext.4
+    titulo: "Acuerdos de interconexión"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.ext.4"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.interconexiones"}, "no"]}]}
+    instrucciones: "Acuerdos con las organizaciones con las que os interconectáis, más el diagrama de esas conexiones y sus controles."
+    criterios_aceptacion:
+      - "Cada interconexión tiene acuerdo o autorización"
+      - "El diagrama coincide con las conexiones reales"
+      - "Constan los controles aplicados en cada punto"
+    rechazos_tipicos:
+      - "Conexiones permanentes con terceros sin ningún acuerdo"
+
+  # ===================================================================== op.nub.1
+  - code: EV-op.nub.1-01
+    measure: op.nub.1
+    option_group: op.nub.1.configuracion
+    preferencia: 1
+    titulo: "Informe de postura de seguridad de la nube"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.nub.1"
+    applies_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    instrucciones: "Informe de la herramienta de postura de seguridad de la plataforma, con las recomendaciones y su estado."
+    criterios_aceptacion:
+      - "Cubre la suscripción o inquilino en alcance"
+      - "Se ven las recomendaciones críticas y qué se ha hecho con ellas"
+      - "Fecha reciente"
+    product_hints:
+      - match: {producto: "Microsoft 365"}
+        instrucciones: "Portal de Defender → Puntuación de seguridad de Microsoft: exporta el informe con las acciones pendientes"
+      - match: {producto: "Azure"}
+        instrucciones: "Microsoft Defender for Cloud → Puntuación de seguridad → Descargar informe CSV"
+      - match: {producto: "AWS"}
+        instrucciones: "Security Hub → Security standards → exporta los controles fallidos"
+
+  - code: EV-op.nub.1-02
+    measure: op.nub.1
+    option_group: op.nub.1.configuracion
+    preferencia: 2
+    titulo: "Capturas de la configuración clave de la nube"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.nub.1"
+    applies_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    instrucciones: "Capturas de los puntos que mirará el auditor: doble factor de administración, registro de auditoría activado, cifrado y región de los datos."
+    criterios_aceptacion:
+      - "Se ve el inquilino u organización en cada captura"
+      - "Aparecen los cuatro puntos: administración protegida, registro, cifrado y región"
+
+  - code: EV-op.nub.1-03
+    measure: op.nub.1
+    titulo: "Reparto de responsabilidades con el proveedor"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.nub.1"
+    applies_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    generable: true
+    instrucciones: "Matriz que indique qué protege el proveedor y qué configuráis vosotros: identidades, copias, registros, cifrado y actualizaciones."
+    criterios_aceptacion:
+      - "No queda ninguna responsabilidad sin asignar"
+      - "Coincide con lo declarado en el perfilado"
+    rechazos_tipicos:
+      - "Dar por supuesto que el proveedor hace las copias sin que figure en ningún sitio"
+
+  - code: EV-op.nub.1-04
+    measure: op.nub.1
+    refuerzo: op.nub.1.r1
+    titulo: "Conformidad ENS del servicio en la nube"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.nub.1"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"==": [{var: "hechos.instalacion_externa"}, true]}]}
+    instrucciones: "Certificado de conformidad ENS del servicio en la nube utilizado, con su categoría, alcance y vigencia."
+    criterios_aceptacion:
+      - "El certificado es del servicio concreto que usáis, no solo del proveedor"
+      - "La categoría cubre la del sistema"
+      - "Vigente"
+    rechazos_tipicos:
+      - "Certificado del proveedor que no incluye el servicio contratado"
+
+  - code: EV-op.nub.1-05
+    measure: op.nub.1
+    refuerzo: op.nub.1.r2
+    titulo: "Guía de configuración segura aplicada"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.nub.1"
+    applies_if: {and: [{">=": [{var: "categoria_orden"}, 3]}, {"==": [{var: "hechos.instalacion_externa"}, true]}]}
+    instrucciones: "Referencia de la guía seguida (CCN, CIS o del fabricante) y evidencia de su aplicación sobre la plataforma."
+    criterios_aceptacion:
+      - "Se identifica la guía y su versión"
+      - "Se aporta evidencia de aplicación, no solo la guía"
+    rechazos_tipicos:
+      - "Aportar la guía del CCN sin ninguna prueba de haberla aplicado"

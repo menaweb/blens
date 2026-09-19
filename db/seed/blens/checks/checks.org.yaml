@@ -1,0 +1,176 @@
+# Seed BLENS · Checks de verificación — familia org
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: org
+checks:
+  - code: "CHK-org.1.1"
+    measure: org.1
+    item: "org.1.1"
+    descripcion: "Los objetivos o misión de la organización"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.1-01, EV-org.1-02, EV-org.1-03, EV-org.1-04, EV-org.1-05, EV-org.1-06, EV-org.1-07]
+  - code: "CHK-org.1.2"
+    measure: org.1
+    item: "org.1.2"
+    descripcion: "El marco legal y regulatorio en el que se desarrollarán las actividades"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.1-01, EV-org.1-02, EV-org.1-03, EV-org.1-04, EV-org.1-05, EV-org.1-06, EV-org.1-07]
+  - code: "CHK-org.1.3"
+    measure: org.1
+    item: "org.1.3"
+    descripcion: "Los roles o funciones de seguridad, definiendo para cada uno los deberes y responsabilidades del cargo, así como el procedimiento para su designación y renovación"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-org.1-01, EV-org.1-02, EV-org.1-03, EV-org.1-04, EV-org.1-05, EV-org.1-06, EV-org.1-07]
+  - code: "CHK-org.1.4"
+    measure: org.1
+    item: "org.1.4"
+    descripcion: "La estructura del comité o los comités para la gestión y coordinación de la seguridad, detallando su ámbito de responsabilidad, las personas integrantes y la relación con otros elementos de la organización"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.1-01, EV-org.1-02, EV-org.1-03, EV-org.1-04, EV-org.1-05, EV-org.1-06, EV-org.1-07]
+  - code: "CHK-org.1.5"
+    measure: org.1
+    item: "org.1.5"
+    descripcion: "Las directrices para la estructuración de la documentación de seguridad del sistema, su gestión y acceso"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-org.1-01, EV-org.1-02, EV-org.1-03, EV-org.1-04, EV-org.1-05, EV-org.1-06, EV-org.1-07]
+  - code: "CHK-org.2.1"
+    measure: org.2
+    item: "org.2.1"
+    descripcion: "El uso correcto de equipos, servicios e instalaciones, así como lo que se considerará uso indebido"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-org.2-01, EV-org.2-02, EV-org.2-03]
+  - code: "CHK-org.2.2"
+    measure: org.2
+    item: "org.2.2"
+    descripcion: "La responsabilidad del personal con respecto al cumplimiento o violación de la normativa: derechos, deberes y medidas disciplinarias de acuerdo con la legislación vigente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.2-01, EV-org.2-02, EV-org.2-03]
+  - code: "CHK-org.2.r1.1"
+    measure: org.2
+    refuerzo: org.2.r1
+    item: "org.2.r1.1"
+    descripcion: "Se dispondrá de una documentación de seguridad, desarrollada según lo reflejado en las guías CCN-STIC que resulten de aplicación"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-org.3.1"
+    measure: org.3
+    item: "org.3.1"
+    descripcion: "Cómo llevar a cabo las tareas habituales"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.2"
+    measure: org.3
+    item: "org.3.2"
+    descripcion: "Quién debe hacer cada tarea"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.3"
+    measure: org.3
+    item: "org.3.3"
+    descripcion: "Cómo identificar y reportar comportamientos anómalos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4"
+    measure: org.3
+    item: "org.3.4"
+    descripcion: "La forma en que se ha de tratar la información en consideración al nivel de seguridad que requiere, precisando cómo efectuar:"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4a"
+    measure: org.3
+    item: "a)"
+    item_padre: "org.3.4"
+    descripcion: "Su control de acceso"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4b"
+    measure: org.3
+    item: "b)"
+    item_padre: "org.3.4"
+    descripcion: "Su almacenamiento"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4c"
+    measure: org.3
+    item: "c)"
+    item_padre: "org.3.4"
+    descripcion: "La realización de copias"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4d"
+    measure: org.3
+    item: "d)"
+    item_padre: "org.3.4"
+    descripcion: "El etiquetado de soportes"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4e"
+    measure: org.3
+    item: "e)"
+    item_padre: "org.3.4"
+    descripcion: "Su transmisión telemática"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.4f"
+    measure: org.3
+    item: "f)"
+    item_padre: "org.3.4"
+    descripcion: "Cualquier otra actividad relacionada con dicha información"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-org.3-01]
+  - code: "CHK-org.3.r1.1"
+    measure: org.3
+    refuerzo: org.3.r1
+    item: "org.3.r1.1"
+    descripcion: "Se requerirá la validación de los procedimientos de seguridad por la autoridad correspondiente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.3-02]
+  - code: "CHK-org.4.1"
+    measure: org.4
+    item: "org.4.1"
+    descripcion: "Utilización de instalaciones, habituales y alternativas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.2"
+    measure: org.4
+    item: "org.4.2"
+    descripcion: "Entrada de equipos en producción, en particular, equipos que involucren criptografía"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.3"
+    measure: org.4
+    item: "org.4.3"
+    descripcion: "Entrada de aplicaciones en producción"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.4"
+    measure: org.4
+    item: "org.4.4"
+    descripcion: "Establecimiento de enlaces de comunicaciones con otros sistemas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.5"
+    measure: org.4
+    item: "org.4.5"
+    descripcion: "Utilización de medios de comunicación, habituales y alternativos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.6"
+    measure: org.4
+    item: "org.4.6"
+    descripcion: "Utilización de soportes de información"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.7"
+    measure: org.4
+    item: "org.4.7"
+    descripcion: "Utilización de equipos móviles. Se entenderá por equipos móviles ordenadores portátiles, tabletas, teléfonos móviles u otros de naturaleza análoga"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]
+  - code: "CHK-org.4.8"
+    measure: org.4
+    item: "org.4.8"
+    descripcion: "Utilización de servicios de terceros, bajo contrato o convenio, concesión, encargo, etc"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-org.4-01, EV-org.4-02]

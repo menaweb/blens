@@ -1,0 +1,419 @@
+# Seed BLENS · Preguntas de perfilado — familias mp.com (Comunicaciones), mp.s (Servicios) y op.mon (Monitorización)
+# Especificación: docs/cuestionario_perfilado.md (bloques B11, B12 y B16)
+#
+# APLICABILIDAD:
+#   mp.com.1, mp.s.1, mp.s.2, mp.s.3, op.mon.1, op.mon.2, op.mon.3 → categoría (todas)
+#   mp.com.4 → categoría MEDIA y ALTA
+#   mp.com.2 → Confidencialidad ≥ BAJO · mp.com.3 → Integridad o Autenticidad ≥ BAJO
+#   mp.s.4  → Disponibilidad ≥ MEDIO
+# Variables: categoria_orden · nivel_orden.C|D · nivel_orden.IA
+
+version: 1
+familias: [mp.com, mp.s, op.mon]
+bloques:
+  - code: B11
+    titulo: Red y comunicaciones
+    minutos_estimados: 9
+  - code: B12
+    titulo: Monitorización
+    minutos_estimados: 6
+  - code: B16
+    titulo: Correo, web y navegación
+    minutos_estimados: 8
+
+questions:
+
+  # ================================================================== mp.com.1
+  - code: mp.com.firewall
+    bloque: B11
+    orden: 10
+    tipo: TOOL
+    funcion: FIREWALL
+    texto: "¿Qué protege vuestra red de internet?"
+    por_que: "Es el perímetro seguro (mp.com.1). El auditor pedirá ver las reglas y comprobará que por defecto se deniega lo que no está permitido."
+    como_saberlo: "Suele ser un cortafuegos físico (Fortinet, Palo Alto, Sophos, pfSense) o el router del operador. Si estáis solo en la nube, cuenta el cortafuegos de la plataforma."
+    a_quien_preguntar: "Quien administra la red"
+    minutos_estimados: 1
+
+  - code: mp.com.reglas
+    bloque: B11
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Se revisan cada cierto tiempo las reglas del cortafuegos?"
+    por_que: "Las reglas se acumulan durante años y nadie recuerda para qué servían. El auditor busca reglas «de todo a todo» y reglas temporales que llevan años vivas."
+    como_saberlo: "Piensa si alguien ha repasado alguna vez la lista de reglas para quitar las que sobran."
+    minutos_estimados: 1
+    opciones:
+      - code: anual
+        label: "Sí, al menos una vez al año"
+        emits: {revision_reglas: anual}
+      - code: ocasional
+        label: "Cuando hay cambios grandes"
+        emits: {revision_reglas: ocasional}
+      - code: nunca
+        label: "Nunca se han revisado"
+        emits: {revision_reglas: nunca}
+
+  # ================================================================== mp.com.4
+  - code: mp.com.segmentacion
+    bloque: B11
+    orden: 20
+    tipo: SINGLE
+    texto: "¿La red está dividida en zonas o todo está en la misma?"
+    por_que: "Es mp.com.4, obligatoria en Media y Alta. Si un puesto infectado alcanza directamente a los servidores, el ransomware se propaga sin frenos."
+    como_saberlo: "Mira si hay VLAN distintas para servidores, puestos, invitados, wifi y gestión, y si hay control entre ellas."
+    glosario:
+      VLAN: "División lógica de la red que separa el tráfico de unos equipos de otros"
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: avanzada
+        label: "Sí, con control entre zonas"
+        emits: {segmentacion: avanzada}
+      - code: basica
+        label: "Hay VLAN, pero se hablan entre sí"
+        emits: {segmentacion: basica}
+      - code: invitados
+        label: "Solo está separada la wifi de invitados"
+        emits: {segmentacion: invitados}
+      - code: plana
+        label: "Todo está en la misma red"
+        emits: {segmentacion: plana}
+
+  - code: mp.com.wifi
+    bloque: B11
+    orden: 21
+    tipo: SINGLE
+    texto: "¿Tenéis wifi? ¿Cómo se entra?"
+    por_que: "Una wifi corporativa con contraseña compartida es un acceso sin identificar a vuestra red interna."
+    como_saberlo: "Mira si la wifi de trabajo pide usuario y contraseña propios o una clave compartida por todos."
+    minutos_estimados: 1
+    opciones:
+      - code: enterprise
+        label: "Con usuario propio de cada persona"
+        emits: {wifi: enterprise}
+      - code: psk_separada
+        label: "Con clave compartida, en red separada"
+        emits: {wifi: psk_separada}
+      - code: psk_interna
+        label: "Con clave compartida, en la red interna"
+        emits: {wifi: psk_interna}
+      - code: "no"
+        label: "No hay wifi"
+        emits: {wifi: "no"}
+
+  # ============================================================ mp.com.2 y .3
+  - code: mp.com.cifrado
+    bloque: B11
+    orden: 30
+    tipo: MULTI
+    texto: "¿Qué comunicaciones van cifradas?"
+    por_que: "mp.com.2 y mp.com.3 exigen proteger la confidencialidad y la integridad de lo que viaja por la red, según vuestros niveles."
+    como_saberlo: "Piensa en la web (candado del navegador), el correo, las conexiones desde fuera y el tráfico entre sedes."
+    show_if: {or: [{">=": [{var: "nivel_orden.C"}, 1]}, {">=": [{var: "nivel_orden.IA"}, 1]}]}
+    minutos_estimados: 2
+    opciones:
+      - code: web_tls
+        label: "Las webs y aplicaciones van por HTTPS"
+        emits: {cifrado_web: true}
+      - code: vpn
+        label: "El acceso desde fuera va por VPN"
+        emits: {cifrado_vpn: true}
+      - code: sedes
+        label: "El tráfico entre sedes va cifrado"
+        emits: {cifrado_sedes: true}
+      - code: correo
+        label: "El correo se envía cifrado en tránsito"
+        emits: {cifrado_correo: true}
+      - code: ninguna
+        label: "No sabría decirlo"
+        emits: {cifrado_comunicaciones: desconocido}
+
+  - code: mp.com.algoritmos
+    bloque: B11
+    orden: 31
+    tipo: SINGLE
+    texto: "¿Se comprueba que los cifrados usados siguen siendo seguros?"
+    por_que: "Es el refuerzo de algoritmos autorizados, obligatorio con nivel medio o alto. Lo que era seguro hace cinco años puede no serlo hoy."
+    como_saberlo: "Mira si alguien revisa las versiones de TLS admitidas en vuestras webs y VPN, con una herramienta de análisis o pidiéndoselo al proveedor."
+    show_if: {or: [{">=": [{var: "nivel_orden.C"}, 2]}, {">=": [{var: "nivel_orden.IA"}, 2]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: periodico
+        label: "Sí, se revisa periódicamente"
+        emits: {algoritmos_revision: periodico}
+      - code: instalacion
+        label: "Se configuró al instalar y no se ha vuelto a mirar"
+        emits: {algoritmos_revision: instalacion}
+      - code: "no"
+        label: "No se ha mirado nunca"
+        emits: {algoritmos_revision: "no"}
+
+  # ==================================================================== mp.s.1
+  - code: mp.s.correo
+    bloque: B16
+    orden: 10
+    tipo: TOOL
+    funcion: CORREO
+    texto: "¿Qué usáis como correo electrónico?"
+    por_que: "El correo es la vía de entrada más común de los ataques. mp.s.1 aplica en todas las categorías."
+    como_saberlo: "Microsoft 365, Google Workspace, un servidor propio o el correo del proveedor de hosting."
+    minutos_estimados: 1
+
+  - code: mp.s.correo.proteccion
+    bloque: B16
+    orden: 11
+    tipo: MULTI
+    texto: "¿Qué protecciones tiene vuestro correo?"
+    por_que: "El auditor comprobará el filtrado y los registros que impiden que suplanten vuestro dominio."
+    como_saberlo: "SPF, DKIM y DMARC son registros de vuestro dominio: se consultan con cualquier herramienta de comprobación pública o preguntando a quien gestiona el dominio."
+    glosario:
+      SPF: "Registro que dice qué servidores pueden enviar correo en nombre de vuestro dominio"
+      DMARC: "Regla que indica qué hacer con el correo que suplanta vuestro dominio"
+    minutos_estimados: 2
+    opciones:
+      - code: antispam
+        label: "Filtro antispam y antivirus"
+        emits: {correo_antispam: true}
+      - code: antiphishing
+        label: "Protección específica contra suplantación"
+        emits: {correo_antiphishing: true}
+      - code: spf
+        label: "Registro SPF publicado"
+        emits: {correo_spf: true}
+      - code: dkim
+        label: "Firma DKIM activada"
+        emits: {correo_dkim: true}
+      - code: dmarc
+        label: "Política DMARC configurada"
+        emits: {correo_dmarc: true}
+      - code: no_se
+        label: "No sé qué protecciones tiene"
+        emits: {correo_proteccion: desconocido}
+
+  # ==================================================================== mp.s.2
+  - code: mp.s.web
+    bloque: B16
+    orden: 20
+    tipo: LIST
+    texto: "¿Qué webs, sedes o aplicaciones vuestras se pueden abrir desde internet?"
+    por_que: "Todo lo publicado es superficie de ataque. El auditor querrá la lista y las pruebas de seguridad hechas sobre ella."
+    como_saberlo: "Incluye la web institucional, la sede electrónica, el área de clientes, las API y cualquier aplicación accesible desde fuera."
+    minutos_estimados: 2
+    campos:
+      - {code: url, label: "Dirección"}
+      - {code: tipo, label: "Qué es"}
+      - {code: quien_mantiene, label: "Quién la mantiene"}
+
+  - code: mp.s.web.auditorias
+    bloque: B16
+    orden: 21
+    tipo: SINGLE
+    texto: "¿Alguien ha hecho pruebas de seguridad sobre esas webs?"
+    por_que: "Es el refuerzo de auditorías de seguridad de mp.s.2. Un análisis de vulnerabilidades vale; en Alta se pide algo más profundo."
+    como_saberlo: "Cuenta los test de intrusión, los análisis de vulnerabilidades web y las revisiones que haya hecho el proveedor."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: pentest_reciente
+        label: "Sí, en el último año"
+        emits: {pentest: reciente}
+      - code: antiguo
+        label: "Sí, hace más de un año"
+        emits: {pentest: antiguo}
+      - code: escaneo
+        label: "Solo escaneos automáticos"
+        emits: {pentest: escaneo}
+      - code: "no"
+        label: "Nunca"
+        emits: {pentest: "no"}
+
+  - code: mp.s.web.waf
+    bloque: B16
+    orden: 22
+    tipo: TOOL
+    funcion: WAF
+    texto: "¿Hay algún filtro delante de esas webs que bloquee ataques?"
+    por_que: "Un cortafuegos de aplicación web bloquea los ataques más comunes mientras se corrigen las vulnerabilidades."
+    como_saberlo: "Ejemplos: Cloudflare, Azure Front Door, AWS WAF, el módulo WAF del cortafuegos o el del proveedor de hosting."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+
+  # ==================================================================== mp.s.3
+  - code: mp.s.navegacion
+    bloque: B16
+    orden: 30
+    tipo: SINGLE
+    texto: "¿Se filtra a qué páginas puede entrar el personal?"
+    por_que: "Es mp.s.3. Bloquear sitios maliciosos evita buena parte de las infecciones y deja registro de la navegación."
+    como_saberlo: "Mira si hay un proxy, un filtro en el cortafuegos, un DNS seguro o la protección de navegación del EDR."
+    minutos_estimados: 1
+    opciones:
+      - code: filtro_categorias
+        label: "Sí, por categorías, con registro"
+        emits: {navegacion: filtro_registro}
+      - code: filtro_simple
+        label: "Sí, se bloquean sitios peligrosos"
+        emits: {navegacion: filtro}
+      - code: "no"
+        label: "No hay filtrado"
+        emits: {navegacion: "no"}
+
+  # ==================================================================== mp.s.4
+  - code: mp.s.dos
+    bloque: B16
+    orden: 40
+    tipo: SINGLE
+    texto: "¿Qué pasaría si alguien intentara tumbar vuestra web a base de tráfico?"
+    por_que: "Es mp.s.4, obligatoria con Disponibilidad media o alta. El auditor pedirá el contrato o la configuración del servicio de protección."
+    como_saberlo: "Mira si tenéis un servicio tipo Cloudflare o la protección del operador, o si nunca se ha previsto."
+    show_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: servicio
+        label: "Tenemos un servicio de protección contratado"
+        emits: {anti_dos: servicio}
+      - code: operador
+        label: "Lo cubre nuestro operador o proveedor de hosting"
+        emits: {anti_dos: operador}
+      - code: "no"
+        label: "No hay nada previsto"
+        emits: {anti_dos: "no"}
+
+  # ================================================================== op.mon.1
+  - code: op.mon.deteccion
+    bloque: B12
+    orden: 30
+    tipo: MULTI
+    texto: "¿Qué avisa si alguien intenta atacar o entrar sin permiso?"
+    por_que: "Es op.mon.1, obligatoria en todas las categorías. No basta con recoger registros: hay que detectar."
+    como_saberlo: "Cuenta el módulo de prevención de intrusiones del cortafuegos, el EDR, las alertas del SIEM o el servicio de un SOC."
+    minutos_estimados: 2
+    opciones:
+      - code: ips
+        label: "El cortafuegos tiene prevención de intrusiones activada"
+        emits: {deteccion_ips: true}
+      - code: edr
+        label: "El EDR genera alertas"
+        emits: {deteccion_edr: true}
+      - code: siem
+        label: "El SIEM tiene reglas de detección"
+        emits: {deteccion_siem: true}
+      - code: soc
+        label: "Un SOC lo vigila"
+        emits: {deteccion_soc: true}
+      - code: ninguna
+        label: "Nada avisa automáticamente"
+        emits: {deteccion: "no"}
+
+  - code: op.mon.respuesta
+    bloque: B12
+    orden: 31
+    tipo: SINGLE
+    texto: "Cuando salta una alerta, ¿está escrito qué hay que hacer?"
+    por_que: "Es el refuerzo de procedimientos de respuesta, obligatorio en Alta. Sin él, cada alerta se improvisa."
+    como_saberlo: "Busca fichas o guías de actuación por tipo de alerta, aunque sean breves."
+    show_if: {">=": [{var: "categoria_orden"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: procedimientos
+        label: "Sí, hay guías por tipo de alerta"
+        emits: {respuesta_alertas: procedimientos}
+      - code: soc
+        label: "Lo gestiona el SOC según su protocolo"
+        emits: {respuesta_alertas: soc}
+      - code: "no"
+        label: "Se resuelve sobre la marcha"
+        emits: {respuesta_alertas: "no"}
+
+  # ================================================================== op.mon.2
+  - code: op.mon.metricas
+    bloque: B12
+    orden: 40
+    tipo: MULTI
+    texto: "¿Medís algo de vuestra seguridad con números?"
+    por_que: "Es op.mon.2, obligatoria en todas las categorías, y es la base del informe anual del estado de seguridad."
+    como_saberlo: "Piensa si alguien recoge cifras como incidentes del periodo, porcentaje de equipos parcheados, cobertura de formación o tiempo de resolución."
+    minutos_estimados: 2
+    opciones:
+      - code: incidentes
+        label: "Número y tipo de incidentes"
+        emits: {metrica_incidentes: true}
+      - code: parcheo
+        label: "Porcentaje de equipos al día"
+        emits: {metrica_parcheo: true}
+      - code: formacion
+        label: "Cobertura de formación y concienciación"
+        emits: {metrica_formacion: true}
+      - code: madurez
+        label: "Nivel de implantación de las medidas"
+        emits: {metrica_madurez: true}
+      - code: ninguna
+        label: "No se mide nada"
+        emits: {metricas: "no"}
+
+  - code: op.mon.ines
+    bloque: B12
+    orden: 41
+    tipo: SINGLE
+    texto: "¿Reportáis el estado de seguridad al CCN a través de INES?"
+    por_que: "Es obligatorio para el sector público y el auditor pedirá el justificante del último envío."
+    como_saberlo: "INES es el informe anual del estado de la seguridad que se envía al Centro Criptológico Nacional."
+    show_if: {in: [{var: "hechos.entidad_tipo"}, ["age", "ccaa", "local", "universidad", "otra_publica"]]}
+    minutos_estimados: 1
+    opciones:
+      - code: anual
+        label: "Sí, todos los años"
+        emits: {ines: anual}
+      - code: alguna
+        label: "Alguna vez"
+        emits: {ines: parcial}
+      - code: "no"
+        label: "No lo hemos hecho"
+        emits: {ines: "no"}
+
+  # ================================================================== op.mon.3
+  - code: op.mon.vigilancia
+    bloque: B12
+    orden: 50
+    tipo: MULTI
+    texto: "¿Cómo os enteráis de las nuevas amenazas y vulnerabilidades que os afectan?"
+    por_que: "Es op.mon.3. Lo importante no es recibir avisos, sino demostrar que se hace algo con ellos."
+    como_saberlo: "Cuenta las suscripciones a avisos del CCN-CERT o de INCIBE, los boletines de los fabricantes y los avisos de vuestro proveedor."
+    minutos_estimados: 2
+    opciones:
+      - code: ccn
+        label: "Avisos del CCN-CERT"
+        emits: {vigilancia_ccn: true}
+      - code: fabricantes
+        label: "Boletines de los fabricantes"
+        emits: {vigilancia_fabricantes: true}
+      - code: proveedor
+        label: "Nos avisa nuestro proveedor"
+        emits: {vigilancia_proveedor: true}
+      - code: soc
+        label: "El SOC nos informa"
+        emits: {vigilancia_soc: true}
+      - code: ninguna
+        label: "No hay un canal definido"
+        emits: {vigilancia: "no"}
+
+  - code: op.mon.correlacion
+    bloque: B12
+    orden: 51
+    tipo: SINGLE
+    texto: "¿Se cruzan avisos de distintos sistemas para detectar lo que por separado no se ve?"
+    por_que: "Es el refuerzo de correlación de eventos, obligatorio en Media y Alta."
+    como_saberlo: "Un SIEM con reglas que combinan fuentes es la forma habitual. También cuenta el servicio de un SOC que lo haga."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: siem
+        label: "Sí, con reglas de correlación"
+        emits: {correlacion: siem}
+      - code: soc
+        label: "Lo hace el SOC"
+        emits: {correlacion: soc}
+      - code: "no"
+        label: "Cada sistema va por su cuenta"
+        emits: {correlacion: "no"}

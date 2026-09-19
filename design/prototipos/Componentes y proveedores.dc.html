@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:1px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Componentes y proveedores</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · medida op.pl.5</span>
+    </div>
+    <span style="display:flex; gap:2px; padding:2px; background:#F1F5F9; border-radius:6px">
+      <button type="button" onClick="{{ verComponentes }}" style="{{ botonComponentes }}">Componentes</button>
+      <button type="button" onClick="{{ verProveedores }}" style="{{ botonProveedores }}">Proveedores</button>
+    </span>
+  </header>
+
+  <div style="flex:1; padding:24px 28px 64px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box; display:flex; flex-direction:column; gap:14px">
+
+    <div style="{{ cajaAvisos }}">
+      <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">{{ tituloAviso }}</span>
+        <span style="font-size:12px; line-height:1.5; color:#475569">{{ detalleAviso }}</span>
+      </span>
+      <button type="button" onClick="{{ filtrarAvisos }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#B45309; background:#FFFFFF; border:1px solid #B45309; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap; flex:0 0 auto">Ver solo lo que vence</button>
+    </div>
+
+    <section style="{{ zonaComponentes }}">
+      <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:600; color:#0F172A; margin-right:4px">Componentes de seguridad</span>
+        <sc-for list="{{ filtrosComp }}" as="f" hint-placeholder-count="4">
+          <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+        </sc-for>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Componente</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:188px">Vía de cumplimiento de op.pl.5</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:104px; white-space:nowrap">Versión</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:150px; white-space:nowrap">Cualificación</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:168px; white-space:nowrap">Qué hacer ahora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ componentes }}" as="c" hint-placeholder-count="6">
+              <tr style="{{ c.fila }}">
+                <td style="{{ c.celdaTexto }}">
+                  <span style="display:flex; flex-direction:column; gap:2px">
+                    <a href="#" style="font-size:14px; font-weight:500">{{ c.nombre }}</a>
+                    <span style="font-size:12px; color:#475569">{{ c.funcion }}</span>
+                  </span>
+                </td>
+                <td style="{{ c.celda }}">
+                  <span style="display:flex; flex-direction:column; gap:3px">
+                    <span style="{{ c.chipVia }}">{{ c.via }}</span>
+                    <span style="font-size:12px; color:#475569; line-height:1.45">{{ c.detalleVia }}</span>
+                  </span>
+                </td>
+                <td style="{{ c.celdaMono }}">{{ c.version }}</td>
+                <td style="{{ c.celda }}">
+                  <span style="display:flex; flex-direction:column; gap:3px">
+                    <span style="{{ c.chipEstado }}">{{ c.estado }}</span>
+                    <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ c.caduca }}</span>
+                  </span>
+                </td>
+                <td style="{{ c.celdaFin }}">
+                  <span style="display:flex; flex-direction:column; gap:6px; align-items:flex-start">
+                    <button type="button" onClick="{{ c.onAccion }}" style="{{ c.botonAccion }}">{{ c.accion }}</button>
+                    <span style="{{ c.panelAccion }}">
+                      <span style="font-size:12px; line-height:1.5; color:#475569">{{ c.textoAccion }}</span>
+                      <span style="display:flex; gap:6px; flex-wrap:wrap">
+                        <button type="button" onClick="{{ c.confirmar }}" style="font-family:inherit; font-size:12px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:5px; padding:6px 10px; cursor:pointer">{{ c.confirmarTexto }}</button>
+                        <button type="button" onClick="{{ c.onAccion }}" style="font-family:inherit; font-size:12px; font-weight:500; color:#475569; background:transparent; border:0; padding:6px 8px; border-radius:5px; cursor:pointer">Cancelar</button>
+                      </span>
+                    </span>
+                    <span style="{{ c.hecho }}">{{ c.textoHecho }}</span>
+                  </span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 16px; border-top:1px solid #E2E8F0; font-size:12px; line-height:1.5; color:#475569">op.pl.5 se satisface por una de tres vías: producto en el catálogo CPSTIC, certificado conforme al artículo 19 del RD 311/2022, o medida compensatoria justificada y aprobada.</div>
+    </section>
+
+    <section style="{{ zonaProveedores }}">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Proveedores con acceso al sistema</span>
+        <span style="font-size:12px; color:#475569">El alcance del certificado tiene que cubrir el servicio que te prestan.</span>
+      </div>
+      <div style="display:flex; flex-direction:column">
+        <sc-for list="{{ proveedores }}" as="p" hint-placeholder-count="4">
+          <div style="{{ p.caja }}">
+            <span style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap">
+              <span style="display:flex; flex-direction:column; gap:3px; flex:1 1 320px; min-width:0">
+                <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="font-size:14px; font-weight:600; color:#0F172A">{{ p.nombre }}</span>
+                  <span style="{{ p.chip }}">{{ p.estado }}</span>
+                </span>
+                <span style="font-size:13px; color:#475569; line-height:1.5">{{ p.servicio }}</span>
+              </span>
+              <span style="display:flex; flex-direction:column; gap:2px; align-items:flex-end; text-align:right; flex:0 0 auto; margin-left:auto">
+                <span style="font-size:13px; color:#0F172A; font-variant-numeric:tabular-nums; white-space:nowrap">{{ p.vigencia }}</span>
+                <span style="font-size:12px; color:#475569; white-space:nowrap">{{ p.certificado }}</span>
+              </span>
+            </span>
+            <span style="{{ p.avisoAlcance }}">{{ p.textoAlcance }}</span>
+            <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+              <sc-for list="{{ p.acciones }}" as="a" hint-placeholder-count="2">
+                <button type="button" onClick="{{ a.onClick }}" style="{{ a.estilo }}">{{ a.nombre }}</button>
+              </sc-for>
+              <span style="{{ p.hecho }}">{{ p.textoHecho }}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+
+  <div style="{{ modal }}" onClick="{{ cerrarModal }}">
+    <div onClick="{{ detener }}" style="width:100%; max-width:520px; background:#FFFFFF; border-radius:8px; box-shadow:0 24px 64px rgba(15,23,42,0.28); display:flex; flex-direction:column; overflow:hidden">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:18px 20px; border-bottom:1px solid #E2E8F0">
+        <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+          <span style="font-size:16px; font-weight:600; color:#0F172A">{{ modalTitulo }}</span>
+          <span style="font-size:13px; color:#475569">{{ modalComponente }}</span>
+        </span>
+        <button type="button" onClick="{{ cerrarModal }}" style="font-family:inherit; font-size:13px; color:#475569; background:transparent; border:0; padding:4px 8px; border-radius:6px; cursor:pointer; flex:0 0 auto" style-hover="background:#F1F5F9">Cerrar</button>
+      </div>
+      <div style="padding:20px; display:flex; flex-direction:column; gap:14px">
+        <span style="font-size:12px; color:#475569">{{ modalVia }}</span>
+        <span style="{{ modalUrgente }}">El certificado está caducado: hasta que se aporte uno vigente, op.pl.5 no se sostiene por esta vía.</span>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:24px 20px; border:1.5px dashed #94A3B8; border-radius:8px; background:#F8FAFC">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Arrastra aquí el certificado</span>
+          <span style="font-size:12px; color:#475569; text-align:center">PDF o imagen, hasta 20 MB. Debe verse el emisor, el alcance y las fechas.</span>
+          <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer">Seleccionar fichero</button>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px">
+          <label style="display:flex; flex-direction:column; gap:5px">
+            <span style="font-size:12px; font-weight:600; color:#0F172A">Emitido el</span>
+            <input type="text" placeholder="dd/mm/aaaa" style="font-family:inherit; font-size:13px; color:#0F172A; padding:7px 9px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; font-variant-numeric:tabular-nums" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:5px">
+            <span style="font-size:12px; font-weight:600; color:#0F172A">Válido hasta</span>
+            <input type="text" placeholder="dd/mm/aaaa" style="font-family:inherit; font-size:13px; color:#0F172A; padding:7px 9px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; font-variant-numeric:tabular-nums" />
+          </label>
+        </div>
+        <label style="display:flex; flex-direction:column; gap:5px">
+          <span style="font-size:12px; font-weight:600; color:#0F172A">Nota para el auditor</span>
+          <textarea placeholder="Qué cubre este certificado y qué no" style="font-family:inherit; font-size:13px; line-height:1.5; color:#0F172A; padding:9px 10px; border:1px solid #E2E8F0; border-radius:6px; resize:vertical; min-height:60px; background:#F8FAFC"></textarea>
+        </label>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-top:1px solid #E2E8F0; background:#F8FAFC; flex-wrap:wrap">
+        <span style="font-size:12px; color:#475569">Quedará como aportado, pendiente de validación interna.</span>
+        <span style="display:flex; align-items:center; gap:8px">
+          <button type="button" onClick="{{ cerrarModal }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:transparent; border:0; padding:8px 10px; border-radius:6px; cursor:pointer">Cancelar</button>
+          <button type="button" onClick="{{ guardarModal }}" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 13px; cursor:pointer">Guardar certificado</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  state = { vista: "componentes", filtro: 0, abierta: null, hechas: {}, provHechos: {}, modal: null };
+
+  componentDidMount() {
+    this._esc = (e) => { if (e.key === "Escape") this.setState({ modal: null }); };
+    document.addEventListener("keydown", this._esc);
+  }
+  componentWillUnmount() { document.removeEventListener("keydown", this._esc); }
+
+  chip(t, texto) {
+    const c = { ok: ["#15803D", "#F0FDF4"], warn: ["#B45309", "#FFFBEB"], bad: ["#B91C1C", "#FEF2F2"], exp: ["#7C2D12", "#FEF6F0"], info: ["#1D4ED8", "#EFF6FF"], mut: ["#64748B", "#F8FAFC"] }[t];
+    return { estilo: `display:inline-flex; align-items:center; align-self:flex-start; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:2px 7px; white-space:nowrap`, texto };
+  }
+
+  renderVals() {
+    const s = this.state, comp = s.vista === "componentes";
+    const base = "padding:11px 10px; border-bottom:1px solid #F1F5F9; vertical-align:top; color:#0F172A; line-height:1.45";
+
+    const datos = [
+      ["Cortafuegos perimetral FortiGate 60F", "Separación de la red municipal y filtrado", "CPSTIC", "Catálogo CCN-STIC 105, familia cortafuegos", "7.2.8", "ok", "vigente", "cualificación hasta 30/06/2027"],
+      ["Microsoft Defender para Empresas", "Protección frente a código dañino", "Artículo 19", "Certificación del fabricante aportada el 12/09/2026", "—", "warn", "por revisar", "vence el 31/10/2026"],
+      ["VPN de acceso remoto del proveedor", "Acceso remoto de Nexia Sistemas", "Compensatoria", "Doble factor y registro de sesiones; aprobada el 14/05/2026", "—", "warn", "compensatoria", "revisión anual: 14/05/2027"],
+      ["Certificado de sede electrónica", "Autenticidad del servicio público", "Artículo 19", "Emitido por la FNMT, cualificado", "—", "exp", "caducado", "caducó el 02/09/2026"],
+      ["Gestor documental Alfresco", "Custodia de expedientes", "Compensatoria", "Sin producto cualificado en el catálogo; control por cifrado y copias", "23.1", "mut", "sin cualificar", "pendiente de justificar"],
+      ["Cabina de copias Veeam", "Copias de seguridad y restauración", "CPSTIC", "Catálogo CCN-STIC 105, familia copias", "12.1", "ok", "vigente", "cualificación hasta 12/03/2028"]
+    ];
+
+    const criterios = [null, "CPSTIC", "Artículo 19", "Compensatoria", "vence"];
+    const crit = criterios[s.filtro];
+    const venceComp = (d) => d[5] === "warn" || d[5] === "exp";
+    const pasa = (d) => crit === null ? true : crit === "vence" ? venceComp(d) : d[2] === crit;
+
+    const acciones = {
+      ok: ["Programar renovación", "Se avisará a Jorge Peña 60 días antes de que caduque la cualificación y se creará la tarea de renovación.", "Programar aviso", "Aviso programado · 60 días antes"],
+      warn: ["Aportar certificado", "Sube el certificado vigente del fabricante o del proveedor. Queda enlazado a op.pl.5 y a la evidencia correspondiente.", "Subir fichero", "Certificado aportado · pendiente de validación"],
+      exp: ["Renovar ya", "El certificado está caducado: la vía de cumplimiento de op.pl.5 no se sostiene. Solicita la renovación y registra la fecha prevista.", "Crear tarea urgente", "Tarea urgente creada · responsable Jorge Peña"],
+      mut: ["Justificar compensatoria", "Sin producto cualificado, hay que documentar la medida compensatoria y aprobarla. El auditor pedirá esa justificación por escrito.", "Redactar justificación", "Justificación en borrador · falta aprobar"]
+    };
+
+    const componentes = datos.filter(pasa).map((d) => {
+      const est = this.chip(d[5], d[6]);
+      const via = { CPSTIC: "info", "Artículo 19": "info", Compensatoria: "mut" }[d[2]];
+      const idx = datos.indexOf(d);
+      const acc = acciones[d[5]];
+      const urgente = d[5] === "exp";
+      return {
+        accion: acc[0], textoAccion: acc[1], confirmarTexto: acc[2], textoHecho: s.hechas[idx] ? acc[3] : "",
+        onAccion: () => (d[5] === "warn" || d[5] === "exp")
+          ? this.setState({ modal: s.modal === idx ? null : idx })
+          : this.setState({ abierta: s.abierta === idx ? null : idx }),
+        confirmar: () => this.setState({ abierta: null, hechas: Object.assign({}, s.hechas, { [idx]: true }) }),
+        botonAccion: `font-family:inherit; font-size:12px; font-weight:${urgente ? 600 : 500}; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${urgente ? "#B91C1C" : "#0F766E"}; background:#FFFFFF; color:${urgente ? "#B91C1C" : "#0F766E"}`,
+        panelAccion: `display:${s.abierta === idx ? "flex" : "none"}; flex-direction:column; gap:8px; padding:10px; border:1px solid #E2E8F0; border-radius:6px; background:#F8FAFC`,
+        hecho: `display:${s.hechas[idx] && s.abierta !== idx ? "block" : "none"}; font-size:12px; color:#15803D`,
+        nombre: d[0], funcion: d[1], via: d[2], detalleVia: d[3], version: d[4],
+        estado: est.texto, caduca: d[7], chipEstado: est.estilo,
+        chipVia: this.chip(via, d[2]).estilo,
+        fila: `background:${d[5] === "exp" ? "#FEF6F0" : d[5] === "warn" ? "#FFFBEB" : "#FFFFFF"}`,
+        celda: base, celdaTexto: base + "; padding-left:16px",
+        celdaMono: base + "; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:#475569",
+        celdaFin: base + "; padding-right:16px"
+      };
+    });
+
+    const cuenta = (c) => datos.filter((d) => c === null ? true : c === "vence" ? venceComp(d) : d[2] === c).length;
+    const filtrosComp = [["Todos", null], ["CPSTIC", "CPSTIC"], ["Artículo 19", "Artículo 19"], ["Compensatorias", "Compensatoria"], ["Vencen o caducados", "vence"]]
+      .map((f, i) => ({
+        nombre: f[0], n: cuenta(f[1]),
+        onClick: () => this.setState({ filtro: i }),
+        estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+      }));
+
+    const provs = [
+      ["Nexia Sistemas", "Administración de servidores y soporte de puestos. Acceso remoto con cuentas privilegiadas.", "certificado ENS", "ok", "hasta 14/03/2027", "Conformidad ENS Media, entidad acreditada", ""],
+      ["Cloudia Hosting", "Alojamiento del gestor de expedientes y de la base de datos.", "vence pronto", "warn", "hasta 21/10/2026", "Conformidad ENS Media", "Vence en 32 días. Pídele el certificado renovado antes de la auditoría."],
+      ["Gestdoc Software", "Mantenimiento del gestor documental y actualizaciones.", "alcance insuficiente", "bad", "hasta 30/04/2027", "Conformidad ENS Básica", "El certificado es de categoría Básica y tu sistema es Media: el alcance no cubre este servicio."],
+      ["Redsys", "Pasarela de pagos de tasas municipales.", "certificado ENS", "ok", "hasta 08/07/2027", "Conformidad ENS Alta", ""]
+    ].map((p, pi) => {
+      const c = this.chip(p[3], p[2]);
+      const hecho = s.provHechos[pi];
+      const btn = (nombre, tono, texto) => ({
+        nombre,
+        onClick: () => this.setState({ provHechos: Object.assign({}, s.provHechos, { [pi]: texto }) }),
+        estilo: `font-family:inherit; font-size:12px; font-weight:${tono === "fuerte" ? 600 : 500}; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${tono === "fuerte" ? "#B91C1C" : "#0F766E"}; background:#FFFFFF; color:${tono === "fuerte" ? "#B91C1C" : "#0F766E"}`
+      });
+      const acciones = p[3] === "bad"
+        ? [btn("Registrar hallazgo", "fuerte", "Hallazgo registrado · alcance insuficiente"), btn("Pedir certificado con alcance Media", "suave", "Petición enviada a Gestdoc Software")]
+        : p[3] === "warn"
+          ? [btn("Pedir el certificado renovado", "fuerte", "Petición enviada · aviso en 7 días"), btn("Subir certificado", "suave", "Certificado subido · pendiente de validación")]
+          : [btn("Subir certificado actualizado", "suave", "Certificado subido · pendiente de validación"), btn("Programar aviso de renovación", "suave", "Aviso programado · 60 días antes")];
+      return {
+        nombre: p[0], servicio: p[1], estado: c.texto, chip: c.estilo, acciones,
+        textoHecho: hecho || "",
+        hecho: `display:${hecho ? "inline" : "none"}; font-size:12px; color:#15803D`,
+        vigencia: p[4], certificado: p[5], textoAlcance: p[6],
+        caja: `display:flex; flex-direction:column; gap:8px; padding:14px 16px; border-bottom:1px solid #F1F5F9; background:${p[3] === "bad" ? "#FEF2F2" : p[3] === "warn" ? "#FFFBEB" : "#FFFFFF"}`,
+        avisoAlcance: `display:${p[6] ? "block" : "none"}; font-size:12px; line-height:1.5; color:${p[3] === "bad" ? "#B91C1C" : "#B45309"}`
+      };
+    });
+
+    const nVencen = datos.filter(venceComp).length + provs.filter((p) => p.estado !== "certificado ENS").length;
+
+    return {
+      componentes, filtrosComp, proveedores: provs,
+      verComponentes: () => this.setState({ vista: "componentes" }),
+      verProveedores: () => this.setState({ vista: "proveedores" }),
+      botonComponentes: `font-family:inherit; font-size:13px; font-weight:${comp ? 600 : 500}; cursor:pointer; padding:6px 12px; border:0; border-radius:5px; background:${comp ? "#FFFFFF" : "transparent"}; color:${comp ? "#0B4F4A" : "#475569"}`,
+      botonProveedores: `font-family:inherit; font-size:13px; font-weight:${comp ? 500 : 600}; cursor:pointer; padding:6px 12px; border:0; border-radius:5px; background:${comp ? "transparent" : "#FFFFFF"}; color:${comp ? "#475569" : "#0B4F4A"}`,
+      zonaComponentes: `display:${comp ? "block" : "none"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      zonaProveedores: `display:${comp ? "none" : "block"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      modal: `display:${s.modal === null || s.modal === undefined ? "none" : "flex"}; position:fixed; inset:0; z-index:60; align-items:center; justify-content:center; padding:24px; background:rgba(15,23,42,0.45)`,
+      modalTitulo: s.modal === null || s.modal === undefined ? "" : (datos[s.modal][5] === "exp" ? "Renovar el certificado" : "Aportar el certificado"),
+      modalComponente: s.modal === null || s.modal === undefined ? "" : datos[s.modal][0],
+      modalVia: s.modal === null || s.modal === undefined ? "" : `Vía de cumplimiento: ${datos[s.modal][2]} · ${datos[s.modal][7]}`,
+      modalUrgente: `display:${s.modal !== null && s.modal !== undefined && datos[s.modal][5] === "exp" ? "block" : "none"}; font-size:12px; line-height:1.5; color:#B91C1C`,
+      cerrarModal: () => this.setState({ modal: null }),
+      detener: (e) => e.stopPropagation(),
+      guardarModal: () => this.setState({ modal: null, hechas: Object.assign({}, s.hechas, { [s.modal]: true }) }),
+      cajaAvisos: "display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:12px 16px; border-radius:8px; background:#FFFBEB; border:1px solid #B4530933",
+      tituloAviso: `${nVencen} cualificaciones o certificados requieren atención`,
+      detalleAviso: "Un certificado caducado o de alcance insuficiente invalida la vía de cumplimiento de op.pl.5 y el auditor lo tratará como hallazgo.",
+      filtrarAvisos: () => this.setState({ vista: "componentes", filtro: 4 })
+    };
+  }
+}
+</script>
+</body>
+</html>

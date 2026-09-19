@@ -1,0 +1,625 @@
+# Seed BLENS · Preguntas de perfilado — familias mp.per (Personal), mp.si (Soportes),
+# mp.sw (Aplicaciones), op.ext (Recursos externos) y op.nub (Servicios en la nube)
+# Especificación: docs/cuestionario_perfilado.md (bloques B05, B14, B15 y B17)
+#
+# APLICABILIDAD:
+#   mp.per.2, mp.per.3, mp.per.4, mp.si.3, mp.si.4, mp.sw.2, op.nub.1 → todas las categorías
+#   mp.per.1, mp.sw.1, op.ext.1, op.ext.2, op.ext.4 → MEDIA y ALTA · op.ext.3 → ALTA
+#   mp.si.1 y mp.si.2 → Confidencialidad ≥ MEDIO (mp.si.2 también Integridad)
+#   mp.si.5 → Confidencialidad ≥ BAJO
+# Variables: categoria_orden · nivel_orden.C · nivel_orden.CI
+
+version: 1
+familias: [mp.per, mp.si, mp.sw, op.ext, op.nub]
+bloques:
+  - code: B05
+    titulo: Proveedores y servicios en la nube
+    minutos_estimados: 10
+  - code: B14
+    titulo: Soportes de información
+    minutos_estimados: 5
+  - code: B15
+    titulo: Desarrollo de aplicaciones
+    minutos_estimados: 7
+  - code: B17
+    titulo: Personas
+    minutos_estimados: 7
+
+questions:
+
+  # ==================================================================== mp.per.2
+  - code: mp.per.deberes
+    bloque: B17
+    orden: 10
+    tipo: SINGLE
+    texto: "¿El personal firma algo sobre confidencialidad y buen uso al incorporarse?"
+    por_que: "Es mp.per.2. El auditor pedirá el modelo y una muestra de firmas, y comprobará que también lo firman los externos con acceso."
+    como_saberlo: "Mira la documentación que se entrega al entrar: contrato, anexo de confidencialidad o compromiso de uso."
+    a_quien_preguntar: "Recursos humanos"
+    minutos_estimados: 2
+    opciones:
+      - code: todos
+        label: "Sí, personal propio y externos"
+        emits: {deberes_firmados: todos}
+      - code: propios
+        label: "Solo el personal propio"
+        emits: {deberes_firmados: propios}
+      - code: contrato
+        label: "Va dentro del contrato laboral, sin documento aparte"
+        emits: {deberes_firmados: contrato}
+      - code: "no"
+        label: "No se firma nada"
+        emits: {deberes_firmados: "no"}
+
+  - code: mp.per.bajas
+    bloque: B17
+    orden: 11
+    tipo: SINGLE
+    texto: "Cuando alguien se va, ¿se le recuerdan sus obligaciones y se recoge lo que tenía?"
+    por_que: "El deber de confidencialidad sobrevive a la salida. El auditor mirará la devolución de equipos, tarjetas y credenciales."
+    como_saberlo: "Piensa en la última salida: ¿hubo una lista de comprobación o un documento de baja?"
+    minutos_estimados: 1
+    opciones:
+      - code: checklist
+        label: "Sí, hay una lista de comprobación"
+        emits: {baja_personal: checklist}
+      - code: informal
+        label: "Se hace, pero sin dejar constancia"
+        emits: {baja_personal: informal}
+      - code: "no"
+        label: "No hay nada previsto"
+        emits: {baja_personal: "no"}
+
+  # ==================================================================== mp.per.1
+  - code: mp.per.puestos
+    bloque: B17
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Está definido qué responsabilidades de seguridad tiene cada puesto?"
+    por_que: "Es mp.per.1, obligatoria en Media y Alta: antes de dar acceso hay que saber qué necesita cada puesto y qué requisitos exige."
+    como_saberlo: "Busca fichas de puesto, relaciones de puestos de trabajo o descripciones de funciones donde aparezca la parte de seguridad."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: fichas
+        label: "Sí, en las fichas de puesto"
+        emits: {caracterizacion_puestos: fichas}
+      - code: parcial
+        label: "Solo en los puestos técnicos"
+        emits: {caracterizacion_puestos: parcial}
+      - code: "no"
+        label: "No está definido"
+        emits: {caracterizacion_puestos: "no"}
+
+  # ==================================================================== mp.per.3
+  - code: mp.per.concienciacion
+    bloque: B17
+    orden: 30
+    tipo: MULTI
+    texto: "¿Qué hacéis para que la gente sepa reconocer un correo fraudulento o una llamada sospechosa?"
+    por_que: "Es mp.per.3 y aplica siempre. El auditor mira la cobertura: cuánta gente ha participado de verdad, no si se organizó algo."
+    como_saberlo: "Cuenta charlas, cursos en línea, píldoras por correo, simulaciones de phishing o carteles."
+    minutos_estimados: 2
+    opciones:
+      - code: elearning
+        label: "Curso en línea con registro"
+        emits: {concienciacion_elearning: true}
+      - code: charlas
+        label: "Charlas o sesiones presenciales"
+        emits: {concienciacion_charlas: true}
+      - code: phishing
+        label: "Simulaciones de phishing"
+        emits: {concienciacion_phishing: true}
+      - code: pildoras
+        label: "Avisos o píldoras periódicas"
+        emits: {concienciacion_pildoras: true}
+      - code: ninguna
+        label: "Nada organizado"
+        emits: {concienciacion: "no"}
+
+  - code: mp.per.concienciacion.cobertura
+    bloque: B17
+    orden: 31
+    tipo: SINGLE
+    texto: "¿Cuándo fue la última acción y a cuánta gente llegó?"
+    por_que: "Una charla a la que fueron diez de ochenta personas no cubre la medida. La evidencia clave es la lista de participantes."
+    como_saberlo: "Mira la convocatoria y la lista de asistencia o el registro de la plataforma."
+    show_if: {"!=": [{var: "hechos.concienciacion"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: anual_mayoria
+        label: "Este año, y participó la mayoría"
+        emits: {concienciacion_cobertura: alta}
+      - code: anual_parcial
+        label: "Este año, pero participó poca gente"
+        emits: {concienciacion_cobertura: parcial}
+      - code: antigua
+        label: "Hace más de un año"
+        emits: {concienciacion_cobertura: antigua}
+      - code: sin_registro
+        label: "Se hizo, pero no hay lista de participantes"
+        emits: {concienciacion_cobertura: sin_registro}
+
+  - code: mp.per.incorporaciones
+    bloque: B17
+    orden: 32
+    tipo: SINGLE
+    texto: "¿Y la gente que se incorpora a lo largo del año?"
+    por_que: "Es el hueco habitual: se forma a la plantilla una vez y las incorporaciones posteriores se quedan fuera."
+    como_saberlo: "Piensa si quien entró hace tres meses ha recibido alguna formación de seguridad."
+    show_if: {"!=": [{var: "hechos.concienciacion"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: incorporacion
+        label: "Sí, se forma al incorporarse"
+        emits: {concienciacion_altas: true}
+      - code: siguiente
+        label: "Esperan a la siguiente sesión general"
+        emits: {concienciacion_altas: siguiente}
+      - code: "no"
+        label: "No reciben nada"
+        emits: {concienciacion_altas: false}
+
+  # ==================================================================== mp.per.4
+  - code: mp.per.formacion
+    bloque: B17
+    orden: 40
+    tipo: SINGLE
+    texto: "¿Quien administra los sistemas recibe formación técnica de seguridad?"
+    por_que: "Es mp.per.4. La concienciación general no basta para quien tiene privilegios: el auditor pedirá certificados o diplomas."
+    como_saberlo: "Cuenta cursos, certificaciones o formación del fabricante de las herramientas que usáis."
+    minutos_estimados: 1
+    opciones:
+      - code: plan
+        label: "Sí, hay plan de formación"
+        emits: {formacion_tecnica: plan}
+      - code: puntual
+        label: "Cursos sueltos cuando surgen"
+        emits: {formacion_tecnica: puntual}
+      - code: "no"
+        label: "No se forma específicamente"
+        emits: {formacion_tecnica: "no"}
+
+  # ============================================================= mp.si.1 a mp.si.5
+  - code: mp.si.soportes
+    bloque: B14
+    orden: 60
+    tipo: MULTI
+    texto: "¿Qué soportes con información salen o pueden salir de vuestras instalaciones?"
+    por_que: "Las medidas de soportes (mp.si) cubren memorias, discos, cintas de copia y papel. Si nada sale, se simplifica mucho."
+    como_saberlo: "Piensa en memorias USB, discos externos, cintas que se llevan a otra sede, portátiles y documentación en papel."
+    minutos_estimados: 2
+    opciones:
+      - code: usb
+        label: "Memorias o discos externos"
+        emits: {soportes_usb: true}
+      - code: cintas
+        label: "Cintas o discos de copia"
+        emits: {soportes_copia: true}
+      - code: papel
+        label: "Documentación en papel"
+        emits: {soportes_papel: true}
+      - code: ninguno
+        label: "Ninguno, todo queda en los sistemas"
+        emits: {soportes: "no"}
+
+  - code: mp.si.usb.control
+    bloque: B14
+    orden: 61
+    tipo: SINGLE
+    texto: "¿Se puede conectar cualquier memoria USB a los equipos?"
+    por_que: "Es la vía clásica de fuga de información y de entrada de malware. Bloquear o cifrar es lo que espera ver el auditor."
+    como_saberlo: "Prueba a conectar una memoria en un puesto, o mira si hay una política que lo impida en el EDR o en las directivas."
+    show_if: {"!=": [{var: "hechos.soportes"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: bloqueado
+        label: "Están bloqueados"
+        emits: {control_usb: bloqueado}
+      - code: cifrado
+        label: "Solo se permiten los cifrados por la organización"
+        emits: {control_usb: cifrado}
+      - code: autorizados
+        label: "Solo los autorizados"
+        emits: {control_usb: autorizados}
+      - code: libre
+        label: "Se puede conectar cualquiera"
+        emits: {control_usb: libre}
+
+  - code: mp.si.marcado
+    bloque: B14
+    orden: 62
+    tipo: SINGLE
+    texto: "¿Los soportes llevan alguna marca que indique qué información contienen?"
+    por_que: "Es mp.si.1, obligatoria con Confidencialidad media o alta: quien encuentra un disco debe saber cómo tratarlo."
+    como_saberlo: "Mira si las cintas, discos o carpetas llevan etiqueta con su contenido y su nivel."
+    show_if: {">=": [{var: "nivel_orden.C"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: etiquetado
+        label: "Sí, van etiquetados"
+        emits: {marcado_soportes: true}
+      - code: parcial
+        label: "Algunos"
+        emits: {marcado_soportes: parcial}
+      - code: "no"
+        label: "No llevan marca"
+        emits: {marcado_soportes: false}
+
+  - code: mp.si.custodia
+    bloque: B14
+    orden: 63
+    tipo: SINGLE
+    texto: "¿Dónde se guardan las cintas, discos y documentación sensible?"
+    por_que: "Es mp.si.3. El auditor querrá ver el armario o la sala, y quién tiene la llave."
+    como_saberlo: "Piensa dónde está ahora mismo la última cinta de copia o el archivo en papel."
+    show_if: {"!=": [{var: "hechos.soportes"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: armario_llave
+        label: "En armario o caja fuerte con llave controlada"
+        emits: {custodia_soportes: armario}
+      - code: sala
+        label: "En la sala técnica, con acceso restringido"
+        emits: {custodia_soportes: sala}
+      - code: despacho
+        label: "En un despacho o estantería"
+        emits: {custodia_soportes: despacho}
+      - code: variable
+        label: "No hay un sitio definido"
+        emits: {custodia_soportes: "no"}
+
+  - code: mp.si.destruccion
+    bloque: B14
+    orden: 64
+    tipo: SINGLE
+    texto: "¿Qué hacéis con los equipos y discos cuando se retiran?"
+    por_que: "Es mp.si.5. Vender o donar equipos sin borrado seguro es una fuga de información silenciosa."
+    como_saberlo: "Piensa en el último ordenador o servidor retirado: ¿qué pasó con su disco?"
+    show_if: {">=": [{var: "nivel_orden.C"}, 1]}
+    minutos_estimados: 2
+    opciones:
+      - code: empresa_certificado
+        label: "Los destruye una empresa que entrega certificado"
+        emits: {destruccion: certificado}
+      - code: borrado_seguro
+        label: "Se borran con herramienta de borrado seguro"
+        emits: {destruccion: borrado}
+      - code: formateo
+        label: "Se formatean"
+        emits: {destruccion: formateo}
+      - code: almacen
+        label: "Se guardan en un almacén"
+        emits: {destruccion: almacen}
+      - code: "no"
+        label: "No hay un criterio"
+        emits: {destruccion: "no"}
+
+  # ============================================================== mp.sw.1 y .2
+  - code: mp.sw.desarrollo
+    bloque: B15
+    orden: 10
+    tipo: SINGLE
+    texto: "¿Desarrolláis software propio o lo encargáis a medida?"
+    por_que: "mp.sw.1 aplica en Media y Alta si hay desarrollo. Si compráis todo hecho, este bloque casi desaparece."
+    como_saberlo: "Cuenta también los desarrollos hechos por una empresa externa para vosotros y los portales a medida."
+    minutos_estimados: 1
+    opciones:
+      - code: interno
+        label: "Sí, con equipo propio"
+        emits: {desarrollo: interno}
+      - code: externo
+        label: "Sí, lo encargamos fuera"
+        emits: {desarrollo: externo}
+      - code: ambos
+        label: "Las dos cosas"
+        emits: {desarrollo: ambos}
+      - code: "no"
+        label: "No, todo es software comprado"
+        emits: {desarrollo: "no"}
+
+  - code: mp.sw.entornos
+    bloque: B15
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Se desarrolla y se prueba en un sitio distinto del que usan los usuarios?"
+    por_que: "Es la separación de entornos. Programar directamente sobre producción es hallazgo seguro."
+    como_saberlo: "Mira si hay entornos de desarrollo, pruebas y producción diferenciados."
+    show_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.desarrollo"}, "no"]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: tres
+        label: "Sí, desarrollo, pruebas y producción"
+        emits: {entornos: tres}
+      - code: dos
+        label: "Desarrollo y producción"
+        emits: {entornos: dos}
+      - code: uno
+        label: "Se trabaja sobre producción"
+        emits: {entornos: uno}
+
+  - code: mp.sw.datos_pruebas
+    bloque: B15
+    orden: 12
+    tipo: SINGLE
+    texto: "¿En pruebas se usan datos reales de personas?"
+    por_que: "Es el refuerzo de datos de pruebas. Copiar la base de producción a un entorno menos protegido es un problema de ENS y también de protección de datos."
+    como_saberlo: "Pregunta a quien desarrolla de dónde salen los datos del entorno de pruebas."
+    show_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.desarrollo"}, "no"]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: ficticios
+        label: "No, se usan datos inventados"
+        emits: {datos_pruebas: ficticios}
+      - code: anonimizados
+        label: "Se usan datos reales anonimizados"
+        emits: {datos_pruebas: anonimizados}
+      - code: reales
+        label: "Sí, se copia la base real"
+        emits: {datos_pruebas: reales}
+
+  - code: mp.sw.seguridad_desarrollo
+    bloque: B15
+    orden: 13
+    tipo: MULTI
+    texto: "¿Qué comprobaciones de seguridad se hacen sobre el código?"
+    por_que: "Son los refuerzos de metodología de desarrollo seguro y seguridad desde el diseño."
+    como_saberlo: "Cuenta la revisión por otra persona, los análisis automáticos de código o de dependencias y las pruebas de seguridad antes de publicar."
+    show_if: {and: [{">=": [{var: "categoria_orden"}, 2]}, {"!=": [{var: "hechos.desarrollo"}, "no"]}]}
+    minutos_estimados: 2
+    opciones:
+      - code: revision
+        label: "Otra persona revisa el código"
+        emits: {sdlc_revision: true}
+      - code: sast
+        label: "Análisis automático del código"
+        emits: {sdlc_sast: true}
+      - code: dependencias
+        label: "Análisis de librerías y dependencias"
+        emits: {sdlc_dependencias: true}
+      - code: pruebas
+        label: "Pruebas de seguridad antes de publicar"
+        emits: {sdlc_pruebas: true}
+      - code: ninguna
+        label: "Ninguna"
+        emits: {sdlc: "no"}
+
+  - code: mp.sw.aceptacion
+    bloque: B15
+    orden: 20
+    tipo: SINGLE
+    texto: "Antes de poner una aplicación en marcha, ¿alguien la prueba y da el visto bueno?"
+    por_que: "Es mp.sw.2 y aplica en todas las categorías, aunque el software sea comprado. El auditor pedirá el acta de la última puesta en servicio."
+    como_saberlo: "Piensa en la última aplicación o actualización importante: ¿hubo pruebas y alguien dijo que sí por escrito?"
+    minutos_estimados: 2
+    opciones:
+      - code: acta
+        label: "Sí, con pruebas y aceptación por escrito"
+        emits: {aceptacion: acta}
+      - code: pruebas
+        label: "Se prueba, pero no se documenta"
+        emits: {aceptacion: pruebas}
+      - code: "no"
+        label: "Se pone en marcha directamente"
+        emits: {aceptacion: "no"}
+
+  # ============================================================== op.ext.1 a .4
+  - code: op.ext.proveedores
+    bloque: B05
+    orden: 10
+    tipo: LIST
+    texto: "¿Qué empresas externas tocan vuestros sistemas o vuestra información?"
+    por_que: "Cada una es un tercero del que hay que demostrar control: contrato, nivel de servicio y, si procede, conformidad ENS."
+    como_saberlo: "Incluye soporte informático, alojamiento, desarrollo, mantenimiento, copias, seguridad gestionada y la empresa que hace la limpieza de la sala técnica."
+    minutos_estimados: 3
+    campos:
+      - {code: proveedor, label: "Empresa"}
+      - {code: servicio, label: "Qué hace"}
+      - {code: acceso, label: "A qué accede"}
+      - {code: critico, label: "¿Es crítico para el servicio?"}
+
+  - code: op.ext.contratos
+    bloque: B05
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Los contratos con esas empresas incluyen obligaciones de seguridad y niveles de servicio?"
+    por_que: "Es op.ext.1, obligatoria en Media y Alta. Sin cláusulas, no hay forma de exigir nada cuando pasa algo."
+    como_saberlo: "Mira el último contrato: ¿habla de confidencialidad, de tiempos de respuesta, de conformidad ENS o de protección de datos?"
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: completos
+        label: "Sí, con cláusulas y niveles de servicio"
+        emits: {contratos_proveedores: completos}
+      - code: parciales
+        label: "Algunos sí, otros no"
+        emits: {contratos_proveedores: parciales}
+      - code: basicos
+        label: "Solo contrato mercantil, sin cláusulas de seguridad"
+        emits: {contratos_proveedores: basicos}
+      - code: "no"
+        label: "Alguno trabaja sin contrato escrito"
+        emits: {contratos_proveedores: "no"}
+
+  - code: op.ext.certificacion
+    bloque: B05
+    orden: 12
+    tipo: SINGLE
+    texto: "¿Vuestros proveedores tienen certificación ENS?"
+    por_que: "Si prestan servicios dentro de vuestro alcance, su conformidad debe ser al menos de vuestra categoría. Es de lo primero que comprueba el auditor."
+    como_saberlo: "Pídeles el certificado. Ojo: la ISO 27001 no es conformidad ENS."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: todos
+        label: "Sí, tengo los certificados"
+        emits: {proveedores_ens: todos}
+      - code: algunos
+        label: "Algunos sí"
+        emits: {proveedores_ens: algunos}
+      - code: creo
+        label: "Creo que sí, pero no los tengo"
+        emits: {proveedores_ens: sin_documentar}
+      - code: "no"
+        label: "No lo sé"
+        emits: {proveedores_ens: desconocido}
+
+  - code: op.ext.poc
+    bloque: B05
+    orden: 12.5
+    tipo: SINGLE
+    texto: "¿Vuestros proveedores tienen una persona concreta de contacto para temas de seguridad?"
+    por_que: "El artículo 13.5 del RD 311/2022 lo exige para servicios externalizados: el proveedor debe designar un punto de contacto de seguridad, que canalice los requisitos y los incidentes."
+    como_saberlo: "Piensa a quién llamaríais si el proveedor sufriera un incidente que os afecta. Si la respuesta es «al comercial», no vale."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: designado
+        label: "Sí, está designado por escrito"
+        emits: {poc_proveedor: designado}
+      - code: informal
+        label: "Hay alguien, pero sin designación formal"
+        emits: {poc_proveedor: informal}
+      - code: "no"
+        label: "No, solo tenemos el contacto comercial"
+        emits: {poc_proveedor: "no"}
+
+  - code: op.ext.seguimiento
+    bloque: B05
+    orden: 13
+    tipo: SINGLE
+    texto: "¿Se revisa que esos proveedores cumplen lo pactado?"
+    por_que: "Es op.ext.2, la gestión diaria. El auditor pedirá informes de servicio o actas de seguimiento."
+    como_saberlo: "Mira si llegan informes periódicos y si alguien los revisa o se reúne con el proveedor."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: reuniones
+        label: "Sí, con informes y reuniones de seguimiento"
+        emits: {seguimiento_proveedores: reuniones}
+      - code: informes
+        label: "Llegan informes, pero sin seguimiento formal"
+        emits: {seguimiento_proveedores: informes}
+      - code: "no"
+        label: "Solo se les llama cuando hay un problema"
+        emits: {seguimiento_proveedores: reactivo}
+
+  - code: op.ext.interconexiones
+    bloque: B05
+    orden: 14
+    tipo: SINGLE
+    texto: "¿Vuestro sistema se conecta con sistemas de otras organizaciones?"
+    por_que: "Es op.ext.4. Cada interconexión necesita su acuerdo y su control, y el auditor querrá el diagrama."
+    como_saberlo: "Piensa en conexiones con otras administraciones, plataformas de intermediación, pasarelas de pago o integraciones con clientes."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: con_acuerdo
+        label: "Sí, con acuerdos firmados"
+        emits: {interconexiones: con_acuerdo}
+      - code: sin_acuerdo
+        label: "Sí, pero sin acuerdo específico"
+        emits: {interconexiones: sin_acuerdo}
+      - code: "no"
+        label: "No hay conexiones con terceros"
+        emits: {interconexiones: "no"}
+
+  - code: op.ext.cadena
+    bloque: B05
+    orden: 15
+    tipo: SINGLE
+    texto: "¿Sabéis si vuestros proveedores subcontratan a su vez parte del servicio?"
+    por_que: "Es op.ext.3, la cadena de suministro, obligatoria en categoría Alta."
+    como_saberlo: "Mira si el contrato permite subcontratar y si os comunican a quién."
+    show_if: {">=": [{var: "categoria_orden"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: controlado
+        label: "Sí, y hay que autorizarlo"
+        emits: {cadena_suministro: controlado}
+      - code: informado
+        label: "Nos informan, sin más"
+        emits: {cadena_suministro: informado}
+      - code: "no"
+        label: "No lo sabemos"
+        emits: {cadena_suministro: "no"}
+
+  # ==================================================================== op.nub.1
+  - code: op.nub.servicios
+    bloque: B05
+    orden: 30
+    tipo: VENDOR
+    texto: "¿Qué servicios en la nube usáis para este sistema?"
+    por_que: "op.nub.1 aplica en todas las categorías. Cada servicio necesita su certificación, su configuración segura y su reparto de responsabilidades."
+    como_saberlo: "Incluye tanto infraestructura (AWS, Azure, Google Cloud) como aplicaciones (Microsoft 365, Google Workspace, herramientas de gestión)."
+    show_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    minutos_estimados: 2
+
+  - code: op.nub.region
+    bloque: B05
+    orden: 31
+    tipo: SINGLE
+    texto: "¿Sabéis en qué país se guardan esos datos?"
+    por_que: "Es un requisito habitual en el sector público y una pregunta segura del auditor, además de relevante para protección de datos."
+    como_saberlo: "En la consola del proveedor suele indicarse la región del servicio o del inquilino."
+    show_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    minutos_estimados: 1
+    opciones:
+      - code: espana
+        label: "En España"
+        emits: {region_datos: espana}
+      - code: ue
+        label: "En la Unión Europea"
+        emits: {region_datos: ue}
+      - code: fuera
+        label: "Fuera de la Unión Europea"
+        emits: {region_datos: fuera}
+      - code: no_se
+        label: "No lo sé"
+        emits: {region_datos: desconocido}
+
+  - code: op.nub.responsabilidad
+    bloque: B05
+    orden: 32
+    tipo: SINGLE
+    texto: "¿Quién configura la seguridad de esos servicios: vosotros o el proveedor?"
+    por_que: "En la nube, el proveedor protege la infraestructura y vosotros la configuración. Muchos incidentes salen de dar por hecho que lo hace el otro."
+    como_saberlo: "Piensa quién decide los permisos, quién activa los registros y quién configura las copias."
+    show_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    minutos_estimados: 1
+    opciones:
+      - code: interno
+        label: "Nosotros"
+        emits: {nube_admin: interno}
+      - code: proveedor
+        label: "Un proveedor lo gestiona por nosotros"
+        emits: {nube_admin: proveedor}
+      - code: mixto
+        label: "Repartido"
+        emits: {nube_admin: mixto}
+      - code: no_se
+        label: "No está claro"
+        emits: {nube_admin: desconocido}
+
+  - code: op.nub.bastionado
+    bloque: B05
+    orden: 33
+    tipo: SINGLE
+    texto: "¿Se ha configurado la nube siguiendo alguna guía de seguridad?"
+    por_que: "Es el refuerzo de guías de configuración, obligatorio en Alta. Las opciones por defecto de la nube no cumplen el ENS."
+    como_saberlo: "Mira si se siguieron guías del CCN para esa plataforma, del CIS o del propio fabricante, y si hay algún informe de postura de seguridad."
+    show_if: {"==": [{var: "hechos.instalacion_externa"}, true]}
+    minutos_estimados: 2
+    opciones:
+      - code: guia_ccn
+        label: "Sí, con guías del CCN"
+        emits: {nube_bastionado: ccn}
+      - code: guia_otra
+        label: "Sí, con guías del fabricante o CIS"
+        emits: {nube_bastionado: otra}
+      - code: herramienta
+        label: "Usamos una herramienta que evalúa la configuración"
+        emits: {nube_bastionado: herramienta}
+      - code: "no"
+        label: "Se configuró sobre la marcha"
+        emits: {nube_bastionado: "no"}

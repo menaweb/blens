@@ -1,0 +1,458 @@
+# Seed BLENS · Plantillas de evidencia — familias org (Marco organizativo) y op.pl (Planificación)
+# Especificación: docs/evidencias_por_herramienta.md · Carpeta del paquete: 00_Gobernanza y 05_[op]
+#
+# Es el bloque con más documentación GENERABLE: cuando falta, BLENS la produce (M3) en vez de pedirla.
+# Lo que no genera nunca es la prueba de aprobación y difusión: eso lo tiene que aportar la organización.
+
+version: 1
+familias: [org, op.pl]
+
+templates:
+
+  # ==================================================================== org.1
+  - code: EV-org.1-01
+    measure: org.1
+    titulo: "Política de seguridad aprobada"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.1"
+    generable: true
+    instrucciones: "Política de seguridad vigente: alcance, principios, marco normativo, estructura de responsabilidades y compromiso de revisión."
+    criterios_aceptacion:
+      - "Identifica los servicios y sistemas en alcance"
+      - "Nombra los cuatro papeles del ENS y quién los ejerce"
+      - "Consta versión y fecha"
+      - "Prevé su propia revisión periódica"
+    rechazos_tipicos:
+      - "Política genérica descargada de internet, sin relación con la organización"
+      - "Documento sin fecha ni versión"
+
+  - code: EV-org.1-02
+    measure: org.1
+    titulo: "Aprobación de la política por el órgano competente"
+    tipo: ACTA
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.1"
+    instrucciones: "Acta, resolución o acuerdo donde conste la aprobación de la política, con su fecha y el órgano que la aprueba."
+    criterios_aceptacion:
+      - "Aprueba el órgano de gobierno o la dirección, no el área de informática (en el sector privado, el órgano con las máximas competencias ejecutivas: art. 2.3 del RD 311/2022)"
+      - "La fecha es coherente con la versión del documento"
+      - "Identifica la versión aprobada"
+    rechazos_tipicos:
+      - "Política firmada solo por el responsable de informática"
+      - "Acta que menciona la política pero no la aprueba"
+
+  - code: EV-org.1-03
+    measure: org.1
+    titulo: "Nombramientos de los responsables"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.1"
+    instrucciones: "Designaciones por escrito del Responsable de la Información, del Servicio, de Seguridad y del Sistema."
+    criterios_aceptacion:
+      - "Cada papel tiene una persona identificada y fecha de designación"
+      - "El Responsable de Seguridad y el del Sistema son personas distintas"
+      - "Las personas designadas siguen en la organización"
+    rechazos_tipicos:
+      - "Una sola persona acumulando seguridad y sistema sin justificación ni compensación"
+      - "Nombramientos de personas que ya no están"
+
+  - code: EV-org.1-04
+    measure: org.1
+    titulo: "Difusión de la política"
+    tipo: EMAIL
+    formatos: [pdf, png, eml]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.1"
+    instrucciones: "Prueba de que la política se ha comunicado: correo de difusión, publicación en intranet con fecha, o informe de acuses de lectura."
+    criterios_aceptacion:
+      - "Consta la fecha de difusión"
+      - "Se ve el alcance: a quién se comunicó"
+    rechazos_tipicos:
+      - "Política aprobada que nadie en la organización conoce"
+
+  - code: EV-org.1-05
+    measure: org.1
+    titulo: "Actas del comité de seguridad"
+    tipo: ACTA
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "00_Gobernanza/org.1"
+    applies_if: {in: [{var: "hechos.comite"}, ["trimestral", "anual"]]}
+    instrucciones: "Actas de las últimas reuniones del comité, con asistentes, temas tratados y acuerdos."
+    criterios_aceptacion:
+      - "La periodicidad real coincide con la declarada"
+      - "Los acuerdos tienen responsable y plazo"
+      - "Al menos una acta dentro del periodo auditado"
+    rechazos_tipicos:
+      - "Comité constituido que no se ha reunido nunca"
+      - "Actas sin acuerdos ni seguimiento de los anteriores"
+
+  - code: EV-org.1-06
+    measure: org.1
+    titulo: "Revisión anual de la categorización"
+    tipo: ACTA
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "01_Alcance_y_Categorizacion"
+    generable: true
+    instrucciones: "Acta o documento fechado donde se confirme o modifique la categoría del sistema. El Anexo I del RD 311/2022 obliga a reevaluarla anualmente o ante cambios significativos."
+    criterios_aceptacion:
+      - "Fecha dentro del último año"
+      - "Confirma o modifica el nivel de cada dimensión, no solo la categoría"
+      - "Firmada por quien tiene la facultad de determinarla (responsable de seguridad, a partir de la valoración de los responsables de información y servicio)"
+    rechazos_tipicos:
+      - "Categorización de hace cuatro años sin ninguna revisión posterior"
+
+  - code: EV-org.1-07
+    measure: org.1
+    titulo: "Publicación del distintivo de conformidad"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "00_Gobernanza/org.1"
+    applies_if: {"==": [{var: "hechos.distintivo_publicado"}, true]}
+    instrucciones: "Captura de la web o sede electrónica donde figura el distintivo de conformidad con el ENS, con su URL visible (art. 38.2)."
+    criterios_aceptacion:
+      - "Se ve la dirección de la página"
+      - "El distintivo corresponde a la categoría y al alcance vigentes"
+
+  # ==================================================================== org.2
+  - code: EV-org.2-01
+    measure: org.2
+    titulo: "Normativa de seguridad para el personal"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.2"
+    generable: true
+    instrucciones: "Normas de uso correcto de equipos, correo, internet, credenciales y, si aplica, teletrabajo y dispositivos móviles."
+    criterios_aceptacion:
+      - "Describe usos permitidos y prohibidos en lenguaje comprensible"
+      - "Indica las consecuencias del incumplimiento"
+      - "Aprobada y fechada"
+
+  - code: EV-org.2-02
+    measure: org.2
+    option_group: org.2.difusion
+    preferencia: 1
+    titulo: "Acuse de lectura de la normativa"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "00_Gobernanza/org.2"
+    applies_if: {"!=": [{var: "hechos.normativa"}, "no"]}
+    instrucciones: "Informe de quién ha leído y aceptado la normativa, con fecha y versión. Si usáis BLENS para difundirla (M12), se genera solo."
+    criterios_aceptacion:
+      - "Se ve la cobertura: cuántas personas de la plantilla han acusado"
+      - "Consta la versión aceptada"
+      - "Incluye las incorporaciones del periodo"
+    rechazos_tipicos:
+      - "Normativa publicada en la intranet sin ninguna constancia de lectura"
+      - "Acuses de hace cinco años para una normativa revisada después"
+
+  - code: EV-org.2-03
+    measure: org.2
+    option_group: org.2.difusion
+    preferencia: 2
+    titulo: "Documentos de aceptación firmados"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.2"
+    applies_if: {"==": [{var: "hechos.normativa_difusion"}, "firma"]}
+    instrucciones: "Muestra de documentos firmados por el personal, incluidas personas externas con acceso al sistema."
+    criterios_aceptacion:
+      - "Firmas fechadas"
+      - "Se incluye al personal de proveedores con acceso"
+
+  # ==================================================================== org.3
+  - code: EV-org.3-01
+    measure: org.3
+    titulo: "Procedimientos operativos de seguridad"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.3"
+    generable: true
+    instrucciones: "Procedimientos de las tareas críticas: altas y bajas, copias y restauración, incidentes, cambios y recuperación."
+    criterios_aceptacion:
+      - "Cada procedimiento indica quién lo ejecuta y cuándo"
+      - "El detalle permite que lo siga otra persona"
+      - "Versión y fecha visibles"
+    rechazos_tipicos:
+      - "Procedimientos que describen una realidad distinta de la que se ve en el sistema"
+
+  - code: EV-org.3-02
+    measure: org.3
+    refuerzo: org.3.r1
+    titulo: "Validación de los procedimientos"
+    tipo: REGISTRO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "00_Gobernanza/org.3"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Evidencia de que los procedimientos se han probado o aplicado: prueba, simulacro o caso real documentado."
+    criterios_aceptacion:
+      - "Se identifica el procedimiento y la fecha"
+      - "Consta el resultado y las correcciones derivadas"
+
+  # ==================================================================== org.4
+  - code: EV-org.4-01
+    measure: org.4
+    titulo: "Proceso de autorización documentado"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 1095
+    carpeta_paquete: "00_Gobernanza/org.4"
+    generable: true
+    instrucciones: "Procedimiento que fije qué hay que autorizar antes de su puesta en servicio (equipos, aplicaciones, servicios en la nube, instalaciones, accesos) y quién autoriza."
+    criterios_aceptacion:
+      - "Cubre al menos equipos, software, servicios externos e instalaciones"
+      - "Identifica quién autoriza cada cosa"
+
+  - code: EV-org.4-02
+    measure: org.4
+    titulo: "Autorizaciones concedidas (muestra)"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "00_Gobernanza/org.4"
+    applies_if: {"!=": [{var: "hechos.autorizacion"}, "no"]}
+    instrucciones: "De 3 a 5 autorizaciones reales del periodo: alta de un equipo, instalación de software o contratación de un servicio."
+    criterios_aceptacion:
+      - "Consta quién solicitó, quién autorizó y cuándo"
+      - "Los casos son del periodo auditado"
+    rechazos_tipicos:
+      - "Servicios en la nube contratados por departamentos sin que informática lo sepa"
+
+  # =================================================================== op.pl.1
+  - code: EV-op.pl.1-01
+    measure: op.pl.1
+    titulo: "Informe de análisis de riesgos"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, xlsx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "02_Analisis_de_Riesgos"
+    generable: true
+    instrucciones: "Informe con activos, valoración, amenazas, riesgo intrínseco y residual, y decisiones de tratamiento. Si lo generáis con BLENS (M7), sale ya en este formato."
+    criterios_aceptacion:
+      - "Identifica los activos del sistema en alcance"
+      - "Explica la metodología, que debe estar reconocida internacionalmente (art. 14.2)"
+      - "Explica los criterios de valoración"
+      - "Distingue riesgo intrínseco de residual"
+      - "Fecha dentro del ciclo declarado de revisión"
+    rechazos_tipicos:
+      - "Análisis de riesgos que no cita ningún activo real de la organización"
+      - "Informe sin riesgo residual: solo lista amenazas"
+      - "Análisis desconectado de la Declaración de Aplicabilidad"
+
+  - code: EV-op.pl.1-02
+    measure: op.pl.1
+    titulo: "Aceptación del riesgo residual"
+    tipo: ACTA
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "02_Analisis_de_Riesgos"
+    instrucciones: "Acta o firma donde la dirección o el comité acepta los riesgos que quedan sin tratar."
+    criterios_aceptacion:
+      - "Identifica los riesgos aceptados y su nivel"
+      - "Firma o acuerdo del órgano competente, no del técnico"
+      - "Fecha posterior al informe de análisis"
+    rechazos_tipicos:
+      - "Riesgos altos aceptados sin ninguna firma"
+
+  - code: EV-op.pl.1-03
+    measure: op.pl.1
+    titulo: "Plan de tratamiento de riesgos"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "02_Analisis_de_Riesgos"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    generable: true
+    instrucciones: "Riesgos a mitigar con su medida asociada, responsable, plazo y estado."
+    criterios_aceptacion:
+      - "Cada acción tiene responsable y fecha"
+      - "Consta el estado de avance"
+      - "Enlaza con las medidas del Anexo II"
+
+  # =================================================================== op.pl.2
+  - code: EV-op.pl.2-01
+    measure: op.pl.2
+    titulo: "Documento de arquitectura de seguridad"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "01_Alcance_y_Categorizacion"
+    generable: true
+    instrucciones: "Diagrama y descripción del sistema: zonas y perímetros, equipos, redes, conexiones externas, puntos de acceso y dónde se aplica cada protección."
+    criterios_aceptacion:
+      - "Incluye las conexiones con terceros y con internet"
+      - "Identifica zonas y sus perímetros"
+      - "Coincide con lo declarado en el inventario y en el perfilado"
+      - "Fecha visible"
+    rechazos_tipicos:
+      - "Diagrama que no incluye los servicios en la nube que sí se usan"
+      - "Arquitectura de hace años con servidores ya retirados"
+
+  - code: EV-op.pl.2-02
+    measure: op.pl.2
+    refuerzo: op.pl.2.r1
+    titulo: "Revisión periódica del sistema de gestión"
+    tipo: ACTA
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "00_Gobernanza/op.pl.2"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Evidencia de la revisión periódica de la seguridad: indicadores, conclusiones y decisiones de mejora. Si tenéis ISO 27001, vale la revisión por la dirección."
+    criterios_aceptacion:
+      - "Fecha dentro del último año"
+      - "Incluye datos o indicadores, no solo texto"
+      - "Consta quién revisa y qué se decide"
+
+  # =================================================================== op.pl.3
+  - code: EV-op.pl.3-01
+    measure: op.pl.3
+    titulo: "Requisitos de seguridad en compras y contratos"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "00_Gobernanza/op.pl.3"
+    generable: true
+    instrucciones: "Cláusulas tipo de seguridad para pliegos y contratos, más un expediente reciente donde se vean aplicadas."
+    criterios_aceptacion:
+      - "Las cláusulas cubren conformidad ENS, protección de datos y obligaciones de seguridad"
+      - "Exigen la Declaración o Certificación de Conformidad al contratista (art. 2.3)"
+      - "Se extienden a la cadena de suministro del contratista cuando el análisis de riesgos lo justifica"
+      - "El ejemplo es de una contratación real del periodo"
+    rechazos_tipicos:
+      - "Cláusulas tipo que no se aplican en ningún expediente real"
+
+  # =================================================================== op.pl.4
+  - code: EV-op.pl.4-01
+    measure: op.pl.4
+    titulo: "Vigilancia de la capacidad"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.pl.4"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    instrucciones: "Captura o informe de la monitorización de recursos: uso de disco, memoria, procesador y ancho de banda, con los umbrales de aviso."
+    criterios_aceptacion:
+      - "Se ven los sistemas vigilados y sus umbrales"
+      - "Fecha visible"
+    rechazos_tipicos:
+      - "Discos al 95 % sin ningún aviso configurado"
+
+  - code: EV-op.pl.4-02
+    measure: op.pl.4
+    refuerzo: op.pl.4.r1
+    titulo: "Previsiones de capacidad"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.pl.4"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    instrucciones: "Estimación de necesidades futuras de recursos basada en datos de uso, con la ampliación prevista y su plazo."
+    criterios_aceptacion:
+      - "Se apoya en datos históricos de uso"
+      - "Indica horizonte temporal y necesidades previstas"
+
+  # =================================================================== op.pl.5
+  - code: EV-op.pl.5-01
+    measure: op.pl.5
+    option_group: op.pl.5.ruta
+    preferencia: 1
+    titulo: "Producto cualificado en el CPSTIC"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.pl.5"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Por cada componente de seguridad: ficha del catálogo CPSTIC fechada, captura de la versión instalada y evidencia de la configuración según su Procedimiento de Empleo Seguro."
+    criterios_aceptacion:
+      - "El producto y la versión coinciden con los cualificados"
+      - "La categoría del producto cubre la del sistema"
+      - "La cualificación está vigente (revisión de validez no caducada)"
+      - "Consta el Procedimiento de Empleo Seguro aplicado, o la guía del fabricante si aún no está publicado"
+    rechazos_tipicos:
+      - "Versión instalada distinta de la cualificada"
+      - "Ficha del catálogo sin fecha de consulta"
+
+  - code: EV-op.pl.5-02
+    measure: op.pl.5
+    option_group: op.pl.5.ruta
+    preferencia: 2
+    titulo: "Producto certificado conforme al artículo 19"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.pl.5"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    instrucciones: "Certificado (Common Criteria, LINCE o evaluación STIC) con su alcance, más la consulta fechada al CPSTIC que muestre que no hay alternativa cualificada para esa funcionalidad."
+    criterios_aceptacion:
+      - "El alcance del certificado cubre la funcionalidad usada"
+      - "Consta la consulta al catálogo y su fecha"
+
+  - code: EV-op.pl.5-03
+    measure: op.pl.5
+    option_group: op.pl.5.ruta
+    preferencia: 3
+    titulo: "Justificación y medidas compensatorias"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.pl.5"
+    applies_if: {">=": [{var: "categoria_orden"}, 2]}
+    generable: true
+    instrucciones: "Justificación de por qué se usa un producto no cualificado, riesgo asociado, medidas compensatorias y plan de sustitución con fecha."
+    criterios_aceptacion:
+      - "Enlaza con el riesgo correspondiente del análisis"
+      - "Incluye plan de sustitución con fecha concreta"
+      - "Aprobada por el Responsable de Seguridad"
+    rechazos_tipicos:
+      - "Justificar la elección por preferencia comercial existiendo alternativa cualificada"
+      - "Plan de sustitución sin fecha"
+
+  - code: EV-op.pl.5-04
+    measure: op.pl.5
+    titulo: "Cualificación del servicio de seguridad prestado a terceros"
+    tipo: CERTIFICADO
+    formatos: [pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.pl.5"
+    applies_if: {"==": [{var: "hechos.presta_servicio_seguridad"}, true]}
+    instrucciones: "Si prestáis un servicio de seguridad a terceros, evidencia de su cualificación en el CPSTIC o de la certificación equivalente."
+    criterios_aceptacion:
+      - "El servicio cualificado es el que efectivamente se presta"
+      - "Vigente en el periodo auditado"

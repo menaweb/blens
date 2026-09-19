@@ -1,0 +1,403 @@
+# Seed BLENS · Plantillas de evidencia — familias mp.info y op.cont
+# Especificación: docs/evidencias_por_herramienta.md §3.6 y §3.14
+# Aplicabilidad por nivel de dimensión (salvo mp.info.1, por categoría). Ver cabecera de questions.mp_info_op_cont.yaml.
+
+version: 1
+familias: [mp.info, op.cont]
+
+templates:
+
+  # ================================================================== mp.info.1
+  - code: EV-mp.info.1-01
+    measure: mp.info.1
+    titulo: "Registro de actividades de tratamiento"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.1"
+    applies_if: {"!=": [{var: "hechos.datos_personales"}, "no"]}
+    instrucciones: "Registro de actividades de tratamiento (RAT) vigente, en la parte que afecta a los servicios en alcance."
+    criterios_aceptacion:
+      - "Incluye los tratamientos soportados por el sistema auditado"
+      - "Consta la fecha de última actualización"
+      - "Identifica responsable y, si procede, encargados"
+    rechazos_tipicos:
+      - "RAT de hace años que no recoge servicios nuevos"
+      - "El sistema auditado no aparece en ningún tratamiento"
+
+  - code: EV-mp.info.1-02
+    measure: mp.info.1
+    titulo: "Delegado de protección de datos y su participación"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.info.1"
+    applies_if: {"!=": [{var: "hechos.dpd"}, "no"]}
+    instrucciones: "Designación del delegado de protección de datos y evidencia de su participación (informe, consulta o acta donde conste)."
+    criterios_aceptacion:
+      - "Consta la designación y su comunicación"
+      - "Se ve al menos una intervención real, no solo el nombramiento"
+
+  - code: EV-mp.info.1-03
+    measure: mp.info.1
+    titulo: "Evaluación de impacto en protección de datos"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: false
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.info.1"
+    applies_if: {"==": [{var: "hechos.datos_personales"}, "especiales"]}
+    instrucciones: "Evaluación de impacto (EIPD) cuando el tratamiento la requiera, o justificación motivada de que no es necesaria."
+    criterios_aceptacion:
+      - "Cubre el tratamiento de riesgo alto identificado"
+      - "Consta la consulta al delegado de protección de datos"
+
+  # ================================================================== mp.info.2
+  - code: EV-mp.info.2-01
+    measure: mp.info.2
+    option_group: mp.info.2.calificacion
+    preferencia: 1
+    titulo: "Norma de calificación de la información"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.info.2"
+    applies_if: {">=": [{var: "nivel_orden.C"}, 2]}
+    generable: true
+    instrucciones: "Norma que defina los niveles de calificación, quién califica, cómo se marca y cómo se trata cada nivel."
+    criterios_aceptacion:
+      - "Define los niveles y quién es responsable de calificar"
+      - "Indica cómo se marca y cómo se distribuye cada nivel"
+      - "Aprobada y fechada"
+
+  - code: EV-mp.info.2-02
+    measure: mp.info.2
+    option_group: mp.info.2.calificacion
+    preferencia: 2
+    titulo: "Documentos marcados de ejemplo"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.2"
+    applies_if: {in: [{var: "hechos.calificacion"}, ["norma_marcado", "norma"]]}
+    instrucciones: "Dos o tres documentos reales donde se vea la marca de calificación aplicada."
+    criterios_aceptacion:
+      - "La marca corresponde a los niveles de la norma"
+      - "Son documentos en uso, no plantillas vacías"
+
+  # ================================================================== mp.info.3
+  - code: EV-mp.info.3-01
+    measure: mp.info.3
+    titulo: "Certificados de firma en uso"
+    tipo: EXPORT_CONFIG
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.3"
+    applies_if: {and: [{">=": [{var: "nivel_orden.IA"}, 1]}, {"!=": [{var: "hechos.firma"}, "no"]}]}
+    instrucciones: "Relación de los certificados usados para firmar: tipo, emisor, titular y caducidad."
+    criterios_aceptacion:
+      - "Consta el emisor y la fecha de caducidad de cada certificado"
+      - "Ninguno está caducado, o consta el plan de renovación"
+      - "El tipo coincide con el refuerzo declarado en la Declaración de Aplicabilidad"
+    rechazos_tipicos:
+      - "Se declara certificado cualificado y el emisor no es prestador cualificado"
+      - "Certificado de sello caducado y sustituido por firma manual sin registrar"
+
+  - code: EV-mp.info.3-02
+    measure: mp.info.3
+    refuerzo: mp.info.3.r2
+    titulo: "Algoritmos y parámetros de firma"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.3"
+    applies_if: {">=": [{var: "nivel_orden.IA"}, 2]}
+    instrucciones: "Configuración de la plataforma de firma: algoritmo, longitud de clave y formato de firma (por ejemplo XAdES o PAdES)."
+    criterios_aceptacion:
+      - "Se ven algoritmo y formato aplicados"
+      - "Se corresponden con los recomendados vigentes"
+
+  - code: EV-mp.info.3-03
+    measure: mp.info.3
+    refuerzo: mp.info.3.r3
+    titulo: "Validación de firmas recibidas"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.3"
+    applies_if: {and: [{">=": [{var: "nivel_orden.IA"}, 2]}, {"!=": [{var: "hechos.firma_verificacion"}, "no"]}]}
+    instrucciones: "Evidencia de la comprobación de validez de una firma recibida: informe de validación con fecha y resultado."
+    criterios_aceptacion:
+      - "Se ve el resultado de la validación y la fecha"
+      - "Se identifica el servicio usado para validar"
+
+  # ================================================================== mp.info.4
+  - code: EV-mp.info.4-01
+    measure: mp.info.4
+    titulo: "Sellos de tiempo aplicados"
+    tipo: DOCUMENTO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.4"
+    applies_if: {">=": [{var: "nivel_orden.T"}, 3]}
+    instrucciones: "Documento sellado de ejemplo donde se vea el sello de tiempo, más el contrato o configuración del prestador."
+    criterios_aceptacion:
+      - "Se identifica el prestador del sello"
+      - "Se ve la fecha y hora certificadas en un documento real"
+    rechazos_tipicos:
+      - "Se presenta la hora del sistema como si fuera un sello de tiempo"
+
+  # ================================================================== mp.info.5
+  - code: EV-mp.info.5-01
+    measure: mp.info.5
+    option_group: mp.info.5.limpieza
+    preferencia: 1
+    titulo: "Herramienta de limpieza de metadatos"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.C"}, 1]}, {"==": [{var: "hechos.limpieza_documentos"}, "herramienta"]}]}
+    instrucciones: "Captura de la herramienta y de su configuración, con el flujo en el que se aplica antes de publicar o enviar."
+    criterios_aceptacion:
+      - "Se ve en qué punto del proceso se aplica"
+      - "Se ve qué elimina: autor, comentarios, control de cambios, versiones"
+
+  - code: EV-mp.info.5-02
+    measure: mp.info.5
+    option_group: mp.info.5.limpieza
+    preferencia: 2
+    titulo: "Procedimiento de limpieza de documentos y ejemplo"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.info.5"
+    applies_if: {">=": [{var: "nivel_orden.C"}, 1]}
+    generable: true
+    instrucciones: "Procedimiento de limpieza antes de publicar, con un ejemplo: propiedades de un documento publicado sin datos ocultos."
+    criterios_aceptacion:
+      - "Indica quién revisa y antes de qué"
+      - "El ejemplo muestra las propiedades ya limpias"
+    rechazos_tipicos:
+      - "Un PDF publicado que conserva autor, comentarios o control de cambios"
+
+  # ================================================================== mp.info.6
+  - code: EV-mp.info.6-01
+    measure: mp.info.6
+    option_group: mp.info.6.trabajos
+    preferencia: 1
+    titulo: "Registro de ejecución de las copias"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, pdf, xlsx]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.info.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    instrucciones: "Informe de los trabajos de copia del último trimestre, con su resultado (correcto, con avisos o fallido)."
+    criterios_aceptacion:
+      - "Cubre todos los sistemas declarados en el alcance de las copias"
+      - "Se ve el resultado de cada ejecución, no solo la programación"
+      - "Los fallos tienen tratamiento o explicación"
+    rechazos_tipicos:
+      - "Trabajos en error repetidos durante semanas sin que nadie actúe"
+      - "Se copian los servidores pero no las bases de datos ni lo que está en la nube"
+      - "Se presenta la política configurada como prueba de que las copias se ejecutan"
+    product_hints:
+      - match: {producto: "Veeam"}
+        instrucciones: "Veeam → Reports → Job Statistics del periodo, o History → Jobs → exportar"
+      - match: {producto: "Azure Backup"}
+        instrucciones: "Centro de copia de seguridad → Trabajos de copia de seguridad: filtra por el periodo y exporta"
+      - match: {producto: "Microsoft 365"}
+        instrucciones: "Aviso: la retención y la papelera de M365 no son copia de seguridad. Si usáis una herramienta de terceros, aporta su informe"
+
+  - code: EV-mp.info.6-02
+    measure: mp.info.6
+    option_group: mp.info.6.trabajos
+    preferencia: 2
+    titulo: "Captura del panel de copias"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "06_[mp]/mp.info.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    instrucciones: "Captura del panel con los trabajos, su última ejecución y su resultado."
+    criterios_aceptacion:
+      - "Se ven los trabajos y su última ejecución correcta"
+      - "Fecha del sistema visible"
+
+  - code: EV-mp.info.6-03
+    measure: mp.info.6
+    titulo: "Política de copias: alcance, frecuencia y retención"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "06_[mp]/mp.info.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    generable: true
+    instrucciones: "Documento o captura de configuración que recoja qué se copia, con qué frecuencia, dónde se guarda y cuánto se conserva."
+    criterios_aceptacion:
+      - "El alcance coincide con el inventario de sistemas críticos"
+      - "La retención declarada coincide con la configurada"
+      - "Consta el responsable de las copias"
+
+  - code: EV-mp.info.6-04
+    measure: mp.info.6
+    refuerzo: mp.info.6.r1
+    titulo: "Acta de prueba de restauración"
+    tipo: ACTA
+    formatos: [pdf, docx, png]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    generable: true
+    instrucciones: "Acta de la última restauración probada: qué se restauró, cuándo, quién, cuánto tardó y si el dato recuperado era correcto."
+    criterios_aceptacion:
+      - "Fecha dentro del último año"
+      - "Se identifica el sistema o fichero restaurado"
+      - "Consta el resultado y el tiempo empleado"
+      - "Firmada o validada por el responsable"
+    rechazos_tipicos:
+      - "Copias impecables y ninguna restauración probada nunca"
+      - "Prueba de hace tres años presentada como vigente"
+      - "Se dice que se restauró sin dejar constancia escrita"
+
+  - code: EV-mp.info.6-05
+    measure: mp.info.6
+    refuerzo: mp.info.6.r2
+    titulo: "Protección de las copias"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "06_[mp]/mp.info.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    instrucciones: "Evidencia del cifrado de las copias, de su almacenamiento inmutable o de solo lectura, y de quién puede borrarlas."
+    criterios_aceptacion:
+      - "Se ve el cifrado activo"
+      - "Se ve la inmutabilidad o el periodo de bloqueo configurado"
+      - "Las credenciales de acceso a las copias son distintas de las de administración del sistema"
+    rechazos_tipicos:
+      - "El administrador del dominio puede borrar las copias con la misma cuenta"
+      - "Copias en un recurso compartido accesible desde los servidores"
+
+  - code: EV-mp.info.6-06
+    measure: mp.info.6
+    titulo: "Copia fuera del emplazamiento principal"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "06_[mp]/mp.info.6"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    instrucciones: "Evidencia de que existe una copia fuera del emplazamiento donde están los servidores: destino, frecuencia y última sincronización."
+    criterios_aceptacion:
+      - "Se identifica el destino externo"
+      - "Se ve la fecha de la última copia enviada fuera"
+    rechazos_tipicos:
+      - "La única copia está en la misma sala que los servidores"
+
+  # ================================================================== op.cont.1
+  - code: EV-op.cont.1-01
+    measure: op.cont.1
+    titulo: "Análisis de impacto"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, xlsx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.cont.1"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    generable: true
+    instrucciones: "Análisis de impacto de los servicios en alcance: tiempo máximo de parada tolerable, pérdida de datos asumible y recursos mínimos necesarios."
+    criterios_aceptacion:
+      - "Cubre los servicios del alcance"
+      - "Fija tiempos concretos por servicio, no genéricos"
+      - "Aprobado por la dirección o el comité"
+      - "Coherente con el plazo declarado en el perfilado"
+    rechazos_tipicos:
+      - "Análisis que no fija plazos y se queda en una descripción"
+      - "Tiempos que contradicen la capacidad real de recuperación"
+
+  # ============================================================ op.cont.2, 3 y 4
+  - code: EV-op.cont.2-01
+    measure: op.cont.2
+    titulo: "Plan de continuidad"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.cont.2"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    generable: true
+    instrucciones: "Plan con criterios de activación, responsables con datos de contacto, orden de recuperación de los sistemas y procedimientos alternativos mientras dure la contingencia."
+    criterios_aceptacion:
+      - "Incluye teléfonos y contactos concretos, no solo roles"
+      - "Define el orden de recuperación coherente con el análisis de impacto"
+      - "Aprobado, fechado y accesible fuera del sistema afectado"
+    rechazos_tipicos:
+      - "Plan guardado únicamente en el servidor que se quiere recuperar"
+      - "Plan con personas que ya no trabajan en la organización"
+
+  - code: EV-op.cont.2-02
+    measure: op.cont.2
+    refuerzo: op.cont.2.r2
+    titulo: "Comprobación de integridad tras la recuperación"
+    tipo: REGISTRO
+    formatos: [pdf, png]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.cont.2"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    instrucciones: "Evidencia de cómo se comprueba que la información recuperada está íntegra y completa."
+    criterios_aceptacion:
+      - "Describe la comprobación concreta que se hace"
+      - "Se ve aplicada en la última prueba o recuperación real"
+
+  - code: EV-op.cont.3-01
+    measure: op.cont.3
+    titulo: "Informe de la última prueba del plan"
+    tipo: ACTA
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.cont.3"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    generable: true
+    instrucciones: "Informe de la última prueba: tipo (de mesa, parcial o completa), fecha, participantes, incidencias detectadas y mejoras acordadas."
+    criterios_aceptacion:
+      - "Fecha dentro del último año"
+      - "Constan los participantes"
+      - "Recoge lo que salió mal y qué se corrigió"
+    rechazos_tipicos:
+      - "Prueba sin ninguna incidencia detectada: suele indicar que no se probó de verdad"
+      - "Plan aprobado hace años y nunca ejercitado"
+
+  - code: EV-op.cont.4-01
+    measure: op.cont.4
+    titulo: "Medios alternativos disponibles"
+    tipo: CONTRATO
+    formatos: [pdf, png]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.cont.4"
+    applies_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    instrucciones: "Contrato de recuperación, evidencia de la infraestructura alternativa preparada o acuerdo con el proveedor, con sus tiempos comprometidos."
+    criterios_aceptacion:
+      - "Consta el compromiso de disponibilidad y sus plazos"
+      - "Los plazos son compatibles con el análisis de impacto"
+      - "Vigente en el periodo auditado"
+    rechazos_tipicos:
+      - "Decir que se levantaría en la nube sin cuenta, sin recursos y sin haberlo probado"
+      - "Contrato caducado"

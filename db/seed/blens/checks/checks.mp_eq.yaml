@@ -1,0 +1,126 @@
+# Seed BLENS · Checks de verificación — familia mp.eq
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.eq
+checks:
+  - code: "CHK-mp.eq.1.1"
+    measure: mp.eq.1
+    item: "mp.eq.1.1"
+    descripcion: "Los puestos de trabajo permanecerán despejados, sin que exista material distinto del necesario en cada momento"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-mp.eq.1-01, EV-mp.eq.1-02]
+  - code: "CHK-mp.eq.1.r1.1"
+    measure: mp.eq.1
+    refuerzo: mp.eq.1.r1
+    item: "mp.eq.1.r1.1"
+    descripcion: "Una vez usado, y siempre que sea factible, el material se almacenará en lugar cerrado"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.eq.1-03]
+  - code: "CHK-mp.eq.2.1"
+    measure: mp.eq.2
+    item: "mp.eq.2.1"
+    descripcion: "El puesto de trabajo se bloqueará al cabo de un tiempo prudencial de inactividad, requiriendo una nueva autenticación del usuario para reanudar la actividad en curso"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.eq.2-01, EV-mp.eq.2-02]
+  - code: "CHK-mp.eq.2.r1.1"
+    measure: mp.eq.2
+    refuerzo: mp.eq.2.r1
+    item: "mp.eq.2.r1.1"
+    descripcion: "Pasado un cierto tiempo, superior al anterior, se cancelarán las sesiones abiertas desde dicho puesto de trabajo…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.eq.2-03]
+  - code: "CHK-mp.eq.3.1"
+    measure: mp.eq.3
+    item: "mp.eq.3.1"
+    descripcion: "Se llevará un inventario de dispositivos portátiles junto con una identificación de la persona responsable de cada uno de ellos y un control regular de que está positivamente bajo su control"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-mp.eq.3-01, EV-mp.eq.3-02, EV-mp.eq.3-03, EV-mp.eq.3-04, EV-mp.eq.3-05]
+  - code: "CHK-mp.eq.3.2"
+    measure: mp.eq.3
+    item: "mp.eq.3.2"
+    descripcion: "Se establecerá un procedimiento operativo de seguridad para informar al servicio de gestión de incidentes de pérdidas o sustracciones"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.eq.3-01, EV-mp.eq.3-02, EV-mp.eq.3-03, EV-mp.eq.3-04, EV-mp.eq.3-05]
+  - code: "CHK-mp.eq.3.3"
+    measure: mp.eq.3
+    item: "mp.eq.3.3"
+    descripcion: "Cuando un dispositivo portátil se conecte remotamente a través de redes que no están bajo el estricto control de la organización, el ámbito de operación del servidor limitará la información y los servicios accesibles a…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.3-01, EV-mp.eq.3-02, EV-mp.eq.3-03, EV-mp.eq.3-04, EV-mp.eq.3-05]
+  - code: "CHK-mp.eq.3.4"
+    measure: mp.eq.3
+    item: "mp.eq.3.4"
+    descripcion: "Se evitará, en la medida de lo posible, que el dispositivo portátil contenga claves de acceso remoto a la organización que no sean imprescindibles…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.3-01, EV-mp.eq.3-02, EV-mp.eq.3-03, EV-mp.eq.3-04, EV-mp.eq.3-05]
+  - code: "CHK-mp.eq.3.r1.1"
+    measure: mp.eq.3
+    refuerzo: mp.eq.3.r1
+    item: "mp.eq.3.r1.1"
+    descripcion: "Se protegerá el dispositivo portátil mediante cifrado del disco duro cuando el nivel de confidencialidad de la información almacenada en el mismo sea de nivel MEDIO"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.eq.3.r2.1"
+    measure: mp.eq.3
+    refuerzo: mp.eq.3.r2
+    item: "mp.eq.3.r2.1"
+    descripcion: "El uso de dispositivos portátiles fuera de las instalaciones de la organización se restringirá a entornos protegidos, donde el acceso sea controlado y a salvo de hurtos y miradas indiscretas"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.3-06]
+  - code: "CHK-a"
+    measure: mp.eq.4
+    item: "a)"
+    descripcion: "Dispositivos multifunción: impresoras, escáneres, etc"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-b"
+    measure: mp.eq.4
+    item: "b)"
+    descripcion: "Dispositivos multimedia: proyectores, altavoces inteligentes, etc"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-c"
+    measure: mp.eq.4
+    item: "c)"
+    descripcion: "Dispositivos internet de las cosas, en inglés Internet of Things (IoT)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-d"
+    measure: mp.eq.4
+    item: "d)"
+    descripcion: "Dispositivos de invitados y los personales de los propios empleados, en inglés Bring Your Own Device (BYOD)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-e"
+    measure: mp.eq.4
+    item: "e)"
+    descripcion: "Otros"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-mp.eq.4.1"
+    measure: mp.eq.4
+    item: "mp.eq.4.1"
+    descripcion: "Los dispositivos presentes en el sistema deberán contar con una configuración de seguridad adecuada de manera que se garantice el control del flujo definido de entrada y salida de la información"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-mp.eq.4.2"
+    measure: mp.eq.4
+    item: "mp.eq.4.2"
+    descripcion: "Los dispositivos presentes en la red que dispongan de algún tipo de almacenamiento temporal o permanente de información proporcionarán la funcionalidad necesaria para eliminar información de soportes de información…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-01]
+  - code: "CHK-mp.eq.4.r1.1"
+    measure: mp.eq.4
+    refuerzo: mp.eq.4.r1
+    item: "mp.eq.4.r1.1"
+    descripcion: "Se usarán, cuando sea posible, productos o servicios que cumplan lo establecido en [op.pl.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.eq.4-03]
+  - code: "CHK-mp.eq.4.r2.1"
+    measure: mp.eq.4
+    refuerzo: mp.eq.4.r2
+    item: "mp.eq.4.r2.1"
+    descripcion: "Se dispondrá de soluciones que permitan visualizar los dispositivos presentes en la red, controlar su conexión/desconexión a la misma y verificar su configuración de seguridad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.eq.4-02]

@@ -1,0 +1,122 @@
+# Seed BLENS · Checks de verificación — familia op.cont
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.cont
+checks:
+  - code: "CHK-op.cont.1.1"
+    measure: op.cont.1
+    item: "op.cont.1.1"
+    descripcion: "Se realizará un análisis de impacto que permita determinar los requisitos de disponibilidad de cada servicio (impacto de una interrupción durante un periodo de tiempo determinado), así como los elementos que son…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.cont.1-01]
+  - code: "CHK-op.cont.2.1"
+    measure: op.cont.2
+    item: "op.cont.2.1"
+    descripcion: "Se identificarán funciones, responsabilidades y actividades a realizar"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.2-01]
+  - code: "CHK-op.cont.2.2"
+    measure: op.cont.2
+    item: "op.cont.2.2"
+    descripcion: "Existirá una previsión para coordinar la entrada en servicio de los medios alternativos de forma que se garantice poder seguir prestando los servicios esenciales de la organización"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.2-01]
+  - code: "CHK-op.cont.2.3"
+    measure: op.cont.2
+    item: "op.cont.2.3"
+    descripcion: "Todos los medios alternativos estarán planificados y materializados en acuerdos o contratos con los proveedores correspondientes"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.2-01]
+  - code: "CHK-op.cont.2.4"
+    measure: op.cont.2
+    item: "op.cont.2.4"
+    descripcion: "Las personas afectadas por el plan recibirán formación específica relativa a su papel en dicho plan"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.2-01]
+  - code: "CHK-op.cont.2.5"
+    measure: op.cont.2
+    item: "op.cont.2.5"
+    descripcion: "El plan de continuidad será parte integral y armónica de los planes de continuidad de la organización en otras materias ajenas a la seguridad"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.2-01]
+  - code: "CHK-op.cont.2.r1.1"
+    measure: op.cont.2
+    refuerzo: op.cont.2.r1
+    item: "op.cont.2.r1.1"
+    descripcion: "Cuando se determine la necesidad de continuidad de los sistemas, deberá existir un plan de emergencia y contingencia en consonancia. En función del análisis de Impacto, se determinarán los aspectos a cubrir"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.cont.2.r2.1"
+    measure: op.cont.2
+    refuerzo: op.cont.2.r2
+    item: "op.cont.2.r2.1"
+    descripcion: "Ante una caída o discontinuidad del sistema, se deberá comprobar la integridad del sistema operativo, del firmware y de los ficheros de configuración"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.2-02]
+  - code: "CHK-op.cont.3.1"
+    measure: op.cont.3
+    item: "op.cont.3.1"
+    descripcion: "Se realizarán pruebas periódicas para localizar y, en su caso, corregir los errores o deficiencias que puedan existir en el plan de continuidad"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.cont.3-01]
+  - code: "CHK-op.cont.4.1"
+    measure: op.cont.4
+    item: "op.cont.4.1"
+    descripcion: "Estará prevista la disponibilidad de medios alternativos para poder seguir prestando servicio cuando los medios habituales no estén disponibles. En concreto, se cubrirán los siguientes elementos del sistema:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.1a"
+    measure: op.cont.4
+    item: "a)"
+    item_padre: "op.cont.4.1"
+    descripcion: "Servicios contratados a terceros"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.1b"
+    measure: op.cont.4
+    item: "b)"
+    item_padre: "op.cont.4.1"
+    descripcion: "Instalaciones alternativas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.1c"
+    measure: op.cont.4
+    item: "c)"
+    item_padre: "op.cont.4.1"
+    descripcion: "Personal alternativo"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.1d"
+    measure: op.cont.4
+    item: "d)"
+    item_padre: "op.cont.4.1"
+    descripcion: "Equipamiento informático alternativo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.1e"
+    measure: op.cont.4
+    item: "e)"
+    item_padre: "op.cont.4.1"
+    descripcion: "Medios de comunicación alternativos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.2"
+    measure: op.cont.4
+    item: "op.cont.4.2"
+    descripcion: "Se establecerá un tiempo máximo para que los medios alternativos entren en funcionamiento"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.3"
+    measure: op.cont.4
+    item: "op.cont.4.3"
+    descripcion: "Los medios alternativos estarán sometidos a las mismas garantías de seguridad que los originales"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.cont.4-01]
+  - code: "CHK-op.cont.4.r1.1"
+    measure: op.cont.4
+    refuerzo: op.cont.4.r1
+    item: "op.cont.4.r1.1"
+    descripcion: "El sistema dispondrá de elementos hardware o software que permitan la transferencia de los servicios automáticamente a los medios alternativos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []

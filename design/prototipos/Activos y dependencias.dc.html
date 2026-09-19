@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; height:100vh; min-height:720px; background:#F8FAFC; overflow:hidden">
+
+  <header style="flex:0 0 56px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 24px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Activos y dependencias</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · 10 activos · 11 dependencias</span>
+    </div>
+    <span style="display:flex; gap:2px; padding:2px; background:#F1F5F9; border-radius:6px">
+      <button type="button" onClick="{{ verGrafo }}" style="{{ botonGrafo }}">Grafo</button>
+      <button type="button" onClick="{{ verTabla }}" style="{{ botonTabla }}">Tabla</button>
+    </span>
+  </header>
+
+  <div style="{{ avisoCiclo }}">
+    <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+      <span style="font-size:13px; font-weight:600; color:#0F172A">Hay una dependencia circular</span>
+      <span style="font-size:12px; line-height:1.5; color:#475569">{{ textoCiclo }} El cálculo de riesgo no puede propagarse en círculo: corrige una de las dependencias o márcala como secundaria.</span>
+    </span>
+    <button type="button" onClick="{{ resolverCiclo }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#B45309; background:#FFFFFF; border:1px solid #B45309; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap; flex:0 0 auto">Ver las tres aristas</button>
+  </div>
+
+  <div style="flex:1; display:flex; min-height:0">
+
+    <div ref="{{ refLienzo }}" style="{{ zonaGrafo }}">
+      <div style="position:absolute; top:12px; left:12px; z-index:5; display:flex; gap:6px; flex-wrap:wrap">
+        <button type="button" onClick="{{ acercar }}" style="{{ botonMapa }}">Acercar</button>
+        <button type="button" onClick="{{ alejar }}" style="{{ botonMapa }}">Alejar</button>
+        <button type="button" onClick="{{ autoajustar }}" style="{{ botonMapa }}">Autoajustar</button>
+        <button type="button" onClick="{{ limpiar }}" style="{{ botonMapa }}">Quitar selección</button>
+      </div>
+      <div style="position:absolute; bottom:12px; left:12px; z-index:5; display:flex; align-items:center; gap:12px; padding:7px 11px; background:rgba(255,255,255,0.92); border:1px solid #E2E8F0; border-radius:6px; flex-wrap:wrap">
+        <sc-for list="{{ leyenda }}" as="l" hint-placeholder-count="4">
+          <span style="display:flex; align-items:center; gap:6px; font-size:12px; color:#475569">
+            <span style="{{ l.punto }}"></span>{{ l.t }}
+          </span>
+        </sc-for>
+        <span style="font-size:12px; color:#475569">Clic para seleccionar · mayúsculas para varios · arrastrar para mover · rueda para acercar</span>
+      </div>
+
+      <svg viewBox="{{ viewBox }}" onWheel="{{ onRueda }}" onMouseDown="{{ onBajar }}" onMouseMove="{{ onMover }}" onMouseUp="{{ onSoltar }}" onMouseLeave="{{ onSoltar }}" style="{{ estiloSvg }}">
+        <sc-for list="{{ aristas }}" as="a" hint-placeholder-count="11">
+          <line x1="{{ a.x1 }}" y1="{{ a.y1 }}" x2="{{ a.x2 }}" y2="{{ a.y2 }}" stroke="{{ a.color }}" strokeWidth="{{ a.grosor }}" strokeDasharray="{{ a.trazo }}"></line>
+        </sc-for>
+        <sc-for list="{{ nodos }}" as="n" hint-placeholder-count="10">
+          <rect onClick="{{ n.onClick }}" x="{{ n.x }}" y="{{ n.y }}" width="168" height="46" rx="8" fill="{{ n.relleno }}" stroke="{{ n.borde }}" strokeWidth="{{ n.grosor }}" style="cursor:pointer"></rect>
+        </sc-for>
+      </svg>
+
+      <div style="position:absolute; inset:0; pointer-events:none; overflow:hidden">
+        <sc-for list="{{ aristas }}" as="a" hint-placeholder-count="11">
+          <span style="{{ a.estiloEtiqueta }}">{{ a.etiqueta }}</span>
+        </sc-for>
+        <sc-for list="{{ nodos }}" as="n" hint-placeholder-count="10">
+          <span style="{{ n.estiloEtiqueta }}">
+            <span style="font-size:12px; font-weight:600; color:#0F172A; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ n.nombre }}</span>
+            <span style="font-size:11px; color:#475569; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ n.tipo }}</span>
+          </span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="{{ zonaTabla }}">
+      <div style="padding:16px 20px; border-bottom:1px solid #E2E8F0; display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Dependencias declaradas</span>
+        <span style="font-size:12px; color:#475569">Misma información que el grafo, recorrible con teclado.</span>
+      </div>
+      <div style="overflow:auto; flex:1">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Depende de</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Para</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:96px; white-space:nowrap">Dependencia</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:124px; white-space:nowrap">Nota</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ filas }}" as="f" hint-placeholder-count="11">
+              <tr style="{{ f.fila }}">
+                <td style="{{ f.celda }}">{{ f.origen }}</td>
+                <td style="{{ f.celda }}">{{ f.destino }}</td>
+                <td style="{{ f.celdaNum }}">{{ f.pct }}</td>
+                <td style="{{ f.celdaFin }}"><span style="{{ f.chip }}">{{ f.nota }}</span></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <aside style="{{ panel }}">
+      <div style="padding:16px 18px; border-bottom:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between; gap:12px">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">{{ tituloPanel }}</span>
+        <button type="button" onClick="{{ limpiar }}" style="font-family:inherit; font-size:13px; color:#475569; background:transparent; border:0; padding:4px 8px; border-radius:6px; cursor:pointer" style-hover="background:#F1F5F9">Cerrar</button>
+      </div>
+      <div style="flex:1; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; gap:16px">
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ seleccionados }}" as="n" hint-placeholder-count="1">
+            <span style="display:flex; flex-direction:column; gap:2px; padding:10px 12px; background:#F8FAFC; border-radius:6px">
+              <span style="font-size:13px; font-weight:600; color:#0F172A">{{ n.nombre }}</span>
+              <span style="font-size:12px; color:#475569">{{ n.tipo }} · {{ n.detalle }}</span>
+            </span>
+          </sc-for>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <span style="font-size:13px; font-weight:600; color:#0F172A">Si esto cae</span>
+          <sc-for list="{{ impacto }}" as="i" hint-placeholder-count="3">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid #F1F5F9">
+              <span style="font-size:13px; color:#0F172A; min-width:0">{{ i.nombre }}</span>
+              <span style="font-size:13px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums; white-space:nowrap">{{ i.pct }}</span>
+            </span>
+          </sc-for>
+          <span style="{{ sinImpacto }}">Ningún servicio declarado depende de la selección.</span>
+        </div>
+        <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 13px; cursor:pointer; align-self:flex-start">Editar dependencias</button>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = { vista: "grafo", sel: [], vb: { x: 0, y: 0, w: 1000, h: 560 }, arrastre: null, resaltarCiclo: false };
+
+  lienzo = React.createRef();
+
+  componentDidMount() {
+    const medir = () => {
+      const el = this.lienzo.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      this.setState({ cont: { w: r.width, h: r.height } });
+    };
+    medir();
+    this._ro = new ResizeObserver(medir);
+    if (this.lienzo.current) this._ro.observe(this.lienzo.current);
+  }
+  componentWillUnmount() { if (this._ro) this._ro.disconnect(); }
+
+  proyeccion() {
+    const vb = this.state.vb, c = this.state.cont || { w: vb.w, h: vb.h };
+    const k = Math.min(c.w / vb.w, c.h / vb.h);
+    return { k, dx: (c.w - vb.w * k) / 2, dy: (c.h - vb.h * k) / 2 };
+  }
+
+  nodosBase() {
+    return [
+      [0, "Sede electrónica", "servicio", 40, 40, "esencial · disponibilidad alta"],
+      [1, "Registro de entrada", "servicio", 40, 170, "esencial · integridad media"],
+      [2, "Pasarela de pagos", "servicio externo", 40, 300, "contratada a Redsys"],
+      [3, "Gestor de expedientes", "aplicación", 280, 100, "software de terceros, v4.2"],
+      [4, "Directorio activo", "aplicación", 280, 240, "identidades de 140 usuarios"],
+      [5, "VM-APP01", "servidor", 530, 60, "Windows Server 2022"],
+      [6, "VM-BD01", "servidor", 530, 190, "SQL Server, datos de expedientes"],
+      [7, "Copias de seguridad", "servicio interno", 530, 320, "Veeam, retención 30 días"],
+      [8, "Red municipal", "comunicaciones", 780, 240, "cortafuegos y VLAN de servidores"],
+      [9, "Nexia Sistemas", "proveedor", 780, 80, "soporte y administración"]
+    ];
+  }
+
+  aristasBase() {
+    return [
+      [0, 3, 100, ""], [1, 3, 80, ""], [3, 5, 100, ""], [3, 4, 60, ""],
+      [5, 6, 100, ""], [6, 7, 100, ""], [7, 5, 20, "cierra el ciclo"],
+      [5, 8, 100, ""], [2, 8, 50, ""], [4, 6, 30, ""], [5, 9, 40, "soporte"]
+    ];
+  }
+
+  ciclo() {
+    const n = this.nodosBase().length, ady = {};
+    this.aristasBase().forEach((a) => { (ady[a[0]] = ady[a[0]] || []).push(a[1]); });
+    const estado = new Array(n).fill(0), pila = [];
+    let encontrado = null;
+    const dfs = (v) => {
+      if (encontrado) return;
+      estado[v] = 1; pila.push(v);
+      (ady[v] || []).forEach((w) => {
+        if (encontrado) return;
+        if (estado[w] === 1) encontrado = pila.slice(pila.indexOf(w)).concat(w);
+        else if (estado[w] === 0) dfs(w);
+      });
+      estado[v] = 2; pila.pop();
+    };
+    for (let i = 0; i < n && !encontrado; i++) if (estado[i] === 0) dfs(i);
+    return encontrado;
+  }
+
+  renderVals() {
+    const s = this.state, grafo = s.vista === "grafo";
+    const nb = this.nodosBase(), ab = this.aristasBase(), pr = this.proyeccion();
+    const centro = (i) => ({ x: nb[i][3] + 84, y: nb[i][4] + 23 });
+
+    const colorTipo = { servicio: "#0F766E", "servicio externo": "#1D4ED8", "servicio interno": "#1D4ED8", aplicación: "#0B4F4A", servidor: "#475569", comunicaciones: "#475569", proveedor: "#7C2D12" };
+    const cic = this.ciclo() || [];
+    const enCiclo = (o, d) => { for (let i = 0; i < cic.length - 1; i++) if (cic[i] === o && cic[i + 1] === d) return true; return false; };
+
+    const dentroDeNodo = (x, y, excluir) => nb.some((n) => n[0] !== excluir[0] && n[0] !== excluir[1] &&
+      x > n[3] - 24 && x < n[3] + 192 && y > n[4] - 14 && y < n[4] + 60);
+    const puntoEtiqueta = (p, q, par) => {
+      const ts = [0.5, 0.32, 0.68, 0.22, 0.78];
+      for (let i = 0; i < ts.length; i++) {
+        const x = p.x + (q.x - p.x) * ts[i], y = p.y + (q.y - p.y) * ts[i];
+        if (!dentroDeNodo(x, y, par)) return { x, y };
+      }
+      return { x: p.x + (q.x - p.x) * 0.5, y: p.y + (q.y - p.y) * 0.5 };
+    };
+
+    const aristas = ab.map((a) => {
+      const p = centro(a[0]), q = centro(a[1]);
+      const e = puntoEtiqueta(p, q, [a[0], a[1]]);
+      const marcada = s.resaltarCiclo && enCiclo(a[0], a[1]);
+      const tocada = s.sel.includes(a[0]) || s.sel.includes(a[1]);
+      const color = marcada ? "#B45309" : tocada ? "#0F766E" : "#CBD5E1";
+      return {
+        x1: p.x, y1: p.y, x2: q.x, y2: q.y,
+        color, colorTexto: marcada ? "#B45309" : tocada ? "#0B4F4A" : "#475569",
+        grosor: marcada ? 2.5 : tocada ? 2 : 1.2,
+        trazo: a[2] < 50 ? "5 4" : "0",
+        etiqueta: a[2] + " %",
+        estiloEtiqueta: `position:absolute; left:${pr.dx + (e.x - s.vb.x) * pr.k}px; top:${pr.dy + (e.y - s.vb.y) * pr.k}px; transform:translate(-50%, -50%); font-size:11px; font-weight:500; font-variant-numeric:tabular-nums; color:${marcada ? "#B45309" : tocada ? "#0B4F4A" : "#475569"}; background:#FFFFFF; border:1px solid ${color}; border-radius:4px; padding:1px 5px; white-space:nowrap`
+      };
+    });
+
+    const nodos = nb.map((n) => {
+      const sel = s.sel.includes(n[0]);
+      return {
+        x: n[3], y: n[4], nombre: n[1], tipo: n[2],
+        estiloEtiqueta: `position:absolute; display:flex; flex-direction:column; justify-content:center; gap:1px; box-sizing:border-box; padding:0 ${10 * pr.k}px; left:${pr.dx + (n[3] - s.vb.x) * pr.k}px; top:${pr.dy + (n[4] - s.vb.y) * pr.k}px; width:${168 * pr.k}px; height:${46 * pr.k}px; overflow:hidden`,
+        relleno: sel ? "#F0FDFA" : "#FFFFFF",
+        borde: sel ? "#0F766E" : colorTipo[n[2]] + "55",
+        grosor: sel ? 2 : 1.2,
+        onClick: (e) => {
+          const multi = e.shiftKey || e.metaKey;
+          const yaEsta = s.sel.includes(n[0]);
+          this.setState({ sel: multi ? (yaEsta ? s.sel.filter((x) => x !== n[0]) : s.sel.concat(n[0])) : (yaEsta && s.sel.length === 1 ? [] : [n[0]]) });
+        }
+      };
+    });
+
+    const vb = s.vb;
+    const zoom = (f) => {
+      const cx = vb.x + vb.w / 2, cy = vb.y + vb.h / 2;
+      const w = Math.min(2400, Math.max(400, vb.w * f)), h = w * 0.56;
+      this.setState({ vb: { x: cx - w / 2, y: cy - h / 2, w, h } });
+    };
+
+    const impacto = [];
+    if (s.sel.length) {
+      const visto = {};
+      const sube = (id, factor, camino) => {
+        if (factor < 0.01 || camino.indexOf(id) !== -1) return;
+        const ruta = camino.concat(id);
+        ab.forEach((a) => {
+          if (a[1] !== id || ruta.indexOf(a[0]) !== -1) return;
+          const f = factor * (a[2] / 100);
+          if (f <= (visto[a[0]] || 0)) return;
+          visto[a[0]] = f;
+          sube(a[0], f, ruta);
+        });
+      };
+      s.sel.forEach((id) => sube(id, 1, []));
+      Object.keys(visto).forEach((k) => {
+        const i = parseInt(k, 10);
+        if (!s.sel.includes(i)) impacto.push({ nombre: nb[i][1], pct: Math.round(visto[k] * 100) + " %" });
+      });
+      impacto.sort((a, b) => parseInt(b.pct, 10) - parseInt(a.pct, 10));
+    }
+
+    const baseCelda = "padding:10px; border-bottom:1px solid #F1F5F9; color:#0F172A; line-height:1.45; vertical-align:middle";
+    const filas = ab.map((a) => {
+      const marcada = s.resaltarCiclo && enCiclo(a[0], a[1]);
+      return {
+        origen: nb[a[0]][1], destino: nb[a[1]][1], pct: a[2] + " %", nota: a[3] || "—",
+        fila: `background:${marcada ? "#FFFBEB" : "#FFFFFF"}`,
+        celda: baseCelda + "; padding-left:16px", celdaNum: baseCelda + "; font-variant-numeric:tabular-nums; color:#475569",
+        celdaFin: baseCelda + "; padding-right:16px",
+        chip: a[3] ? `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:#B45309; background:#FFFBEB; border:1px solid #B4530933; border-radius:5px; padding:2px 7px; white-space:nowrap` : "font-size:13px; color:#94A3B8"
+      };
+    });
+
+    return {
+      nodos, aristas, filas, impacto, refLienzo: this.lienzo,
+      viewBox: `${Math.round(vb.x)} ${Math.round(vb.y)} ${Math.round(vb.w)} ${Math.round(vb.h)}`,
+      estiloSvg: `width:100%; height:100%; display:block; background:#F8FAFC; cursor:${s.arrastre ? "grabbing" : "grab"}; touch-action:none`,
+      verGrafo: () => this.setState({ vista: "grafo" }),
+      verTabla: () => this.setState({ vista: "tabla" }),
+      botonGrafo: `font-family:inherit; font-size:13px; font-weight:${grafo ? 600 : 500}; cursor:pointer; padding:6px 12px; border:0; border-radius:5px; background:${grafo ? "#FFFFFF" : "transparent"}; color:${grafo ? "#0B4F4A" : "#475569"}`,
+      botonTabla: `font-family:inherit; font-size:13px; font-weight:${grafo ? 500 : 600}; cursor:pointer; padding:6px 12px; border:0; border-radius:5px; background:${grafo ? "transparent" : "#FFFFFF"}; color:${grafo ? "#475569" : "#0B4F4A"}`,
+      zonaGrafo: `display:${grafo ? "block" : "none"}; position:relative; flex:1; min-width:0`,
+      zonaTabla: `display:${grafo ? "none" : "flex"}; flex-direction:column; flex:1; min-width:0; background:#FFFFFF; border-right:1px solid #E2E8F0`,
+      botonMapa: "font-family:inherit; font-size:12px; font-weight:500; color:#475569; background:rgba(255,255,255,0.92); border:1px solid #E2E8F0; border-radius:6px; padding:6px 10px; cursor:pointer; white-space:nowrap",
+      acercar: () => zoom(0.8), alejar: () => zoom(1.25),
+      autoajustar: () => this.setState({ vb: { x: 0, y: 0, w: 1000, h: 560 } }),
+      limpiar: () => this.setState({ sel: [] }),
+      onRueda: (e) => { zoom(e.deltaY > 0 ? 1.08 : 0.93); },
+      onBajar: (e) => this.setState({ arrastre: { x: e.clientX, y: e.clientY, vx: vb.x, vy: vb.y } }),
+      onMover: (e) => {
+        if (!s.arrastre) return;
+        const k = vb.w / 1000;
+        this.setState({ vb: Object.assign({}, vb, { x: s.arrastre.vx - (e.clientX - s.arrastre.x) * k, y: s.arrastre.vy - (e.clientY - s.arrastre.y) * k }) });
+      },
+      onSoltar: () => { if (s.arrastre) this.setState({ arrastre: null }); },
+      leyenda: [["servicio", "#0F766E"], ["aplicación", "#0B4F4A"], ["infraestructura", "#475569"], ["proveedor", "#7C2D12"]]
+        .map((l) => ({ t: l[0], punto: `width:9px; height:9px; border-radius:3px; background:${l[1]}` })),
+      avisoCiclo: `display:${cic.length ? "flex" : "none"}; align-items:center; justify-content:space-between; gap:16px; padding:11px 24px; background:#FFFBEB; border-bottom:1px solid #B4530933`,
+      textoCiclo: cic.length ? cic.map((i) => nb[i][1]).join(" → ") + "." : "",
+      resolverCiclo: () => this.setState({ resaltarCiclo: !s.resaltarCiclo, vista: "tabla" }),
+      panel: `display:${s.sel.length ? "flex" : "none"}; flex-direction:column; width:300px; flex:0 0 300px; background:#FFFFFF; border-left:1px solid #E2E8F0`,
+      tituloPanel: s.sel.length === 1 ? "Activo seleccionado" : `${s.sel.length} activos seleccionados`,
+      seleccionados: s.sel.map((i) => ({ nombre: nb[i][1], tipo: nb[i][2], detalle: nb[i][5] })),
+      sinImpacto: `display:${impacto.length ? "none" : "block"}; font-size:13px; color:#475569`
+    };
+  }
+}
+</script>
+</body>
+</html>

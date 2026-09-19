@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  input[type=range] { accent-color:#0F766E; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; height:100vh; min-height:720px; background:#F8FAFC; overflow:hidden">
+
+  <header style="flex:0 0 56px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 24px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Amenazas y tratamiento</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · análisis del 02/09/2026</span>
+    </div>
+    <span style="{{ avisoSimulacion }}">Simulación activa · no se ha guardado ningún cambio</span>
+  </header>
+
+  <div style="flex:1; display:flex; min-height:0">
+
+    <aside style="width:300px; flex:0 0 300px; display:flex; flex-direction:column; background:#FFFFFF; border-right:1px solid #E2E8F0">
+      <div style="padding:14px 16px; border-bottom:1px solid #E2E8F0; display:flex; flex-direction:column; gap:4px">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Amenazas valoradas</span>
+        <span style="font-size:12px; color:#475569">Ordenadas por riesgo residual.</span>
+      </div>
+      <div style="flex:1; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:1px">
+        <sc-for list="{{ amenazas }}" as="a" hint-placeholder-count="7">
+          <button type="button" onClick="{{ a.onClick }}" style="{{ a.caja }}">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+              <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ a.cod }}</span>
+              <span style="{{ a.chip }}">{{ a.nivel }}</span>
+            </span>
+            <span style="{{ a.titulo }}">{{ a.nombre }}</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">intrínseco {{ a.intr }} · residual {{ a.resid }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex:1; min-width:0; overflow-y:auto">
+      <div style="max-width:940px; margin:0 auto; padding:24px 28px 72px; display:flex; flex-direction:column; gap:18px">
+
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <span style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+            <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; font-weight:500; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:3px 8px">{{ codActual }}</span>
+            <span style="font-size:12px; color:#475569">{{ origenActual }}</span>
+          </span>
+          <h1 style="margin:0; font-size:24px; line-height:1.3; font-weight:600; letter-spacing:-0.01em; color:#0F172A">{{ nombreActual }}</h1>
+          <p style="margin:0; font-size:14px; line-height:1.55; color:#475569; max-width:680px; text-wrap:pretty">{{ descripcionActual }}</p>
+        </div>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:14px">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Riesgo por dimensión</span>
+            <span style="display:flex; align-items:center; gap:14px; font-size:12px; color:#475569">
+              <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#CBD5E1"></span>intrínseco</span>
+              <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#0F766E"></span>residual actual</span>
+              <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#14A79B"></span>simulado</span>
+            </span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px">
+            <sc-for list="{{ dimensiones }}" as="d" hint-placeholder-count="5">
+              <span style="display:flex; flex-direction:column; gap:5px">
+                <span style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
+                  <span style="font-size:13px; color:#0F172A">{{ d.nombre }}</span>
+                  <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ d.texto }}</span>
+                </span>
+                <span style="position:relative; display:block; height:22px; border-radius:4px; background:#F1F5F9; overflow:hidden">
+                  <span style="{{ d.barraIntr }}"></span>
+                  <span style="{{ d.barraResid }}"></span>
+                  <span style="{{ d.barraSim }}"></span>
+                </span>
+              </span>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:14px">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Salvaguardas que lo reducen</span>
+            <span style="font-size:12px; color:#475569">Mueve la madurez para simular. Nada se guarda hasta aplicar.</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px">
+            <sc-for list="{{ salvaguardas }}" as="sg" hint-placeholder-count="4">
+              <div style="{{ sg.caja }}">
+                <span style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+                  <span style="display:flex; align-items:center; gap:8px; min-width:0">
+                    <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ sg.cod }}</span>
+                    <span style="font-size:13px; font-weight:500; color:#0F172A">{{ sg.nombre }}</span>
+                    <span style="{{ sg.chipSoporte }}">madurez no soportada</span>
+                  </span>
+                  <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">peso {{ sg.peso }}</span>
+                </span>
+                <span style="display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+                  <input type="range" min="0" max="5" step="1" value="{{ sg.valor }}" onChange="{{ sg.onCambio }}" style="flex:1 1 220px; min-width:160px" />
+                  <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; font-weight:500; color:#0F172A; white-space:nowrap">L{{ sg.valor }}</span>
+                  <span style="{{ sg.chipDelta }}">{{ sg.textoDelta }}</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="{{ cajaResultado }}">
+            <span style="font-size:13px; line-height:1.55; color:#0B4F4A">{{ textoSimulacion }}</span>
+            <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+              <button type="button" onClick="{{ aplicar }}" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer">Convertir en plan de acción</button>
+              <button type="button" onClick="{{ restablecer }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:6px; padding:8px 12px; cursor:pointer" style-hover="background:#F1F5F9">Restablecer</button>
+            </span>
+          </div>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:14px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Decisión de tratamiento</span>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <sc-for list="{{ tratamientos }}" as="t" hint-placeholder-count="4">
+              <button type="button" onClick="{{ t.onClick }}" style="{{ t.estilo }}">{{ t.nombre }}</button>
+            </sc-for>
+          </div>
+          <span style="font-size:13px; line-height:1.55; color:#475569">{{ explicacionTratamiento }}</span>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px">
+            <label style="display:flex; flex-direction:column; gap:5px">
+              <span style="font-size:12px; font-weight:600; color:#0F172A">Responsable</span>
+              <select style="font-family:inherit; font-size:13px; color:#0F172A; padding:7px 9px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF">
+                <option>Marta Ruiz · Sistemas</option>
+                <option>Jorge Peña · Proveedor IT</option>
+                <option>Ana Castaño · Secretaría</option>
+              </select>
+            </label>
+            <label style="display:flex; flex-direction:column; gap:5px">
+              <span style="font-size:12px; font-weight:600; color:#0F172A">Plazo</span>
+              <input type="text" value="31/12/2026" style="font-family:inherit; font-size:13px; color:#0F172A; padding:7px 9px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; font-variant-numeric:tabular-nums" />
+            </label>
+            <label style="display:flex; flex-direction:column; gap:5px">
+              <span style="font-size:12px; font-weight:600; color:#0F172A">Riesgo aceptado hasta</span>
+              <input type="text" value="medio" style="font-family:inherit; font-size:13px; color:#0F172A; padding:7px 9px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF" />
+            </label>
+          </div>
+          <span style="{{ avisoAceptar }}">Aceptar un riesgo alto requiere la firma del responsable del sistema y queda registrado con fecha en el paquete de auditoría.</span>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  state = { sel: 0, niveles: {}, tratamiento: null };
+
+  datos() {
+    return [
+      {
+        cod: "E.8", nombre: "Difusión de software dañino", origen: "Origen: errores y fallos no intencionados · MAGERIT",
+        desc: "Propagación de código dañino por los puestos y servidores del alcance, con cifrado o borrado de expedientes y parada del servicio.",
+        intr: { conf: 8, int: 9, disp: 9, aut: 4, traz: 5 },
+        sg: [["op.exp.6", "Protección frente a código dañino", 3, 0.35, false], ["op.exp.4", "Mantenimiento y actualizaciones", 2, 0.2, false], ["mp.info.6", "Copias de seguridad", 4, 0.25, false], ["mp.per.3", "Concienciación", 1, 0.1, false]]
+      },
+      {
+        cod: "A.11", nombre: "Acceso no autorizado", origen: "Origen: ataques intencionados · MAGERIT",
+        desc: "Alguien accede a expedientes o a la consola de administración con credenciales que no le corresponden.",
+        intr: { conf: 9, int: 7, disp: 4, aut: 9, traz: 7 },
+        sg: [["op.acc.4", "Gestión de derechos de acceso", 3, 0.4, true], ["op.acc.5", "Mecanismo de autenticación", 2, 0.3, false], ["op.exp.8", "Registro de la actividad", 2, 0.2, false]]
+      },
+      {
+        cod: "I.5", nombre: "Avería de origen físico o lógico", origen: "Origen: desastres industriales · MAGERIT",
+        desc: "Fallo del servidor o de la cabina que deja sin servicio la sede electrónica y el registro de entrada.",
+        intr: { conf: 2, int: 5, disp: 9, aut: 2, traz: 3 },
+        sg: [["mp.info.6", "Copias de seguridad", 4, 0.4, false], ["mp.if.4", "Energía eléctrica", 3, 0.2, false], ["op.exp.4", "Mantenimiento y actualizaciones", 2, 0.2, false]]
+      },
+      {
+        cod: "A.5", nombre: "Suplantación de la identidad del usuario", origen: "Origen: ataques intencionados · MAGERIT",
+        desc: "Presentación de trámites o firma de resoluciones en nombre de otra persona.",
+        intr: { conf: 7, int: 8, disp: 3, aut: 9, traz: 8 },
+        sg: [["op.acc.5", "Mecanismo de autenticación", 2, 0.45, false], ["op.exp.8", "Registro de la actividad", 2, 0.25, false]]
+      },
+      {
+        cod: "E.19", nombre: "Fugas de información", origen: "Origen: errores y fallos no intencionados · MAGERIT",
+        desc: "Envío de expedientes a destinatarios equivocados o publicación de datos personales sin anonimizar.",
+        intr: { conf: 9, int: 3, disp: 2, aut: 3, traz: 5 },
+        sg: [["mp.info.3", "Cifrado de la información", 1, 0.35, false], ["mp.per.3", "Concienciación", 1, 0.3, false], ["op.exp.8", "Registro de la actividad", 2, 0.15, false]]
+      }
+    ];
+  }
+
+  nivel(v) { return v >= 7 ? ["crítico", "#B91C1C", "#FEF2F2"] : v >= 4 ? ["medio", "#B45309", "#FFFBEB"] : ["bajo", "#15803D", "#F0FDF4"]; }
+
+  residual(a, niveles) {
+    const dims = ["conf", "int", "disp", "aut", "traz"];
+    const r = {};
+    let reduccion = 0;
+    a.sg.forEach((sg, i) => {
+      const v = niveles[i] === undefined ? sg[2] : niveles[i];
+      const soportada = !sg[4];
+      reduccion += sg[3] * (v / 5) * (soportada ? 1 : 0.5);
+    });
+    dims.forEach((d) => { r[d] = Math.max(0.5, a.intr[d] * (1 - reduccion)); });
+    return r;
+  }
+
+  renderVals() {
+    const s = this.state, ds = this.datos(), a = ds[s.sel];
+    const nombresDim = { conf: "Confidencialidad", int: "Integridad", disp: "Disponibilidad", aut: "Autenticidad", traz: "Trazabilidad" };
+    const base = this.residual(a, {});
+    const sim = this.residual(a, s.niveles);
+    const haySim = Object.keys(s.niveles).length > 0;
+
+    const media = (o) => Object.keys(o).reduce((t, k) => t + o[k], 0) / 5;
+    const mediaBase = media(base), mediaSim = media(sim), mediaIntr = media(a.intr);
+
+    const amenazas = ds.map((x, i) => ({ x, i, rb: media(this.residual(x, i === s.sel ? s.niveles : {})) }))
+      .sort((p, q) => q.rb - p.rb)
+      .map((o) => {
+      const x = o.x, i = o.i, rb = o.rb;
+      const n = this.nivel(rb);
+      const simulada = i === s.sel && haySim;
+      return {
+        cod: x.cod, nombre: x.nombre, nivel: n[0],
+        intr: media(x.intr).toFixed(1), resid: rb.toFixed(1) + (simulada ? " simulado" : ""),
+        onClick: () => this.setState({ sel: i, niveles: {} }),
+        caja: `display:flex; flex-direction:column; gap:4px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:10px 12px; border:0; border-radius:6px; background:${i === s.sel ? "#F0FDFA" : "transparent"}; box-shadow:${i === s.sel ? "inset 2px 0 0 #0F766E" : "none"}`,
+        titulo: `font-size:13px; font-weight:${i === s.sel ? 600 : 500}; color:#0F172A; line-height:1.35`,
+        chip: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${n[1]}; background:${n[2]}; border:1px solid ${n[1]}33; border-radius:5px; padding:2px 7px; white-space:nowrap`
+      };
+    });
+
+    const dimensiones = Object.keys(nombresDim).map((k) => ({
+      nombre: nombresDim[k],
+      texto: haySim ? `${a.intr[k].toFixed(1)} → ${base[k].toFixed(1)} → ${sim[k].toFixed(1)} simulado` : `${a.intr[k].toFixed(1)} → ${base[k].toFixed(1)}`,
+      barraIntr: `position:absolute; left:0; top:0; bottom:0; width:${a.intr[k] * 10}%; background:#CBD5E1`,
+      barraResid: `position:absolute; left:0; top:0; bottom:0; width:${base[k] * 10}%; background:#0F766E`,
+      barraSim: `display:${haySim ? "block" : "none"}; position:absolute; left:0; top:0; bottom:0; width:${sim[k] * 10}%; background:#14A79B; opacity:0.85`
+    }));
+
+    const salvaguardas = a.sg.map((sg, i) => {
+      const v = s.niveles[i] === undefined ? sg[2] : s.niveles[i];
+      const d = v - sg[2];
+      return {
+        cod: sg[0], nombre: sg[1], peso: Math.round(sg[3] * 100) + " %", valor: v,
+        onCambio: (e) => this.setState({ niveles: Object.assign({}, s.niveles, { [i]: parseInt(e.target.value, 10) }) }),
+        caja: `display:flex; flex-direction:column; gap:8px; padding:12px 14px; border:1px solid ${d ? "#14A79B" : "#E2E8F0"}; border-radius:6px; background:${d ? "#F0FDFA" : "#FFFFFF"}`,
+        chipSoporte: `display:${sg[4] ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; color:#B45309; background:#FFFBEB; border:1px solid #B4530933; border-radius:5px; padding:2px 7px; white-space:nowrap`,
+        textoDelta: d === 0 ? "sin cambio" : d > 0 ? `+${d} nivel${d > 1 ? "es" : ""}` : `${d} nivel${d < -1 ? "es" : ""}`,
+        chipDelta: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; white-space:nowrap; border-radius:5px; padding:2px 7px; color:${d === 0 ? "#64748B" : d > 0 ? "#15803D" : "#B91C1C"}; background:${d === 0 ? "#F8FAFC" : d > 0 ? "#F0FDF4" : "#FEF2F2"}; border:1px solid ${d === 0 ? "#64748B" : d > 0 ? "#15803D" : "#B91C1C"}33`
+      };
+    });
+
+    const cambiadas = a.sg.map((sg, i) => [sg, i]).filter((x) => s.niveles[x[1]] !== undefined && s.niveles[x[1]] !== x[0][2]);
+    const frase = cambiadas.length
+      ? `Si ${cambiadas.map((x) => `${x[0][0]} sube a L${s.niveles[x[1]]}`).join(" y ")}, el riesgo medio de esta amenaza baja de ${mediaBase.toFixed(1)} a ${mediaSim.toFixed(1)} sobre 10. El intrínseco sigue siendo ${mediaIntr.toFixed(1)}: la amenaza no desaparece, se contiene.`
+      : "";
+
+    const tratamientos = ["Reducir", "Aceptar", "Transferir", "Evitar"].map((t, i) => ({
+      nombre: t,
+      onClick: () => this.setState({ tratamiento: i }),
+      estilo: `font-family:inherit; font-size:13px; font-weight:${s.tratamiento === i ? 600 : 500}; cursor:pointer; padding:7px 13px; border-radius:6px; border:1px solid ${s.tratamiento === i ? "#0F766E" : "#E2E8F0"}; background:${s.tratamiento === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.tratamiento === i ? "#0B4F4A" : "#475569"}`
+    }));
+
+    const explicaciones = [
+      "Se aplican o mejoran salvaguardas hasta dejar el riesgo por debajo del umbral aceptado. Genera acciones con responsable y plazo.",
+      "Se asume el riesgo tal y como está, con justificación escrita. No genera acciones.",
+      "Se traslada a un tercero mediante contrato o póliza. Hay que aportar el contrato como evidencia.",
+      "Se suprime la actividad o el activo que origina el riesgo."
+    ];
+
+    return {
+      amenazas, dimensiones, salvaguardas, tratamientos,
+      codActual: a.cod, nombreActual: a.nombre, origenActual: a.origen, descripcionActual: a.desc,
+      avisoSimulacion: `display:${haySim ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; color:#B45309; background:#FFFBEB; border:1px solid #B4530933; border-radius:5px; padding:4px 9px; white-space:nowrap`,
+      cajaResultado: `display:${cambiadas.length ? "flex" : "none"}; flex-direction:column; gap:10px; padding:14px 16px; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:6px`,
+      textoSimulacion: frase,
+      aplicar: () => this.setState({ tratamiento: 0 }),
+      restablecer: () => this.setState({ niveles: {} }),
+      explicacionTratamiento: s.tratamiento === null
+        ? "Sin decidir. Toda amenaza valorada necesita una decisión de tratamiento antes de cerrar el análisis de riesgos."
+        : explicaciones[s.tratamiento],
+      avisoAceptar: `display:${s.tratamiento === 1 && mediaBase >= 7 ? "block" : "none"}; font-size:12px; line-height:1.5; color:#B45309`
+    };
+  }
+}
+</script>
+</body>
+</html>

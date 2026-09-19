@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:8px; font-size:14px; color:#475569; min-width:0">
+      <a href="#" style="color:#0F766E">Evidencias</a>
+      <span style="color:#94A3B8">/</span>
+      <a href="#" style="color:#0F766E">05_op</a>
+      <span style="color:#94A3B8">/</span>
+      <span style="color:#0F172A; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">Inventario de la consola del antivirus</span>
+    </div>
+    <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · Ayto. de Valverde</span>
+  </header>
+
+  <div style="flex:1; display:flex; align-items:flex-start; gap:24px; padding:28px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box; flex-wrap:wrap">
+
+    <main style="flex:1 1 420px; min-width:0; display:flex; flex-direction:column; gap:20px">
+
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+          <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; font-weight:500; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:3px 8px">op.exp.6</span>
+          <span style="display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:#64748B; background:#F8FAFC; border:1px solid #64748B33; border-radius:5px; padding:3px 8px">pendiente</span>
+          <span style="display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:#B45309; background:#FFFBEB; border:1px solid #B4530933; border-radius:5px; padding:3px 8px">caduca en 90 días</span>
+        </div>
+        <h1 style="margin:0; font-size:24px; line-height:1.3; font-weight:600; letter-spacing:-0.01em; color:#0F172A">Inventario de la consola del antivirus</h1>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#475569; max-width:660px; text-wrap:pretty">Hay que demostrar que todos los ordenadores y servidores del alcance están protegidos y que alguien vigila la consola. Responde a la medida <strong style="color:#0F172A; font-weight:600">op.exp.6, protección frente a código dañino</strong>.</p>
+      </div>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:14px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Con una de estas tres basta</span>
+          <span style="font-size:12px; color:#475569">Ordenadas de más a menos sólida.</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ opciones }}" as="o" hint-placeholder-count="3">
+            <button type="button" onClick="{{ o.onClick }}" style="{{ o.caja }}">
+              <span style="{{ o.radio }}"><span style="{{ o.punto }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:4px; min-width:0">
+                <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="{{ o.estiloTitulo }}">{{ o.titulo }}</span>
+                  <span style="{{ o.etiqueta }}">{{ o.etiquetaTexto }}</span>
+                </span>
+                <span style="{{ o.estiloDetalle }}">{{ o.detalle }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:14px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Qué debe verse</span>
+          <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ criteriosMarcados }} de 4 comprobados</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:2px">
+          <sc-for list="{{ criterios }}" as="c" hint-placeholder-count="4">
+            <button type="button" onClick="{{ c.onClick }}" style="{{ c.caja }}">
+              <span style="{{ c.casilla }}">{{ c.marca }}</span>
+              <span style="{{ c.texto }}">{{ c.nombre }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background:#FFFBEB; border:1px solid #B4530933; border-left:3px solid #B45309; border-radius:8px; padding:16px 18px; display:flex; flex-direction:column; gap:10px">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">El auditor lo rechazará si</span>
+        <ul style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px">
+          <li style="font-size:14px; line-height:1.55; color:#0F172A">Es la captura de un solo equipo.</li>
+          <li style="font-size:14px; line-height:1.55; color:#0F172A">La cobertura es del 80 % sin explicar el 20 % restante.</li>
+          <li style="font-size:14px; line-height:1.55; color:#0F172A">Hay equipos inactivos desde hace meses.</li>
+        </ul>
+        <span style="font-size:12px; color:#475569">Se avisa antes de subir para no repetir el trabajo.</span>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:14px">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Dónde encontrarlo en tu herramienta</span>
+        <span style="display:inline-flex; align-self:flex-start; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:6px 9px">Portal de Defender → Activos → Dispositivos → Exportar</span>
+        <div style="{{ zonaSubida }}">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Arrastra aquí el fichero</span>
+          <span style="font-size:12px; color:#475569; text-align:center">CSV, XLSX, PDF o imagen, hasta 50 MB. Desde el móvil puedes hacer la foto en el sitio.</span>
+          <span style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center">
+            <button type="button" onClick="{{ subir }}" style="font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 14px; cursor:pointer">Seleccionar fichero</button>
+            <button type="button" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:9px 14px; cursor:pointer" style-hover="background:#F0FDFA">Enviar enlace al móvil</button>
+          </span>
+        </div>
+        <div style="{{ cajaSubiendo }}">
+          <span style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+            <span style="font-size:14px; font-weight:500; color:#0F172A">export_defender_19092026.csv</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ progresoTexto }}</span>
+          </span>
+          <span style="display:block; height:4px; border-radius:2px; background:#E2E8F0; overflow:hidden">
+            <span style="{{ barraSubida }}"></span>
+          </span>
+          <span style="{{ accionesSubida }}">
+            <button type="button" onClick="{{ enviarRevision }}" style="{{ botonRevision }}">{{ textoRevision }}</button>
+            <button type="button" onClick="{{ sustituir }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:8px 12px; cursor:pointer" style-hover="background:#F0FDFA">Sustituir fichero</button>
+            <button type="button" onClick="{{ quitar }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#B91C1C; background:transparent; border:0; padding:8px 10px; border-radius:6px; cursor:pointer" style-hover="background:#FEF2F2">Quitar</button>
+          </span>
+        </div>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:10px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Nota para el auditor</span>
+          <span style="font-size:12px; color:#475569">Acompaña a la evidencia en el paquete de auditoría.</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#475569">Aquí se explica lo que el fichero no deja ver por sí solo: una diferencia de cobertura, un equipo fuera de alcance o por qué se aporta la alternativa en vez de la preferida.</p>
+        <textarea value="{{ nota }}" onChange="{{ onNota }}" maxLength="600" placeholder="Los 7 equipos que faltan son portátiles retirados en agosto; su baja consta en el inventario." style="font-family:inherit; font-size:14px; line-height:1.5; color:#0F172A; padding:10px; border:1px solid #E2E8F0; border-radius:6px; resize:vertical; min-height:72px; background:#F8FAFC; width:100%; box-sizing:border-box"></textarea>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <span style="display:flex; align-items:center; gap:8px">
+            <button type="button" onClick="{{ guardarNota }}" style="{{ botonNota }}">{{ textoNota }}</button>
+            <span style="{{ estadoNota }}">{{ textoEstadoNota }}</span>
+          </span>
+          <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ contadorNota }}</span>
+        </div>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:12px">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Historial</span>
+        <div style="display:flex; flex-direction:column; gap:0">
+          <sc-for list="{{ historial }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid #F1F5F9; flex-wrap:wrap">
+              <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                <span style="font-size:14px; font-weight:500; color:#0F172A">{{ h.titulo }}</span>
+                <span style="font-size:12px; color:#475569">{{ h.detalle }}</span>
+              </span>
+              <span style="{{ h.chip }}">{{ h.estado }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+
+    <aside style="flex:0 1 272px; min-width:248px; display:grid; grid-template-columns:repeat(auto-fit, minmax(248px, 1fr)); align-content:start; gap:12px">
+      <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:8px">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">Ficha</span>
+        <sc-for list="{{ ficha }}" as="f" hint-placeholder-count="5">
+          <span style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:6px 0; border-bottom:1px solid #F1F5F9">
+            <span style="font-size:12px; color:#475569">{{ f.k }}</span>
+            <span style="{{ f.estilo }}">{{ f.v }}</span>
+          </span>
+        </sc-for>
+        <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:7px 11px; cursor:pointer" style-hover="background:#F0FDFA">Cambiar responsable</button>
+      </div>
+
+      <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:8px">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">Sugerencia de la IA</span>
+        <span style="display:inline-flex; align-self:flex-start; align-items:center; font-size:12px; font-weight:500; color:#7C3AED; background:#F5F3FF; border:1px solid #7C3AED33; border-radius:5px; padding:3px 8px">sugerido por IA · confianza media</span>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#475569">En «Inventario» declarasteis Microsoft Defender para Empresas con 34 equipos. La opción preferida encaja con esa herramienta.</p>
+        <span style="font-size:12px; color:#475569">Origen: respuesta del perfilado del 12/09/2026.</span>
+        <span style="display:flex; gap:8px; flex-wrap:wrap">
+          <button type="button" onClick="{{ aceptarIA }}" style="{{ botonIA }}">{{ textoIA }}</button>
+          <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:transparent; border:0; padding:7px 9px; border-radius:6px; cursor:pointer" style-hover="background:#F1F5F9">Corregir</button>
+        </span>
+      </div>
+
+      <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:8px">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">Si no aplica</span>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#475569">Marcarlo como no aplicable exige una justificación que el auditor verá junto a la medida.</p>
+        <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:7px 11px; cursor:pointer; text-align:left" style-hover="background:#F1F5F9">Marcar como no aplica</button>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { opcion: 0, criterios: [false, false, false, false], subida: null, ia: false, enviada: false, nota: "", notaGuardada: "" };
+
+  chip(tipo) {
+    const c = { validada: ["#15803D", "#F0FDF4"], revision: ["#1D4ED8", "#EFF6FF"], caducado: ["#7C2D12", "#FEF6F0"], rechazado: ["#B91C1C", "#FEF2F2"] }[tipo];
+    return `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:3px 8px; white-space:nowrap; flex:0 0 auto`;
+  }
+
+  componentWillUnmount() { clearInterval(this._iv); }
+
+  subirFichero() {
+    clearInterval(this._iv);
+    this.setState({ subida: 0 });
+    this._iv = setInterval(() => {
+      this.setState((st) => {
+        const n = (st.subida || 0) + 12;
+        if (n >= 100) { clearInterval(this._iv); return { subida: 100 }; }
+        return { subida: n };
+      });
+    }, 220);
+  }
+
+  renderVals() {
+    const s = this.state;
+
+    const datosOp = [
+      ["Export de la consola", "preferida", "Listado de equipos con su estado de protección, en CSV o XLSX, tal y como sale de la herramienta."],
+      ["Captura del panel de cobertura", "alternativa", "Pantallazo con los totales visibles: equipos protegidos, sin comunicar y fuera de política."],
+      ["Informe del proveedor", "alternativa", "Informe fechado y en papelería del proveedor que gestiona el servicio."]
+    ];
+    const opciones = datosOp.map((o, i) => {
+      const sel = s.opcion === i;
+      const pref = i === 0;
+      return {
+        titulo: o[0], detalle: o[2], etiquetaTexto: o[1],
+        estiloTitulo: "font-size:14px; font-weight:600; color:#0F172A",
+        estiloDetalle: "font-size:12px; line-height:1.5; color:#475569",
+        onClick: () => this.setState({ opcion: i }),
+        caja: `display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:14px 16px; border-radius:6px; border:1.5px solid ${sel ? "#0F766E" : "#E2E8F0"}; background:${sel ? "#F0FDFA" : "#FFFFFF"}`,
+        radio: `flex:0 0 auto; margin-top:3px; width:18px; height:18px; border-radius:50%; border:1.5px solid ${sel ? "#0F766E" : "#94A3B8"}; display:flex; align-items:center; justify-content:center; background:#FFFFFF`,
+        punto: `width:9px; height:9px; border-radius:50%; background:#0F766E; opacity:${sel ? 1 : 0}`,
+        etiqueta: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; border-radius:5px; padding:2px 7px; color:${pref ? "#0B4F4A" : "#475569"}; background:${pref ? "#CCFBF1" : "#F1F5F9"}`
+      };
+    });
+
+    const textosCrit = [
+      "Se ve el total de equipos protegidos",
+      "Coincide con el total del inventario, o se explica la diferencia",
+      "Incluye servidores, no solo puestos",
+      "No hay equipos sin comunicar desde hace semanas"
+    ];
+    const criterios = textosCrit.map((t, i) => {
+      const on = s.criterios[i];
+      return {
+        nombre: t, marca: on ? "✓" : "",
+        onClick: () => this.setState({ criterios: s.criterios.map((v, j) => (j === i ? !v : v)) }),
+        caja: `display:flex; align-items:flex-start; gap:10px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:9px 8px; border:0; border-radius:6px; background:transparent`,
+        casilla: `flex:0 0 auto; margin-top:1px; width:18px; height:18px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#FFFFFF; border:1.5px solid ${on ? "#0F766E" : "#94A3B8"}; background:${on ? "#0F766E" : "#FFFFFF"}`,
+        texto: `font-size:14px; line-height:1.5; color:${on ? "#0F172A" : "#475569"}`
+      };
+    });
+
+    const historial = [
+      { titulo: "v2 · export_defender_12092026.csv", detalle: "Subida por Marta Ruiz el 12/09/2026 · validada por Jorge Peña el 13/09/2026 · caduca el 11/12/2026", estado: "validada", chip: this.chip("validada") },
+      { titulo: "v1 · cobertura_junio.png", detalle: "Subida por Marta Ruiz el 04/06/2026 · sustituida por la v2", estado: "caducada", chip: this.chip("caducado") },
+      { titulo: "Intento previo · pantallazo_equipo.png", detalle: "Rechazado el 02/06/2026 por Jorge Peña: es la captura de un solo equipo", estado: "rechazada", chip: this.chip("rechazado") }
+    ];
+
+    const ficha = [
+      ["Medida", "op.exp.6"], ["Carpeta", "05_op / op.exp.6"], ["Responsable", "Marta Ruiz"],
+      ["Vence", "11/12/2026"], ["Periodicidad", "cada 90 días"]
+    ].map((f) => ({ k: f[0], v: f[1], estilo: `font-size:14px; font-weight:500; color:#0F172A; text-align:right; ${f[0] === "Medida" || f[0] === "Carpeta" ? "font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px;" : ""}` }));
+
+    const sub = s.subida;
+    return {
+      opciones, criterios, historial, ficha,
+      criteriosMarcados: s.criterios.filter(Boolean).length,
+      subir: () => this.subirFichero(),
+      zonaSubida: `display:${sub === null ? "flex" : "none"}; flex-direction:column; align-items:center; gap:8px; padding:20px; border:1.5px dashed #94A3B8; border-radius:8px; background:#F8FAFC`,
+      cajaSubiendo: `display:${sub === null ? "none" : "flex"}; flex-direction:column; gap:8px; padding:14px 16px; border:1px solid #E2E8F0; border-radius:8px; background:#FFFFFF`,
+      progresoTexto: sub === 100 ? (s.enviada ? "Enviada a revisión de Jorge Peña" : "Subida · pendiente de enviar a revisión") : `Subiendo ${sub} %`,
+      accionesSubida: `display:${sub === 100 ? "flex" : "none"}; align-items:center; gap:8px; flex-wrap:wrap; margin-top:4px`,
+      enviarRevision: () => this.setState({ enviada: !s.enviada }),
+      textoRevision: s.enviada ? "En revisión · retirar" : "Enviar a revisión",
+      botonRevision: `font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:${s.enviada ? "#1D4ED8" : "#0F766E"}; border:0; border-radius:6px; padding:8px 12px; cursor:pointer`,
+      sustituir: () => { this.setState({ enviada: false }); this.subirFichero(); },
+      quitar: () => { clearInterval(this._iv); this.setState({ subida: null, enviada: false }); },
+      barraSubida: `display:block; height:100%; width:${sub || 0}%; border-radius:2px; background:${sub === 100 ? "#15803D" : "#0F766E"}`,
+      nota: s.nota,
+      onNota: (e) => this.setState({ nota: e.target.value }),
+      guardarNota: () => { if (s.nota.trim()) this.setState({ notaGuardada: s.nota }); },
+      textoNota: s.notaGuardada && s.notaGuardada === s.nota ? "Nota guardada" : "Guardar nota",
+      botonNota: `font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:${s.nota.trim() ? (s.notaGuardada === s.nota ? "#0B4F4A" : "#0F766E") : "#64748B"}; border:0; border-radius:6px; padding:8px 12px; cursor:${s.nota.trim() ? "pointer" : "not-allowed"}`,
+      estadoNota: `display:${s.notaGuardada ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:3px 8px`,
+      textoEstadoNota: s.notaGuardada === s.nota ? "Visible para el auditor" : "Hay cambios sin guardar",
+      contadorNota: `${s.nota.length} / 600`,
+      aceptarIA: () => this.setState({ ia: !s.ia, opcion: 0 }),
+      textoIA: s.ia ? "Sugerencia aceptada · deshacer" : "Aceptar sugerencia",
+      botonIA: `font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:${s.ia ? "#0B4F4A" : "#7C3AED"}; border:0; border-radius:6px; padding:8px 12px; cursor:pointer`
+    };
+  }
+}
+</script>
+</body>
+</html>

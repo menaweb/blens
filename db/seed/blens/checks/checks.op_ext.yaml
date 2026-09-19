@@ -1,0 +1,89 @@
+# Seed BLENS · Checks de verificación — familia op.ext
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.ext
+checks:
+  - code: "CHK-op.ext.1.1"
+    measure: op.ext.1
+    item: "op.ext.1.1"
+    descripcion: "Con anterioridad a la efectiva utilización de los recursos externos se establecerá contractualmente un Acuerdo de Nivel de Servicio, que incluirá las características del servicio prestado, lo que debe entenderse como…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.ext.1-01, EV-op.ext.1-02, EV-op.ext.1-03]
+  - code: "CHK-op.ext.2.1"
+    measure: op.ext.2
+    item: "op.ext.2.1"
+    descripcion: "Un sistema rutinario para medir el cumplimiento de las obligaciones de servicio, incluyendo el procedimiento para neutralizar cualquier desviación fuera del margen de tolerancia acordado ([op.ext.1])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.ext.2-01]
+  - code: "CHK-op.ext.2.2"
+    measure: op.ext.2
+    item: "op.ext.2.2"
+    descripcion: "El mecanismo y los procedimientos de coordinación para llevar a cabo las tareas de mantenimiento de los sistemas comprendidos en el acuerdo, que contemplarán los supuestos de incidentes y desastres (ver [op.exp.7])"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.ext.2-01]
+  - code: "CHK-op.ext.3.1"
+    measure: op.ext.3
+    item: "op.ext.3.1"
+    descripcion: "Se analizará el impacto que puede tener sobre el sistema un incidente accidental o deliberado que tenga su origen en la cadena de suministro"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.ext.3-01]
+  - code: "CHK-op.ext.3.2"
+    measure: op.ext.3
+    item: "op.ext.3.2"
+    descripcion: "Se estimará el riesgo sobre el sistema por causa del impacto estimado en el punto anterior"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.ext.3-01]
+  - code: "CHK-op.ext.3.3"
+    measure: op.ext.3
+    item: "op.ext.3.3"
+    descripcion: "Se tomarán medidas de contención de los impactos estimados en los puntos anteriores"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.ext.3-01]
+  - code: "CHK-op.ext.3.r1.1"
+    measure: op.ext.3
+    refuerzo: op.ext.3.r1
+    item: "op.ext.3.r1.1"
+    descripcion: "El plan de continuidad de la organización deberá tener en cuenta la dependencia de proveedores externos críticos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.ext.3.r1.2"
+    measure: op.ext.3
+    refuerzo: op.ext.3.r1
+    item: "op.ext.3.r1.2"
+    descripcion: "Se deberán realizar pruebas o ejercicios de continuidad, incluyendo escenarios en los que falla un proveedor"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.ext.3.r2.1"
+    measure: op.ext.3
+    refuerzo: op.ext.3.r2
+    item: "op.ext.3.r2.1"
+    descripcion: "Se implementará un sistema de protección de los procesos y flujos de información en las relaciones en línea (online) entre los distintos integrantes de la cadena de suministro"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.ext.3.r3.1"
+    measure: op.ext.3
+    refuerzo: op.ext.3.r3
+    item: "op.ext.3.r3.1"
+    descripcion: "Se mantendrá actualizado un registro formal que contenga los detalles y las relaciones de la cadena de suministro de los diversos componentes utilizados en la construcción de programas informáticos, acorde a lo…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.ext.4.1"
+    measure: op.ext.4
+    item: "op.ext.4.1"
+    descripcion: "Todos los intercambios de información y prestación de servicios con otros sistemas deberán ser objeto de una autorización previa. Todo flujo de información estará prohibido salvo autorización expresa"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.ext.4-01]
+  - code: "CHK-op.ext.4.2"
+    measure: op.ext.4
+    item: "op.ext.4.2"
+    descripcion: "Para cada interconexión se documentará explícitamente: las características de la interfaz, los requisitos de seguridad y protección de datos y la naturaleza de la información intercambiada"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.ext.4-01]
+  - code: "CHK-op.ext.4.r1.1"
+    measure: op.ext.4
+    refuerzo: op.ext.4.r1
+    item: "op.ext.4.r1.1"
+    descripcion: "Cuando se interconecten sistemas en los que la identificación, autenticación y autorización tengan lugar en diferentes dominios de seguridad, bajo distintas responsabilidades, las medidas de seguridad locales se…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL, MUESTREO]
+    evidencia_esperada: []

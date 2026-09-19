@@ -1,0 +1,115 @@
+# Seed BLENS · Checks de verificación — familia mp.si
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.si
+checks:
+  - code: "CHK-mp.si.1.1"
+    measure: mp.si.1
+    item: "mp.si.1.1"
+    descripcion: "Los soportes de información (papel impreso, documentos electrónicos, contenidos multimedia -vídeos, cursos, presentaciones- etc.) que contengan información que según [mp.info…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.si.1-01]
+  - code: "CHK-mp.si.1.r1.1"
+    measure: mp.si.1
+    refuerzo: mp.si.1.r1
+    item: "mp.si.1.r1.1"
+    descripcion: "La política de seguridad de la organización definirá marcas de agua para asegurar el uso adecuado de la información que se maneja"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.si.1.r1.2"
+    measure: mp.si.1
+    refuerzo: mp.si.1.r1
+    item: "mp.si.1.r1.2"
+    descripcion: "Los soportes de información digital (documentos electrónicos, material multimedia, etc.) podrán incluir una marca de agua según la política de seguridad"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.si.1.r1.3"
+    measure: mp.si.1
+    refuerzo: mp.si.1.r1
+    item: "mp.si.1.r1.3"
+    descripcion: "Los equipos o dispositivos a través de los que se accede a aplicaciones, escritorios remotos o virtuales, datos, etc., presentarán una marca de agua en pantalla según la política de seguridad"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.si.2.1"
+    measure: mp.si.2
+    item: "mp.si.2.1"
+    descripcion: "Se usarán mecanismos criptográficos que garanticen la confidencialidad y la integridad de la información contenida"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.si.2-01]
+  - code: "CHK-mp.si.2.2"
+    measure: mp.si.2
+    item: "mp.si.2.2"
+    descripcion: "Se emplearán algoritmos y parámetros autorizados por el CCN"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.si.2-01]
+  - code: "CHK-mp.si.2.r1.1"
+    measure: mp.si.2
+    refuerzo: mp.si.2.r1
+    item: "mp.si.2.r1.1"
+    descripcion: "Se emplearán productos certificados conforme a lo establecido en [op.pl.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.si.2.r2.1"
+    measure: mp.si.2
+    refuerzo: mp.si.2.r2
+    item: "mp.si.2.r2.1"
+    descripcion: "Las copias de seguridad se cifrarán utilizando algoritmos y parámetros autorizados por el CCN"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.si.3.1"
+    measure: mp.si.3
+    item: "mp.si.3.1"
+    descripcion: "Se aplicará la debida diligencia y control a los soportes de información que permanecen bajo la responsabilidad de la organización, garantizando el control de acceso con medidas físicas ([mp.if.1] y [mp.if…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.si.3-01]
+  - code: "CHK-mp.si.3.2"
+    measure: mp.si.3
+    item: "mp.si.3.2"
+    descripcion: "Se respetarán las exigencias de mantenimiento del fabricante, en especial, en lo referente a temperatura, humedad y otros agentes medioambientales"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.si.3-01]
+  - code: "CHK-mp.si.4.1"
+    measure: mp.si.4
+    item: "mp.si.4.1"
+    descripcion: "Se dispondrá de un registro de entrada/salida que identifique al transportista que entrega/recibe el soporte"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.si.4-01, EV-mp.si.4-02]
+  - code: "CHK-mp.si.4.2"
+    measure: mp.si.4
+    item: "mp.si.4.2"
+    descripcion: "Se dispondrá de un procedimiento rutinario que coteje las salidas con las llegadas y levante las alarmas pertinentes cuando se detecte algún incidente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.si.4-01, EV-mp.si.4-02]
+  - code: "CHK-mp.si.4.3"
+    measure: mp.si.4
+    item: "mp.si.4.3"
+    descripcion: "Se utilizarán los medios de protección criptográfica ([mp.si.2]) correspondientes al mayor nivel de seguridad de la información contenida"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.si.4-01, EV-mp.si.4-02]
+  - code: "CHK-mp.si.4.4"
+    measure: mp.si.4
+    item: "mp.si.4.4"
+    descripcion: "Se gestionarán las claves según [op.exp.10]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.si.4-01, EV-mp.si.4-02]
+  - code: "CHK-mp.si.5.1"
+    measure: mp.si.5
+    item: "mp.si.5.1"
+    descripcion: "Los soportes que vayan a ser reutilizados para otra información o liberados a otra organización serán objeto del borrado seguro de su contenido que no permita su recuperación…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.si.5-01, EV-mp.si.5-02]
+  - code: "CHK-mp.si.5.r1.1"
+    measure: mp.si.5
+    refuerzo: mp.si.5.r1
+    item: "mp.si.5.r1.1"
+    descripcion: "Se usarán productos o servicios que cumplan lo establecido en [op.pl.5]"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.si.5.r2.1"
+    measure: mp.si.5
+    refuerzo: mp.si.5.r2
+    item: "mp.si.5.r2.1"
+    descripcion: "Una vez finalizado el ciclo de vida del soporte de información, deberá ser destruido de forma segura conforme a los criterios establecidos por el CCN"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []

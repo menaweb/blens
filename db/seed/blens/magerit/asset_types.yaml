@@ -1,0 +1,114 @@
+# Seed BLENS · Tipos de activo (MAGERIT v3, Libro II)
+# Modelo: MageritAssetType (CLAUDE.md §7.1)
+# is_terminal: true = activo donde nace el valor (información y servicios). El resto lo hereda por dependencias.
+# Fuente: MAGERIT v3 (metodología pública). Taxonomía simplificada: se conserva la letra original
+# para que un auditor acostumbrado a PILAR reconozca el vocabulario.
+
+version: 1
+catalog: MAGERIT-v3
+
+asset_types:
+
+  - code: D
+    name: "Datos e información"
+    is_terminal: true
+    ayuda: "Lo que la organización maneja: expedientes, bases de datos, ficheros, registros de actividad, copias de seguridad."
+    subtipos:
+      - {code: D.files, name: "Ficheros"}
+      - {code: D.backup, name: "Copias de seguridad"}
+      - {code: D.conf, name: "Datos de configuración"}
+      - {code: D.log, name: "Registros de actividad"}
+      - {code: D.personal, name: "Datos de carácter personal"}
+      - {code: D.source, name: "Código fuente"}
+
+  - code: K
+    name: "Claves criptográficas"
+    is_terminal: true
+    ayuda: "Certificados, claves de firma, claves de cifrado, credenciales de administración custodiadas."
+    subtipos:
+      - {code: K.cert, name: "Certificados y claves de firma"}
+      - {code: K.disk, name: "Claves de cifrado de información"}
+      - {code: K.comms, name: "Claves de cifrado de comunicaciones"}
+
+  - code: S
+    name: "Servicios"
+    is_terminal: true
+    ayuda: "Lo que la organización presta a sus usuarios o a terceros: sede electrónica, correo, expediente electrónico, API."
+    subtipos:
+      - {code: S.www, name: "Servicio web o sede electrónica"}
+      - {code: S.email, name: "Correo electrónico"}
+      - {code: S.dir, name: "Servicio de directorio"}
+      - {code: S.int, name: "Servicio interno"}
+      - {code: S.ext, name: "Servicio contratado a un tercero"}
+
+  - code: SW
+    name: "Aplicaciones (software)"
+    is_terminal: false
+    ayuda: "Programas que soportan los servicios: gestor de expedientes, ERP, base de datos, sistema operativo."
+    subtipos:
+      - {code: SW.app, name: "Aplicación de negocio"}
+      - {code: SW.db, name: "Gestor de base de datos"}
+      - {code: SW.os, name: "Sistema operativo"}
+      - {code: SW.saas, name: "Aplicación en modo servicio (SaaS)"}
+      - {code: SW.sec, name: "Software de seguridad"}
+
+  - code: HW
+    name: "Equipamiento informático"
+    is_terminal: false
+    ayuda: "Servidores, puestos de trabajo, portátiles, móviles, máquinas virtuales, dispositivos de red."
+    subtipos:
+      - {code: HW.server, name: "Servidor"}
+      - {code: HW.vm, name: "Máquina virtual o instancia de nube"}
+      - {code: HW.pc, name: "Puesto de trabajo"}
+      - {code: HW.mobile, name: "Portátil o dispositivo móvil"}
+      - {code: HW.network, name: "Equipo de red"}
+      - {code: HW.print, name: "Impresora o multifunción"}
+
+  - code: COM
+    name: "Redes de comunicaciones"
+    is_terminal: false
+    ayuda: "Conectividad: red local, wifi, enlaces de internet, VPN, líneas contratadas."
+    subtipos:
+      - {code: COM.lan, name: "Red local"}
+      - {code: COM.wifi, name: "Red inalámbrica"}
+      - {code: COM.internet, name: "Acceso a internet"}
+      - {code: COM.vpn, name: "Red privada virtual"}
+
+  - code: MEDIA
+    name: "Soportes de información"
+    is_terminal: false
+    ayuda: "Donde se guarda o transporta la información: discos, cintas, memorias USB, papel."
+    subtipos:
+      - {code: MEDIA.disk, name: "Disco o cabina de almacenamiento"}
+      - {code: MEDIA.tape, name: "Cinta o soporte de copia"}
+      - {code: MEDIA.usb, name: "Soporte extraíble"}
+      - {code: MEDIA.paper, name: "Documentación en papel"}
+
+  - code: AUX
+    name: "Equipamiento auxiliar"
+    is_terminal: false
+    ayuda: "Lo que hace posible que lo demás funcione: SAI, climatización, cableado, extinción de incendios."
+    subtipos:
+      - {code: AUX.power, name: "Suministro eléctrico y SAI"}
+      - {code: AUX.ac, name: "Climatización"}
+      - {code: AUX.cabling, name: "Cableado"}
+      - {code: AUX.fire, name: "Protección contra incendios"}
+
+  - code: L
+    name: "Instalaciones"
+    is_terminal: false
+    ayuda: "Dónde está todo: sala técnica o CPD, oficinas, armarios de comunicaciones, sedes del proveedor."
+    subtipos:
+      - {code: L.cpd, name: "Sala técnica o CPD propio"}
+      - {code: L.office, name: "Oficina"}
+      - {code: L.housing, name: "CPD de un tercero (coubicación o nube)"}
+
+  - code: P
+    name: "Personal"
+    is_terminal: false
+    ayuda: "Quien opera y usa el sistema: administradores, usuarios internos, personal de proveedores."
+    subtipos:
+      - {code: P.adm, name: "Administradores de sistemas"}
+      - {code: P.ui, name: "Usuarios internos"}
+      - {code: P.prov, name: "Personal de proveedores"}
+      - {code: P.des, name: "Desarrolladores"}

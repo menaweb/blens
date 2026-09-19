@@ -1,0 +1,537 @@
+# Seed BLENS · Checks de verificación — familia op.acc
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.acc
+checks:
+  - code: "CHK-op.acc.1.1"
+    measure: op.acc.1
+    item: "op.acc.1.1"
+    descripcion: "Se podrá utilizar como identificador único los sistemas de identificación previstos en la normativa de aplicación, entre ellos, los sistemas de clave concertada y cualquier otro sistema que las administraciones…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.2"
+    measure: op.acc.1
+    item: "op.acc.1.2"
+    descripcion: "Cuando el usuario tenga diferentes roles frente al sistema (como ciudadano o usuario final, como trabajador del organismo o como administrador de los sistemas, por ejemplo) recibirá identificadores singulares para cada…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.3"
+    measure: op.acc.1
+    item: "op.acc.1.3"
+    descripcion: "Cada entidad (entidad, usuario o proceso) que accede al sistema, contará con un identificador singular que permita conocer el destinatario de los mismos y los derechos de acceso que recibe, así como las acciones…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.4"
+    measure: op.acc.1
+    item: "op.acc.1.4"
+    descripcion: "Las cuentas de usuario se gestionarán de la siguiente forma:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.4a"
+    measure: op.acc.1
+    item: "a)"
+    item_padre: "op.acc.1.4"
+    descripcion: "Cada cuenta (de entidad, usuario o proceso) estará asociada a un identificador único"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.4b"
+    measure: op.acc.1
+    item: "b)"
+    item_padre: "op.acc.1.4"
+    descripcion: "Las cuentas deben ser inhabilitadas en los siguientes casos: cuando el usuario deja la organización; cuando el usuario cesa en la función para la cual se requería la cuenta de usuario; o, cuando la persona que la…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.4c"
+    measure: op.acc.1
+    item: "c)"
+    item_padre: "op.acc.1.4"
+    descripcion: "Las cuentas se retendrán durante el periodo necesario para atender a las necesidades de trazabilidad de los registros de actividad asociados a las mismas. A este periodo se le denominará «periodo de retención»"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.5"
+    measure: op.acc.1
+    item: "op.acc.1.5"
+    descripcion: "En los supuestos de comunicaciones electrónicas, las partes intervinientes se identificarán atendiendo a los mecanismos previstos en la legislación europea y nacional en la materia, con la siguiente correspondencia…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.5a"
+    measure: op.acc.1
+    item: "a)"
+    item_padre: "op.acc.1.5"
+    descripcion: "Si se requiere un nivel BAJO en la dimensión de autenticidad (anexo I): Nivel de seguridad bajo, sustancial o alto (artículo 8 del Reglamento (UE) n.º 910/2014)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.5b"
+    measure: op.acc.1
+    item: "b)"
+    item_padre: "op.acc.1.5"
+    descripcion: "Si se requiere un nivel MEDIO en la dimensión de autenticidad (anexo I): Nivel de seguridad sustancial o alto (artículo 8 del Reglamento (UE) n.º 910/2014)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.5c"
+    measure: op.acc.1
+    item: "c)"
+    item_padre: "op.acc.1.5"
+    descripcion: "Si se requiere un nivel ALTO en la dimensión de autenticidad (anexo I): Nivel de seguridad alto (artículo 8 del Reglamento (UE) n.º 910/2014)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-01, EV-op.acc.1-02, EV-op.acc.1-03]
+  - code: "CHK-op.acc.1.r1.1"
+    measure: op.acc.1
+    refuerzo: op.acc.1.r1
+    item: "op.acc.1.r1.1"
+    descripcion: "La identificación del usuario permitirá al Responsable del Sistema, al Responsable de la Seguridad o a sus respectivos administradores delegados, singularizar a la persona asociada al mismo, así como sus…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.acc.1-04]
+  - code: "CHK-op.acc.1.r1.2"
+    measure: op.acc.1
+    refuerzo: op.acc.1.r1
+    item: "op.acc.1.r1.2"
+    descripcion: "Los datos de identificación serán utilizados por el sistema para determinar los privilegios del usuario conforme a los requisitos de control de acceso establecidos en la documentación de seguridad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.1-04]
+  - code: "CHK-op.acc.1.r1.3"
+    measure: op.acc.1
+    refuerzo: op.acc.1.r1
+    item: "op.acc.1.r1.3"
+    descripcion: "Se asegurará la existencia de una lista actualizada de usuarios autorizados y mantenida por el administrador del sistema/de la seguridad del sistema"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.1-04]
+  - code: "CHK-op.acc.2.1"
+    measure: op.acc.2
+    item: "op.acc.2.1"
+    descripcion: "Los recursos del sistema se protegerán con algún mecanismo que impida su utilización, salvo a las entidades que disfruten de derechos de acceso suficientes"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.2-01, EV-op.acc.2-02]
+  - code: "CHK-op.acc.2.2"
+    measure: op.acc.2
+    item: "op.acc.2.2"
+    descripcion: "Los derechos de acceso de cada recurso, se establecerán según las decisiones de la persona responsable del recurso, ateniéndose a la política y normativa de seguridad del sistema"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.acc.2-01, EV-op.acc.2-02]
+  - code: "CHK-op.acc.2.3"
+    measure: op.acc.2
+    item: "op.acc.2.3"
+    descripcion: "Particularmente, se controlará el acceso a los componentes del sistema operativo y a sus ficheros o registros de configuración"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.2-01, EV-op.acc.2-02]
+  - code: "CHK-op.acc.2.r1.1"
+    measure: op.acc.2
+    refuerzo: op.acc.2.r1
+    item: "op.acc.2.r1.1"
+    descripcion: "Todos los usuarios autorizados deben tener un conjunto de atributos de seguridad (privilegios) que puedan ser mantenidos individualmente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.2-03]
+  - code: "CHK-op.acc.2.r1.2"
+    measure: op.acc.2
+    refuerzo: op.acc.2.r1
+    item: "op.acc.2.r1.2"
+    descripcion: "Los privilegios de acceso se implementarán para restringir el tipo de acceso que un usuario puede tener (lectura, escritura, modificación, borrado, etc.)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.2-03]
+  - code: "CHK-op.acc.2.r2.1"
+    measure: op.acc.2
+    refuerzo: op.acc.2.r2
+    item: "op.acc.2.r2.1"
+    descripcion: "Se dispondrá de soluciones que permitan establecer controles de acceso a los dispositivos en función de la política de seguridad de la organización"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.2-04]
+  - code: "CHK-op.acc.3.1"
+    measure: op.acc.3
+    item: "op.acc.3.1"
+    descripcion: "Siempre que sea posible, las capacidades de desarrollo y operación no recaerán en la misma persona"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.3-01, EV-op.acc.3-02]
+  - code: "CHK-op.acc.3.2"
+    measure: op.acc.3
+    item: "op.acc.3.2"
+    descripcion: "Siempre que sea posible, las personas que autorizan y controlan el uso serán distintas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.3-01, EV-op.acc.3-02]
+  - code: "CHK-op.acc.3.r1.1"
+    measure: op.acc.3
+    refuerzo: op.acc.3.r1
+    item: "op.acc.3.r1.1"
+    descripcion: "Siempre que sea posible, la misma persona no aunará funciones de configuración y mantenimiento del sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.3.r1.2"
+    measure: op.acc.3
+    refuerzo: op.acc.3.r1
+    item: "op.acc.3.r1.2"
+    descripcion: "La misma persona no puede aunar funciones de auditoría o supervisión con cualquier otra función"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.3.r2.1"
+    measure: op.acc.3
+    refuerzo: op.acc.3.r2
+    item: "op.acc.3.r2.1"
+    descripcion: "Existirán cuentas con privilegios de auditoría estrictamente controladas y personalizadas"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.acc.3-03]
+  - code: "CHK-op.acc.3.r3.1"
+    measure: op.acc.3
+    refuerzo: op.acc.3.r3
+    item: "op.acc.3.r3.1"
+    descripcion: "El acceso a la información de seguridad del sistema estará permitido únicamente a los administradores de seguridad/sistema autorizados, utilizando los mecanismos de acceso imprescindibles (consola, interfaz web, acceso…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.4.1"
+    measure: op.acc.4
+    item: "op.acc.4.1"
+    descripcion: "Todo acceso estará prohibido, salvo autorización expresa"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.4-01, EV-op.acc.4-02, EV-op.acc.4-03]
+  - code: "CHK-op.acc.4.2"
+    measure: op.acc.4
+    item: "op.acc.4.2"
+    descripcion: "Mínimo privilegio: los privilegios de cada entidad, usuario o proceso se reducirán al mínimo imprescindible para cumplir sus obligaciones o funciones"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.acc.4-01, EV-op.acc.4-02, EV-op.acc.4-03]
+  - code: "CHK-op.acc.4.3"
+    measure: op.acc.4
+    item: "op.acc.4.3"
+    descripcion: "Necesidad de conocer y responsabilidad de compartir: los privilegios se asignarán de forma que las entidades, usuarios o procesos sólo accederán al conocimiento de aquella información requerida para cumplir sus…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.acc.4-01, EV-op.acc.4-02, EV-op.acc.4-03]
+  - code: "CHK-op.acc.4.4"
+    measure: op.acc.4
+    item: "op.acc.4.4"
+    descripcion: "Capacidad de autorizar: Exclusivamente el personal con competencia para ello podrá conceder, alterar o anular la autorización de acceso a los recursos, conforme a los criterios establecidos por su responsable…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.4-01, EV-op.acc.4-02, EV-op.acc.4-03]
+  - code: "CHK-op.acc.4.5"
+    measure: op.acc.4
+    item: "op.acc.4.5"
+    descripcion: "Se establecerá una política específica de acceso remoto, requiriéndose autorización expresa"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.4-01, EV-op.acc.4-02, EV-op.acc.4-03]
+  - code: "CHK-op.acc.5.1"
+    measure: op.acc.5
+    item: "op.acc.5.1"
+    descripcion: "Antes de proporcionar las credenciales de autenticación a las entidades, usuarios o procesos, estos deberán haberse identificado y registrado de manera fidedigna ante el sistema o ante un Prestador Cualificado de…"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.2"
+    measure: op.acc.5
+    item: "op.acc.5.2"
+    descripcion: "Antes de activar el mecanismo de autenticación, el usuario reconocerá que las ha recibido y que conoce y acepta las obligaciones que implica su tenencia, en particular, el deber de custodia diligente, la protección de…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.3"
+    measure: op.acc.5
+    item: "op.acc.5.3"
+    descripcion: "Las credenciales estarán bajo el control exclusivo del usuario y se activarán una vez estén bajo su control efectivo"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.4"
+    measure: op.acc.5
+    item: "op.acc.5.4"
+    descripcion: "Las credenciales se cambiarán con una periodicidad marcada por la política de seguridad de la organización"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.5"
+    measure: op.acc.5
+    item: "op.acc.5.5"
+    descripcion: "Las credenciales serán inhabilitadas -pudiendo ser regeneradas, en su caso-, cuando conste o se sospeche su pérdida, compromiso o revelación a entidades (personas, equipos o procesos) no autorizadas"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.6"
+    measure: op.acc.5
+    item: "op.acc.5.6"
+    descripcion: "Las credenciales serán inhabilitadas cuando la entidad (persona, equipo o proceso) que autentican termina su relación con el sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.7"
+    measure: op.acc.5
+    item: "op.acc.5.7"
+    descripcion: "Antes de autorizar el acceso, la información presentada por el sistema será la mínima imprescindible para que el usuario se autentique, evitando todo aquello que pueda, directa o indirectamente, revelar información…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.8"
+    measure: op.acc.5
+    item: "op.acc.5.8"
+    descripcion: "El número de intentos permitidos será limitado, bloqueando la oportunidad de acceso una vez superado tal número, y requiriendo una intervención específica para reactivar la cuenta, que se describirá en la documentación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.9"
+    measure: op.acc.5
+    item: "op.acc.5.9"
+    descripcion: "El sistema informará al usuario de sus derechos u obligaciones inmediatamente después de obtener el acceso"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.5-01]
+  - code: "CHK-op.acc.5.r1.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r1
+    item: "op.acc.5.r1.1"
+    descripcion: "Se empleará una contraseña como mecanismo de autenticación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r1.2"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r1
+    item: "op.acc.5.r1.2"
+    descripcion: "Se impondrán normas de complejidad mínima y robustez frente a ataques de adivinación (ver guías CCN-STIC)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r2.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r2
+    item: "op.acc.5.r2.1"
+    descripcion: "Se requerirá una contraseña de un solo uso (OTP, en inglés) como complemento a la contraseña de usuario"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r3.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r3
+    item: "op.acc.5.r3.1"
+    descripcion: "Se emplearán certificados cualificados como mecanismo de autenticación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r3.2"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r3
+    item: "op.acc.5.r3.2"
+    descripcion: "El uso del certificado estará protegido por un segundo factor, del tipo PIN o biométrico"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r3.3"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r3
+    item: "op.acc.5.r3.3"
+    descripcion: "Las credenciales utilizadas deberán haber sido obtenidas tras un registro previo presencial, o bien telemático, usando un certificado electrónico cualificado"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r4.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r4
+    item: "op.acc.5.r4.1"
+    descripcion: "Se emplearán certificados cualificados como mecanismo de autenticación, en soporte físico (tarjeta o similar) usando algoritmos, parámetros y dispositivos autorizados por el CCN"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r4.2"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r4
+    item: "op.acc.5.r4.2"
+    descripcion: "El uso del certificado estará protegido por un segundo factor, del tipo PIN o biométrico"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r4.3"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r4
+    item: "op.acc.5.r4.3"
+    descripcion: "Las credenciales utilizadas deberán haber sido obtenidas tras un registro previo presencial, o bien telemático, usando certificado electrónico cualificado"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r5.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r5
+    item: "op.acc.5.r5.1"
+    descripcion: "Se registrarán los accesos con éxito y los fallidos"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.5-02]
+  - code: "CHK-op.acc.5.r5.2"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r5
+    item: "op.acc.5.r5.2"
+    descripcion: "Se informará al usuario del último acceso efectuado con su identidad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.5-02]
+  - code: "CHK-op.acc.5.r6.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r6
+    item: "op.acc.5.r6.1"
+    descripcion: "Se definirán aquellos puntos en los que el sistema requerirá una renovación de la autenticación del usuario, mediante identificación singular, no bastando con la sesión establecida"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.5.r7.1"
+    measure: op.acc.5
+    refuerzo: op.acc.5.r7
+    item: "op.acc.5.r7.1"
+    descripcion: "Las credenciales se suspenderán tras un periodo definido de no utilización"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.1"
+    measure: op.acc.6
+    item: "op.acc.6.1"
+    descripcion: "Antes de proporcionar las credenciales a los usuarios, estos deberán conocer y aceptar la política de seguridad del organismo en los aspectos que les afecten"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.2"
+    measure: op.acc.6
+    item: "op.acc.6.2"
+    descripcion: "Antes de activar el mecanismo de autenticación, el usuario reconocerá que ha recibido las credenciales de acceso y que conoce y acepta las obligaciones que implica su tenencia, en particular, el deber de custodia…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.3"
+    measure: op.acc.6
+    item: "op.acc.6.3"
+    descripcion: "Las credenciales estarán bajo el control exclusivo del usuario y se activarán una vez estén bajo su control efectivo"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.4"
+    measure: op.acc.6
+    item: "op.acc.6.4"
+    descripcion: "Las credenciales se cambiarán con una periodicidad marcada por la política de seguridad de la organización"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.5"
+    measure: op.acc.6
+    item: "op.acc.6.5"
+    descripcion: "Las credenciales serán inhabilitadas -pudiendo ser regeneradas, en su caso-, cuando conste o se sospeche su pérdida, compromiso o revelación a entidades (personas, equipos o procesos) no autorizadas"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.6"
+    measure: op.acc.6
+    item: "op.acc.6.6"
+    descripcion: "Las credenciales serán inhabilitadas cuando el usuario que autentican termina su relación con el sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.7"
+    measure: op.acc.6
+    item: "op.acc.6.7"
+    descripcion: "Antes de autorizar el acceso, la información presentada por el sistema será la mínima imprescindible para que el usuario se autentique, evitando todo aquello que pueda, directa o indirectamente, revelar información…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.8"
+    measure: op.acc.6
+    item: "op.acc.6.8"
+    descripcion: "El número de intentos permitidos será limitado, bloqueando la oportunidad de acceso una vez superado tal número, y requiriendo una intervención específica para reactivar la cuenta, que se describirá en la documentación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.9"
+    measure: op.acc.6
+    item: "op.acc.6.9"
+    descripcion: "El sistema informará al usuario de sus derechos u obligaciones inmediatamente después de obtener el acceso"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-01, EV-op.acc.6-02, EV-op.acc.6-08]
+  - code: "CHK-op.acc.6.r1.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r1
+    item: "op.acc.6.r1.1"
+    descripcion: "Se empleará una contraseña como mecanismo de autenticación cuando el acceso se realiza desde zonas controladas y sin atravesar zonas no controladas (véase refuerzo R8)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-03]
+  - code: "CHK-op.acc.6.r1.2"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r1
+    item: "op.acc.6.r1.2"
+    descripcion: "Se impondrán normas de complejidad mínima y robustez frente a ataques de adivinación (ver guías CCN-STIC)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.6-03]
+  - code: "CHK-op.acc.6.r2.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r2
+    item: "op.acc.6.r2.1"
+    descripcion: "Se requerirá un segundo factor tal como «algo que se tiene», es decir, un dispositivo, una contraseña de un solo uso (OTP, en inglés) como complemento a la contraseña de usuario, o «algo que se es»"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.r3.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r3
+    item: "op.acc.6.r3.1"
+    descripcion: "Se emplearán certificados cualificados como mecanismo de autenticación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.r3.2"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r3
+    item: "op.acc.6.r3.2"
+    descripcion: "El uso del certificado estará protegido por un segundo factor, del tipo PIN o biométrico"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.r4.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r4
+    item: "op.acc.6.r4.1"
+    descripcion: "Se emplearán certificados cualificados como mecanismo de autenticación, en soporte físico (tarjeta o similar) usando algoritmos, parámetros y dispositivos autorizados por el CCN"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.r4.2"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r4
+    item: "op.acc.6.r4.2"
+    descripcion: "El uso del certificado estará protegido por un segundo factor, del tipo PIN o biométrico"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.r5.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r5
+    item: "op.acc.6.r5.1"
+    descripcion: "Se registrarán los accesos con éxito y los fallidos"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-05]
+  - code: "CHK-op.acc.6.r5.2"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r5
+    item: "op.acc.6.r5.2"
+    descripcion: "Se informará al usuario del último acceso efectuado con su identidad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-05]
+  - code: "CHK-op.acc.6.r6.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r6
+    item: "op.acc.6.r6.1"
+    descripcion: "Se definirán aquellos puntos en los que el sistema requerirá una renovación de la autenticación del usuario, mediante identificación singular, no bastando con la sesión establecida"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.6-07]
+  - code: "CHK-op.acc.6.r7.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r7
+    item: "op.acc.6.r7.1"
+    descripcion: "Las credenciales se suspenderán tras un periodo definido de no utilización"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.6-06]
+  - code: "CHK-op.acc.6.r8.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r8
+    item: "op.acc.6.r8.1"
+    descripcion: "Para el acceso desde o a través de zonas no controladas se requerirá un doble factor de autenticación: R2, R3 o R4"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.acc.6.r9.1"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    item: "op.acc.6.r9.1"
+    descripcion: "Será de aplicación la ITS de Interconexión de sistemas de información"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.acc.6-04]
+  - code: "CHK-op.acc.6.r9.2"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    item: "op.acc.6.r9.2"
+    descripcion: "El acceso remoto deberá considerar los siguientes aspectos:"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-04]
+  - code: "CHK-op.acc.6.r9.2a"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    item: "a)"
+    item_padre: "op.acc.6.r9.2"
+    descripcion: "Ser autorizado por la autoridad correspondiente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.acc.6-04]
+  - code: "CHK-op.acc.6.r9.2b"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    item: "b)"
+    item_padre: "op.acc.6.r9.2"
+    descripcion: "El tráfico deberá ser cifrado"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-04]
+  - code: "CHK-op.acc.6.r9.2c"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    item: "c)"
+    item_padre: "op.acc.6.r9.2"
+    descripcion: "Si la utilización no se produce de manera constante, el acceso remoto deberá encontrarse inhabilitado y habilitarse únicamente cuando sea necesario"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-04]
+  - code: "CHK-op.acc.6.r9.2d"
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    item: "d)"
+    item_padre: "op.acc.6.r9.2"
+    descripcion: "Deberán recogerse registros de auditoría de este tipo de conexiones"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.acc.6-04]

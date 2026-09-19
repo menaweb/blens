@@ -1,0 +1,399 @@
+# Seed BLENS · Mapa medida ↔ amenaza (equivalente curado de la biblioteca de PILAR)
+# Modelo: MeasureThreatMap (CLAUDE.md §7.1) · Consumido por engines/risk_engine (§9.2)
+#
+# Para cada amenaza, qué medidas del ENS actúan como salvaguarda:
+#   aspect: FREQ   reduce la probabilidad de que ocurra
+#           IMPACT reduce el daño si ocurre
+#   weight: 0..1   reducción máxima que aporta esa medida con eficacia 1 (madurez L5)
+#   dim:           opcional; si se omite, aplica a todas las dimensiones de la amenaza
+#
+# Fórmula (§9.2): factor = Π (1 − eficacia(madurez) × weight)
+# Por eso los pesos NO suman 1: se combinan multiplicativamente (defensa en profundidad).
+#
+# CALIBRACIÓN (criterio de BLENS, revisable):
+#   0.6–0.7  la medida ataca directamente esa amenaza (es su razón de ser)
+#   0.4–0.5  contribución fuerte
+#   0.2–0.3  contribución de apoyo
+#   0.1      contribución marginal, se incluye solo si es defendible ante un auditor
+# Regla: ninguna medida sola anula una amenaza. Máximo 0.7.
+#
+# ⚠️ v0: primera pasada de curación. Pendiente de revisión con un consultor MAGERIT
+# y de contraste con la biblioteca de PILAR sobre un caso real.
+
+version: 1
+catalog: MAGERIT-v3
+depends_on_catalog: ENS-2022-OSCAL
+
+map:
+
+  # ------------------------------------------------------------------ Naturales e industriales
+  N.1:   # Fuego
+    - {measure: mp.if.5, aspect: FREQ, weight: 0.5}
+    - {measure: mp.if.5, aspect: IMPACT, weight: 0.6}
+    - {measure: mp.if.1, aspect: FREQ, weight: 0.2}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+    - {measure: op.cont.4, aspect: IMPACT, weight: 0.4}
+
+  N.2:   # Daños por agua
+    - {measure: mp.if.6, aspect: FREQ, weight: 0.6}
+    - {measure: mp.if.6, aspect: IMPACT, weight: 0.4}
+    - {measure: mp.if.3, aspect: FREQ, weight: 0.2}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.4}
+
+  N.*:   # Otros desastres naturales
+    - {measure: op.pl.1, aspect: FREQ, weight: 0.1}
+    - {measure: op.cont.1, aspect: IMPACT, weight: 0.3}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+    - {measure: op.cont.4, aspect: IMPACT, weight: 0.5}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+
+  I.1:   # Fuego industrial
+    - {measure: mp.if.5, aspect: FREQ, weight: 0.6}
+    - {measure: mp.if.5, aspect: IMPACT, weight: 0.6}
+    - {measure: mp.if.3, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+
+  I.2:   # Daños por agua industrial
+    - {measure: mp.if.6, aspect: FREQ, weight: 0.5}
+    - {measure: mp.if.3, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+
+  I.5:   # Avería de origen físico o lógico
+    - {measure: op.exp.4, aspect: FREQ, weight: 0.3}
+    - {measure: op.pl.4, aspect: FREQ, weight: 0.3}
+    - {measure: mp.eq.4, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.2}
+
+  I.6:   # Corte del suministro eléctrico
+    - {measure: mp.if.4, aspect: IMPACT, weight: 0.7}
+    - {measure: mp.if.3, aspect: FREQ, weight: 0.2}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.4}
+    - {measure: op.cont.4, aspect: IMPACT, weight: 0.4}
+    - {measure: op.cont.3, aspect: IMPACT, weight: 0.3}
+
+  I.7:   # Temperatura o humedad inadecuadas
+    - {measure: mp.if.3, aspect: FREQ, weight: 0.6}
+    - {measure: op.mon.1, aspect: FREQ, weight: 0.2}
+    - {measure: mp.eq.4, aspect: IMPACT, weight: 0.3}
+
+  I.8:   # Fallo de comunicaciones
+    - {measure: mp.com.1, aspect: FREQ, weight: 0.2}
+    - {measure: op.ext.1, aspect: FREQ, weight: 0.3}
+    - {measure: op.ext.2, aspect: FREQ, weight: 0.2}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+    - {measure: op.cont.4, aspect: IMPACT, weight: 0.5}
+
+  I.9:   # Interrupción de otros suministros
+    - {measure: op.ext.1, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.1, aspect: IMPACT, weight: 0.3}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+
+  I.10:  # Degradación de soportes
+    - {measure: mp.si.1, aspect: FREQ, weight: 0.4}
+    - {measure: mp.si.3, aspect: FREQ, weight: 0.2}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.7}
+    - {measure: mp.eq.4, aspect: FREQ, weight: 0.2}
+
+  I.11:  # Emanaciones electromagnéticas
+    - {measure: mp.if.1, aspect: FREQ, weight: 0.3}
+    - {measure: mp.com.2, aspect: IMPACT, weight: 0.4}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.4}
+
+  # ------------------------------------------------------------------ Errores no intencionados
+  E.1:   # Errores de los usuarios
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.5}
+    - {measure: mp.per.4, aspect: FREQ, weight: 0.3}
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.3}
+    - {measure: org.2, aspect: FREQ, weight: 0.2}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.5}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.2}
+
+  E.2:   # Errores del administrador
+    - {measure: mp.per.4, aspect: FREQ, weight: 0.4}
+    - {measure: op.exp.5, aspect: FREQ, weight: 0.5}
+    - {measure: op.exp.3, aspect: FREQ, weight: 0.4}
+    - {measure: op.acc.3, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+
+  E.3:   # Errores de monitorización
+    - {measure: op.exp.8, aspect: FREQ, weight: 0.6, dim: T}
+    - {measure: op.mon.1, aspect: FREQ, weight: 0.3, dim: T}
+    - {measure: op.exp.3, aspect: FREQ, weight: 0.3, dim: T}
+    - {measure: op.mon.2, aspect: IMPACT, weight: 0.2, dim: T}
+
+  E.4:   # Errores de configuración
+    - {measure: op.exp.2, aspect: FREQ, weight: 0.5}
+    - {measure: op.exp.3, aspect: FREQ, weight: 0.5}
+    - {measure: op.exp.5, aspect: FREQ, weight: 0.4}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.3}
+    - {measure: op.pl.2, aspect: FREQ, weight: 0.2}
+    - {measure: op.nub.1, aspect: FREQ, weight: 0.4}
+
+  E.7:   # Deficiencias en la organización
+    - {measure: org.1, aspect: FREQ, weight: 0.4}
+    - {measure: org.3, aspect: FREQ, weight: 0.4}
+    - {measure: mp.per.1, aspect: FREQ, weight: 0.3}
+    - {measure: org.4, aspect: FREQ, weight: 0.2}
+
+  E.8:   # Difusión de software dañino (no intencionada)
+    - {measure: op.exp.6, aspect: FREQ, weight: 0.6}
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.4}
+    - {measure: op.exp.4, aspect: FREQ, weight: 0.4}
+    - {measure: mp.s.1, aspect: FREQ, weight: 0.3}
+    - {measure: mp.s.3, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.exp.7, aspect: IMPACT, weight: 0.4}
+    - {measure: op.exp.9, aspect: IMPACT, weight: 0.2}
+
+  E.9:   # Errores de encaminamiento
+    - {measure: mp.com.1, aspect: FREQ, weight: 0.4}
+    - {measure: mp.com.4, aspect: FREQ, weight: 0.3}
+    - {measure: mp.com.2, aspect: IMPACT, weight: 0.4}
+    - {measure: op.ext.4, aspect: FREQ, weight: 0.3}
+
+  E.10:  # Errores de secuencia
+    - {measure: mp.com.3, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.4, aspect: IMPACT, weight: 0.2}
+
+  E.15:  # Alteración accidental de la información
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.4}
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.2}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.7}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.2}
+
+  E.18:  # Destrucción de información (accidental)
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.3}
+    - {measure: mp.si.4, aspect: FREQ, weight: 0.2}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.7}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.3}
+
+  E.19:  # Fugas de información (accidentales)
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.4}
+    - {measure: mp.per.2, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.5, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.2, aspect: FREQ, weight: 0.3}
+    - {measure: mp.si.4, aspect: FREQ, weight: 0.2}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.4}
+    - {measure: mp.si.5, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.1, aspect: FREQ, weight: 0.2}
+
+  E.20:  # Vulnerabilidades de los programas
+    - {measure: op.exp.4, aspect: FREQ, weight: 0.6}
+    - {measure: mp.sw.1, aspect: FREQ, weight: 0.5}
+    - {measure: op.exp.2, aspect: FREQ, weight: 0.3}
+    - {measure: op.pl.5, aspect: FREQ, weight: 0.2}
+    - {measure: mp.s.2, aspect: IMPACT, weight: 0.4}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}
+    - {measure: op.pl.3, aspect: FREQ, weight: 0.2}
+    - {measure: op.ext.3, aspect: FREQ, weight: 0.3}
+    - {measure: op.mon.3, aspect: FREQ, weight: 0.4}
+
+  E.21:  # Errores de mantenimiento de programas
+    - {measure: op.exp.5, aspect: FREQ, weight: 0.5}
+    - {measure: op.exp.4, aspect: FREQ, weight: 0.3}
+    - {measure: mp.sw.2, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.5}
+
+  E.23:  # Errores de mantenimiento de equipos
+    - {measure: mp.eq.4, aspect: FREQ, weight: 0.5}
+    - {measure: op.exp.5, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.3}
+
+  E.24:  # Caída por agotamiento de recursos
+    - {measure: op.pl.4, aspect: FREQ, weight: 0.6}
+    - {measure: op.mon.1, aspect: FREQ, weight: 0.3}
+    - {measure: mp.s.4, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.4}
+
+  E.25:  # Pérdida de equipos
+    - {measure: op.exp.1, aspect: FREQ, weight: 0.3}
+    - {measure: mp.if.7, aspect: FREQ, weight: 0.3}
+    - {measure: mp.eq.3, aspect: IMPACT, weight: 0.7, dim: C}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6, dim: D}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.5, dim: C}
+
+  E.28:  # Indisponibilidad del personal
+    - {measure: mp.per.1, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.3, aspect: IMPACT, weight: 0.3}
+    - {measure: op.cont.1, aspect: IMPACT, weight: 0.4}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+
+  # ------------------------------------------------------------------ Ataques intencionados
+  A.3:   # Manipulación de los registros de actividad
+    - {measure: op.exp.8, aspect: FREQ, weight: 0.6, dim: T}
+    - {measure: op.acc.3, aspect: FREQ, weight: 0.4}
+    - {measure: op.acc.2, aspect: FREQ, weight: 0.4}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}
+    - {measure: mp.info.4, aspect: IMPACT, weight: 0.3}
+
+  A.4:   # Manipulación de la configuración
+    - {measure: op.exp.3, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.2, aspect: FREQ, weight: 0.4}
+    - {measure: op.acc.6, aspect: FREQ, weight: 0.4}
+    - {measure: op.exp.5, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}
+
+  A.5:   # Suplantación de la identidad
+    - {measure: op.acc.6, aspect: FREQ, weight: 0.7}
+    - {measure: op.acc.5, aspect: FREQ, weight: 0.6}
+    - {measure: op.acc.1, aspect: FREQ, weight: 0.4}
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.3}
+    - {measure: mp.com.2, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}
+    - {measure: mp.eq.2, aspect: FREQ, weight: 0.3}
+
+  A.6:   # Abuso de privilegios
+    - {measure: op.acc.2, aspect: FREQ, weight: 0.6}
+    - {measure: op.acc.3, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.4}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.4}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}
+    - {measure: op.nub.1, aspect: FREQ, weight: 0.3}
+
+  A.7:   # Uso no previsto
+    - {measure: org.2, aspect: FREQ, weight: 0.4}
+    - {measure: op.acc.2, aspect: FREQ, weight: 0.3}
+    - {measure: mp.s.3, aspect: FREQ, weight: 0.3}
+    - {measure: mp.eq.1, aspect: FREQ, weight: 0.2}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+
+  A.8:   # Software dañino deliberado (ransomware)
+    - {measure: op.exp.6, aspect: FREQ, weight: 0.7}
+    - {measure: op.exp.4, aspect: FREQ, weight: 0.5}
+    - {measure: mp.s.1, aspect: FREQ, weight: 0.4}
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.4}
+    - {measure: mp.com.4, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.7}
+    - {measure: op.exp.7, aspect: IMPACT, weight: 0.5}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.4}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.4}
+    - {measure: op.exp.9, aspect: IMPACT, weight: 0.3}
+    - {measure: op.mon.3, aspect: FREQ, weight: 0.4}
+    - {measure: op.cont.3, aspect: IMPACT, weight: 0.3}
+
+  A.11:  # Acceso no autorizado
+    - {measure: op.acc.1, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.6, aspect: FREQ, weight: 0.5}
+    - {measure: mp.if.1, aspect: FREQ, weight: 0.4}
+    - {measure: mp.com.1, aspect: FREQ, weight: 0.4}
+    - {measure: op.exp.2, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.4, dim: C}
+    - {measure: mp.eq.2, aspect: FREQ, weight: 0.4}
+    - {measure: op.pl.2, aspect: FREQ, weight: 0.3}
+    - {measure: op.nub.1, aspect: FREQ, weight: 0.4}
+    - {measure: op.ext.4, aspect: FREQ, weight: 0.3}
+
+  A.12:  # Análisis de tráfico
+    - {measure: mp.com.2, aspect: IMPACT, weight: 0.6}
+    - {measure: mp.com.4, aspect: FREQ, weight: 0.3}
+    - {measure: mp.com.1, aspect: FREQ, weight: 0.3}
+
+  A.13:  # Repudio
+    - {measure: mp.info.4, aspect: FREQ, weight: 0.6}
+    - {measure: op.exp.8, aspect: FREQ, weight: 0.5, dim: T}
+    - {measure: op.acc.6, aspect: FREQ, weight: 0.4, dim: A}
+    - {measure: mp.info.3, aspect: FREQ, weight: 0.4, dim: A}
+
+  A.14:  # Interceptación de información
+    - {measure: mp.com.2, aspect: IMPACT, weight: 0.7}
+    - {measure: mp.com.1, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.3, aspect: IMPACT, weight: 0.4}
+    - {measure: op.exp.10, aspect: IMPACT, weight: 0.3}
+
+  A.15:  # Modificación deliberada de la información
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.2, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.4, aspect: IMPACT, weight: 0.4}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+
+  A.18:  # Destrucción de información (deliberada)
+    - {measure: op.acc.2, aspect: FREQ, weight: 0.4}
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.7}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.4}
+
+  A.19:  # Divulgación de información
+    - {measure: mp.per.2, aspect: FREQ, weight: 0.4}
+    - {measure: op.acc.4, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.2, aspect: FREQ, weight: 0.3}
+    - {measure: mp.info.5, aspect: FREQ, weight: 0.3}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.5}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.2}
+    - {measure: mp.si.5, aspect: FREQ, weight: 0.4}
+    - {measure: mp.info.1, aspect: FREQ, weight: 0.2}
+
+  A.22:  # Manipulación de programas
+    - {measure: mp.sw.1, aspect: FREQ, weight: 0.6}
+    - {measure: mp.sw.2, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.3, aspect: FREQ, weight: 0.4}
+    - {measure: op.exp.3, aspect: FREQ, weight: 0.3}
+    - {measure: op.pl.5, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.8, aspect: IMPACT, weight: 0.3}
+    - {measure: op.pl.3, aspect: FREQ, weight: 0.3}
+    - {measure: op.ext.3, aspect: FREQ, weight: 0.3}
+
+  A.23:  # Manipulación de los equipos
+    - {measure: mp.if.1, aspect: FREQ, weight: 0.6}
+    - {measure: mp.if.2, aspect: FREQ, weight: 0.4}
+    - {measure: mp.if.7, aspect: FREQ, weight: 0.3}
+    - {measure: mp.eq.4, aspect: FREQ, weight: 0.2}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.4, dim: C}
+
+  A.24:  # Denegación de servicio
+    - {measure: mp.s.4, aspect: FREQ, weight: 0.6}
+    - {measure: mp.com.1, aspect: FREQ, weight: 0.4}
+    - {measure: op.pl.4, aspect: FREQ, weight: 0.3}
+    - {measure: op.mon.1, aspect: FREQ, weight: 0.4}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+    - {measure: op.exp.7, aspect: IMPACT, weight: 0.4}
+    - {measure: op.mon.3, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.3, aspect: IMPACT, weight: 0.3}
+
+  A.25:  # Robo
+    - {measure: mp.if.1, aspect: FREQ, weight: 0.6}
+    - {measure: mp.if.2, aspect: FREQ, weight: 0.4}
+    - {measure: mp.if.7, aspect: FREQ, weight: 0.3}
+    - {measure: mp.eq.3, aspect: IMPACT, weight: 0.6, dim: C}
+    - {measure: mp.si.2, aspect: IMPACT, weight: 0.5, dim: C}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.5, dim: D}
+
+  A.26:  # Ataque destructivo
+    - {measure: mp.if.1, aspect: FREQ, weight: 0.5}
+    - {measure: mp.if.2, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+    - {measure: op.cont.4, aspect: IMPACT, weight: 0.5}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.6}
+    - {measure: op.cont.3, aspect: IMPACT, weight: 0.4}
+
+  A.28:  # Indisponibilidad deliberada del personal
+    - {measure: mp.per.1, aspect: FREQ, weight: 0.3}
+    - {measure: op.cont.1, aspect: IMPACT, weight: 0.4}
+    - {measure: op.cont.2, aspect: IMPACT, weight: 0.5}
+
+  A.29:  # Extorsión
+    - {measure: mp.per.2, aspect: FREQ, weight: 0.3}
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.3}
+    - {measure: op.acc.3, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.7, aspect: IMPACT, weight: 0.4}
+    - {measure: mp.info.6, aspect: IMPACT, weight: 0.5}
+
+  A.30:  # Ingeniería social
+    - {measure: mp.per.3, aspect: FREQ, weight: 0.6}
+    - {measure: mp.s.1, aspect: FREQ, weight: 0.5}
+    - {measure: op.acc.6, aspect: FREQ, weight: 0.5}
+    - {measure: org.2, aspect: FREQ, weight: 0.3}
+    - {measure: mp.per.4, aspect: FREQ, weight: 0.3}
+    - {measure: op.exp.7, aspect: IMPACT, weight: 0.4}
+    - {measure: op.mon.1, aspect: IMPACT, weight: 0.3}

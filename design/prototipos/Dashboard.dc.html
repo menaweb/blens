@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Sede electrónica</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Ayto. de Valverde · categoría Media</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <button type="button" onClick="{{ alternarEstado }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:7px 11px; cursor:pointer" style-hover="background:#F1F5F9">{{ textoAlternar }}</button>
+      <button type="button" style="{{ botonCabecera }}">{{ textoCabecera }}</button>
+    </div>
+  </header>
+
+  <div style="{{ vistaVacia }}">
+    <div style="max-width:560px; display:flex; flex-direction:column; gap:14px">
+      <h1 style="margin:0; font-size:24px; line-height:1.3; font-weight:600; letter-spacing:-0.01em; color:#0F172A">Aún no hay datos de cumplimiento.</h1>
+      <p style="margin:0; font-size:14px; line-height:1.6; color:#475569; text-wrap:pretty">Empieza por categorizar tu sistema: son 5 preguntas y 2 minutos, y de ahí sale todo lo demás. Con la categoría sabremos qué medidas te aplican, qué evidencias tendrás que reunir y por dónde conviene empezar.</p>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:2px">
+        <button type="button" style="font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:10px 16px; cursor:pointer">Categorizar el sistema</button>
+        <button type="button" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:10px 16px; cursor:pointer" style-hover="background:#F0FDFA">Ver qué pide el ENS</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px; padding:14px 16px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">Después de categorizar</span>
+        <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="3">
+          <span style="display:flex; align-items:baseline; gap:10px">
+            <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ p.n }}</span>
+            <span style="font-size:13px; line-height:1.5; color:#475569">{{ p.t }}</span>
+          </span>
+        </sc-for>
+      </div>
+      <p style="margin:0; font-size:12px; line-height:1.5; color:#475569">Empezar a cero es lo normal. Nadie cumple el ENS el primer día.</p>
+    </div>
+  </div>
+
+  <div style="{{ vistaDatos }}">
+    <div style="display:flex; flex-direction:column; gap:16px">
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(290px, 1fr)); gap:16px; align-items:start">
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:14px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Listo para auditoría</span>
+          <span style="font-size:12px; color:#475569">semana del 14/09</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:10px">
+          <span style="font-size:32px; font-weight:600; letter-spacing:-0.02em; color:#0F172A; font-variant-numeric:tabular-nums">31 %</span>
+          <span style="font-size:13px; color:#475569; font-variant-numeric:tabular-nums">+4 desde la semana anterior</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px">
+          <sc-for list="{{ componentes }}" as="c" hint-placeholder-count="3">
+            <span style="display:flex; flex-direction:column; gap:5px">
+              <span style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
+                <span style="font-size:13px; color:#0F172A">{{ c.nombre }}</span>
+                <span style="font-size:13px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">{{ c.valor }}</span>
+              </span>
+              <span style="display:block; height:5px; border-radius:3px; background:#E2E8F0; overflow:hidden">
+                <span style="{{ c.barra }}"></span>
+              </span>
+              <span style="font-size:12px; color:#475569">{{ c.detalle }}</span>
+            </span>
+          </sc-for>
+        </div>
+        <p style="margin:0; padding-top:10px; border-top:1px solid #F1F5F9; font-size:12px; line-height:1.5; color:#475569">Esto no es una declaración de conformidad: la conformidad la declara el auditor. El indicador nunca redondea al alza.</p>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:12px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Avisos</span>
+          <span style="font-size:12px; color:#475569">Agrupados, no uno por cambio.</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ avisos }}" as="a" hint-placeholder-count="3">
+            <div style="{{ a.caja }}">
+              <span style="display:flex; align-items:baseline; justify-content:space-between; gap:10px">
+                <span style="font-size:13px; font-weight:600; color:#0F172A">{{ a.titulo }}</span>
+                <span style="font-size:13px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">{{ a.n }}</span>
+              </span>
+              <span style="font-size:12px; line-height:1.5; color:#475569">{{ a.detalle }}</span>
+              <a href="#" style="font-size:13px; font-weight:500">{{ a.accion }}</a>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+      </div>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:12px; min-width:0">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Madurez por familia</span>
+          <span style="display:flex; align-items:center; gap:10px; font-size:12px; color:#475569">
+            <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#CBD5E1"></span>sin datos</span>
+            <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#B91C1C"></span>a más de dos niveles</span>
+            <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#CA8A04"></span>uno o dos</span>
+            <span style="display:flex; align-items:center; gap:5px"><span style="width:10px; height:10px; border-radius:3px; background:#15803D"></span>en objetivo</span>
+          </span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; min-width:0">
+          <sc-for list="{{ familias }}" as="f" hint-placeholder-count="6">
+            <span style="display:flex; align-items:center; gap:10px; min-width:0">
+              <span style="flex:0 0 190px; display:flex; align-items:baseline; gap:7px; min-width:0">
+                <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569; flex:0 0 auto">{{ f.cod }}</span>
+                <span style="font-size:13px; color:#0F172A; line-height:1.3">{{ f.nombre }}</span>
+              </span>
+              <span style="display:flex; gap:3px; flex:1; min-width:0">
+                <sc-for list="{{ f.celdas }}" as="c" hint-placeholder-count="8">
+                  <span style="{{ c.estilo }}" title="{{ c.titulo }}"></span>
+                </sc-for>
+              </span>
+              <span style="flex:0 0 72px; text-align:right; font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ f.resumen }}</span>
+            </span>
+          </sc-for>
+        </div>
+        <span style="font-size:12px; color:#475569">Cada celda es una medida aplicable. Una medida con madurez declarada pero sin evidencia validada aparece como no soportada y no suma.</span>
+      </section>
+
+      <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:12px; min-width:0">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Dónde se pierde más</span>
+          <span style="font-size:12px; color:#475569">Ordenado por impacto en el indicador.</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ carencias }}" as="g" hint-placeholder-count="4">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:11px 12px; border:1px solid #E2E8F0; border-radius:6px; background:#F8FAFC; flex-wrap:wrap">
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0; flex:1 1 280px">
+                <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ g.cod }}</span>
+                  <span style="font-size:13px; font-weight:600; color:#0F172A">{{ g.nombre }}</span>
+                  <span style="{{ g.chip }}">{{ g.etiqueta }}</span>
+                </span>
+                <span style="font-size:12px; color:#475569">{{ g.detalle }}</span>
+              </span>
+              <span style="display:flex; align-items:center; gap:10px; flex:0 0 auto">
+                <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ g.impacto }}</span>
+                <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap" style-hover="background:#F0FDFA">{{ g.accion }}</button>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;estadoInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;con datos&quot;,&quot;vacío&quot;],&quot;default&quot;:&quot;con datos&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { vacio: null };
+
+  renderVals() {
+    const vacio = this.state.vacio === null ? (this.props.estadoInicial === "vacío") : this.state.vacio;
+
+    const componentes = [
+      ["Madurez suficiente", "24 / 72", 33, "Medidas que alcanzan el L3 de categoría Media."],
+      ["Evidencia viva", "31 / 118", 26, "Requisitos con evidencia validada y no caducada."],
+      ["Documentación vigente", "6 / 14", 43, "Documentos obligatorios aprobados y en vigor."]
+    ].map((c) => ({
+      nombre: c[0], valor: c[1], detalle: c[3],
+      barra: `display:block; height:100%; width:${c[2]}%; border-radius:3px; background:#0F766E`
+    }));
+
+    const datosFam = [
+      ["org", "Marco organizativo", [3, 3, 2, 2, 1, 0]],
+      ["op.pl", "Planificación", [3, 2, 2, 1, 1]],
+      ["op.acc", "Control de acceso", [2, 1, 1, 1, 0, 0, 1]],
+      ["op.exp", "Explotación", [3, 2, 2, 1, 1, 0, 0, 1, 2]],
+      ["op.mon", "Monitorización", [1, 0, 0]],
+      ["mp.if", "Instalaciones", [3, 3, 2, 0, 1, 2]],
+      ["mp.s", "Servicios", [2, 1, 1, 0]],
+      ["mp.info", "Información", [3, 2, 1, 1, 0, 2]],
+      ["mp.per", "Personal", [2, 1, 0, 1]]
+    ];
+    const colores = { 0: "#CBD5E1", 1: "#B91C1C", 2: "#CA8A04", 3: "#15803D" };
+    const nombres = { 0: "sin datos", 1: "a más de dos niveles del objetivo", 2: "a uno o dos niveles", 3: "en objetivo" };
+    const familias = datosFam.map((f) => ({
+      cod: f[0], nombre: f[1],
+      resumen: `${f[2].filter((v) => v === 3).length} / ${f[2].length}`,
+      celdas: f[2].map((v) => ({
+        estilo: `flex:1 1 0; min-width:6px; height:18px; border-radius:3px; background:${colores[v]}`,
+        titulo: nombres[v]
+      }))
+    }));
+
+    const chip = (t) => {
+      const c = { soporte: ["#B45309", "#FFFBEB"], caducado: ["#7C2D12", "#FEF6F0"], sin: ["#B91C1C", "#FEF2F2"] }[t];
+      return `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:2px 7px; white-space:nowrap`;
+    };
+
+    const carencias = [
+      ["op.mon.1", "Detección de intrusión", "sin", "sin evidencia", "Madurez L1 frente a objetivo L3. No hay evidencias aportadas.", "−6 puntos", "Ver medida"],
+      ["op.acc.4", "Gestión de derechos de acceso", "soporte", "madurez no soportada", "Declarada L3, pero ninguna de sus 3 evidencias está validada.", "−5 puntos", "Aportar evidencia"],
+      ["op.exp.6", "Protección frente a código dañino", "caducado", "evidencia caducada", "El informe mensual de alertas venció el 31/08.", "−3 puntos", "Renovar evidencia"],
+      ["mp.per.3", "Concienciación", "sin", "sin evidencia", "No consta formación impartida en los últimos 12 meses.", "−3 puntos", "Ver medida"]
+    ].map((g) => ({
+      cod: g[0], nombre: g[1], etiqueta: g[3], detalle: g[4], impacto: g[5], accion: g[6], chip: chip(g[2])
+    }));
+
+    const avisos = [
+      ["Evidencias que caducan", "7", "3 vencen esta semana, 4 en los próximos 30 días.", "Revisar las 7", "#B45309"],
+      ["Certificados de proveedor", "2", "Nexia Sistemas y Cloudia vencen su certificado ENS en octubre.", "Ver proveedores", "#7C2D12"],
+      ["Tareas vencidas", "5", "Asignadas a 3 personas, la más antigua del 28/08.", "Ver tareas", "#B91C1C"]
+    ].map((a) => ({
+      titulo: a[0], n: a[1], detalle: a[2], accion: a[3],
+      caja: `display:flex; flex-direction:column; gap:5px; padding:11px 12px; border:1px solid #E2E8F0; border-left:3px solid ${a[4]}; border-radius:6px; background:#F8FAFC`
+    }));
+
+    const pasos = [
+      { n: "01", t: "Declaración de Aplicabilidad: qué medidas te tocan y cuáles no, con su justificación." },
+      { n: "02", t: "Perfilado: unas preguntas en lenguaje llano sobre cómo trabajáis hoy." },
+      { n: "03", t: "Evidencias: la carpeta que el auditor va a pedirte, con su estado." }
+    ];
+
+    return {
+      componentes, familias, carencias, avisos, pasos,
+      vistaVacia: `display:${vacio ? "flex" : "none"}; flex:1; align-items:center; justify-content:center; padding:48px 28px`,
+      vistaDatos: `display:${vacio ? "none" : "block"}; padding:24px 28px 64px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box`,
+      textoCabecera: vacio ? "Categorizar el sistema" : "Generar paquete",
+      botonCabecera: `font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer`,
+      alternarEstado: () => this.setState({ vacio: !vacio }),
+      textoAlternar: vacio ? "Ver con datos" : "Ver estado vacío"
+    };
+  }
+}
+</script>
+</body>
+</html>

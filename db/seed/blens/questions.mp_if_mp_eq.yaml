@@ -1,0 +1,485 @@
+# Seed BLENS · Preguntas de perfilado — familias mp.if (Instalaciones) y mp.eq (Equipos)
+# Especificación: docs/cuestionario_perfilado.md (§1bis redacción, bloques B04 y B09)
+# Variables de show_if: categoria_orden (1..3), nivel_orden.C|I|T|A|D (0..3), hechos.<clave>
+#
+# NOTA: mp.if.1, mp.if.2, mp.if.3 y mp.if.7 aplican SIEMPRE (por categoría), aunque no haya CPD propio:
+# se refieren también a las oficinas donde se trata la información. mp.if.4, .5 y .6 aplican por nivel de
+# Disponibilidad y solo tienen sentido donde haya equipamiento propio.
+
+version: 1
+familias: [mp.if, mp.eq]
+bloques:
+  - code: B04
+    titulo: Instalaciones
+    minutos_estimados: 7
+  - code: B09
+    titulo: Puestos de trabajo y dispositivos
+    minutos_estimados: 6
+
+questions:
+
+  # =================================================================== mp.if.1
+  - code: mp.if.areas
+    bloque: B04
+    orden: 10
+    tipo: MULTI
+    texto: "¿Dónde están los equipos que sostienen el servicio?"
+    por_que: "Marca qué hay que proteger físicamente. El auditor visitará estos sitios o pedirá pruebas de cómo están protegidos."
+    como_saberlo: "Piensa dónde están los servidores, el rack de comunicaciones y los ordenadores de quienes trabajan con el servicio."
+    minutos_estimados: 1
+    opciones:
+      - code: cpd
+        label: "Sala o CPD propio dedicado"
+        emits: {instalacion_cpd: true}
+      - code: rack
+        label: "Un rack o armario en una sala compartida"
+        emits: {instalacion_rack: true}
+      - code: oficina
+        label: "Oficinas donde se trabaja con la información"
+        emits: {instalacion_oficina: true}
+      - code: proveedor
+        label: "En instalaciones de un proveedor o en la nube"
+        emits: {instalacion_externa: true}
+
+  - code: mp.if.acceso
+    bloque: B04
+    orden: 11
+    tipo: MULTI
+    texto: "¿Cómo se impide que entre cualquiera a la sala donde están los equipos?"
+    por_que: "Es la primera medida física del ENS: zonas separadas y con acceso controlado. Una puerta sin llave es un hallazgo directo."
+    como_saberlo: "Mira la puerta: ¿llave, tarjeta, código, huella? ¿Está siempre cerrada o se queda abierta durante la jornada?"
+    a_quien_preguntar: "Quien lleva el mantenimiento del edificio o servicios generales"
+    show_if: {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_rack"}, true]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: tarjeta
+        label: "Tarjeta o código"
+        emits: {cpd_acceso: tarjeta}
+      - code: biometria
+        label: "Huella o biometría"
+        emits: {cpd_acceso: biometria}
+      - code: llave
+        label: "Llave física"
+        emits: {cpd_acceso: llave}
+      - code: vigilancia
+        label: "Además hay vigilancia o cámaras"
+        emits: {cpd_vigilancia: true}
+      - code: abierta
+        label: "La sala se queda abierta durante la jornada"
+        emits: {cpd_acceso: abierta}
+
+  - code: mp.if.autorizados
+    bloque: B04
+    orden: 12
+    tipo: SINGLE
+    texto: "¿Hay una lista de quién puede entrar en esa sala, y se revisa?"
+    por_que: "El auditor la pedirá y comprobará si aparece gente que ya no trabaja ahí."
+    como_saberlo: "Puede ser la lista de tarjetas dadas de alta en el control de accesos, o de a quién se ha dado llave."
+    show_if: {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_rack"}, true]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: lista_revisada
+        label: "Sí, y se revisa periódicamente"
+        emits: {cpd_autorizados: revisada}
+      - code: lista
+        label: "Sí, pero no se revisa"
+        emits: {cpd_autorizados: lista}
+      - code: "no"
+        label: "No hay lista"
+        emits: {cpd_autorizados: "no"}
+
+  # =================================================================== mp.if.2
+  - code: mp.if.registro_accesos
+    bloque: B04
+    orden: 20
+    tipo: SINGLE
+    texto: "Cuando entra alguien en la sala, ¿queda constancia de quién y cuándo?"
+    por_que: "Tras un problema hay que poder saber quién estuvo allí. Si el registro existe pero está vacío, cuenta como que no existe."
+    como_saberlo: "El control de accesos electrónico lo guarda solo; si es llave, mira si hay un libro de firmas."
+    show_if: {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_rack"}, true]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: electronico
+        label: "Sí, el sistema de accesos lo registra"
+        emits: {cpd_registro: electronico}
+      - code: libro
+        label: "Sí, en un libro de firmas"
+        emits: {cpd_registro: libro}
+      - code: "no"
+        label: "No queda constancia"
+        emits: {cpd_registro: "no"}
+
+  - code: mp.if.visitas
+    bloque: B04
+    orden: 21
+    tipo: SINGLE
+    texto: "¿Qué pasa cuando viene alguien de fuera (mantenimiento, técnicos, mensajería)?"
+    por_que: "Es la parte de identificación de personas que más se olvida: los externos entran y nadie los acompaña."
+    como_saberlo: "Piensa en la última visita del técnico del aire acondicionado: ¿firmó algo, le acompañó alguien?"
+    show_if: {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_oficina"}, true]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: registro_acompanado
+        label: "Se registra la visita y va acompañada"
+        emits: {visitas: registro_acompanado}
+      - code: registro
+        label: "Se registra, pero puede moverse sola"
+        emits: {visitas: registro}
+      - code: nada
+        label: "No hay control de visitas"
+        emits: {visitas: "no"}
+
+  # =================================================================== mp.if.3
+  - code: mp.if.clima
+    bloque: B04
+    orden: 30
+    tipo: SINGLE
+    texto: "¿La sala tiene climatización y alguien la mantiene?"
+    por_que: "Un CPD sin aire acondicionado se apaga solo en verano. El auditor pedirá el contrato y los partes de mantenimiento."
+    como_saberlo: "Mira si hay un equipo de aire dedicado a la sala, no el del edificio, y busca los partes de la última revisión."
+    a_quien_preguntar: "Servicios generales o el mantenedor del edificio"
+    show_if: {"==": [{var: "hechos.instalacion_cpd"}, true]}
+    minutos_estimados: 1
+    opciones:
+      - code: dedicada_mantenida
+        label: "Sí, dedicada y con mantenimiento contratado"
+        emits: {cpd_clima: dedicada_mantenida}
+      - code: dedicada
+        label: "Sí, dedicada, pero sin mantenimiento regular"
+        emits: {cpd_clima: dedicada}
+      - code: edificio
+        label: "La del edificio, no es específica de la sala"
+        emits: {cpd_clima: edificio}
+      - code: "no"
+        label: "No hay climatización"
+        emits: {cpd_clima: "no"}
+
+  - code: mp.if.condiciones
+    bloque: B04
+    orden: 31
+    tipo: MULTI
+    texto: "¿Se vigilan las condiciones de la sala (temperatura, humedad)?"
+    por_que: "Forma parte del acondicionamiento de locales. Con sensores, la evidencia sale sola."
+    como_saberlo: "Mira si hay sondas de temperatura o humedad que avisen, o si alguien lo comprueba manualmente."
+    show_if: {"==": [{var: "hechos.instalacion_cpd"}, true]}
+    minutos_estimados: 1
+    opciones:
+      - code: sensores
+        label: "Sí, con sensores y avisos"
+        emits: {cpd_sensores: true}
+      - code: manual
+        label: "Se comprueba a mano de vez en cuando"
+        emits: {cpd_sensores: manual}
+      - code: "no"
+        label: "No se vigila"
+        emits: {cpd_sensores: false}
+
+  # =================================================================== mp.if.4
+  - code: mp.if.energia
+    bloque: B04
+    orden: 40
+    tipo: SINGLE
+    texto: "Si se va la luz, ¿los equipos siguen encendidos un rato?"
+    por_que: "Un corte de luz no debe cortar el servicio ni corromper los datos. Con Disponibilidad media o alta hace falta además suministro de emergencia."
+    como_saberlo: "Busca una caja con baterías conectada al rack (un SAI). Suele tener pantalla y pitar cuando falla la corriente."
+    glosario:
+      SAI: "Sistema de alimentación ininterrumpida: baterías que mantienen los equipos encendidos si se va la luz"
+    show_if: {and: [{">=": [{var: "nivel_orden.D"}, 1]}, {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_rack"}, true]}]}]}
+    a_quien_preguntar: "Quien mantiene la sala o el electricista del edificio"
+    minutos_estimados: 1
+    opciones:
+      - code: sai_generador
+        label: "Sí, hay SAI y generador"
+        emits: {energia: sai_generador}
+      - code: sai
+        label: "Sí, hay SAI"
+        emits: {energia: sai}
+      - code: "no"
+        label: "No, se apagan"
+        emits: {energia: "no"}
+
+  - code: mp.if.energia.prueba
+    bloque: B04
+    orden: 41
+    tipo: DATE
+    texto: "¿Cuándo se probó por última vez que el SAI o el generador funciona?"
+    por_que: "Un SAI con las baterías agotadas aguanta segundos. El auditor pide el informe de la última prueba, no la factura de compra."
+    como_saberlo: "Busca el parte del mantenedor o el informe de la prueba de autonomía."
+    show_if: {in: [{var: "hechos.energia"}, ["sai", "sai_generador"]]}
+    minutos_estimados: 1
+    emits: {energia_ultima_prueba: "$value"}
+
+  # =================================================================== mp.if.5
+  - code: mp.if.incendios
+    bloque: B04
+    orden: 50
+    tipo: MULTI
+    texto: "¿Qué protección hay contra incendios donde están los equipos?"
+    por_que: "Es exigible desde Disponibilidad baja. Y las revisiones caducadas son de los hallazgos más fáciles de encontrar."
+    como_saberlo: "Mira si hay detectores en el techo de la sala, extintores cerca y su etiqueta de última revisión."
+    show_if: {and: [{">=": [{var: "nivel_orden.D"}, 1]}, {or: [{"==": [{var: "hechos.instalacion_cpd"}, true]}, {"==": [{var: "hechos.instalacion_rack"}, true]}]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: deteccion
+        label: "Detectores de humo"
+        emits: {incendios_deteccion: true}
+      - code: extincion
+        label: "Sistema de extinción automática"
+        emits: {incendios_extincion: true}
+      - code: extintores
+        label: "Extintores"
+        emits: {incendios_extintores: true}
+      - code: "no"
+        label: "Nada específico de la sala"
+        emits: {incendios_ninguno: true}
+
+  # =================================================================== mp.if.6
+  - code: mp.if.inundacion
+    bloque: B04
+    orden: 60
+    tipo: SINGLE
+    texto: "¿La sala puede inundarse (sótano, tuberías por encima, planta baja)?"
+    por_que: "Con Disponibilidad media o alta hay que haberlo valorado. Vale con demostrar que se pensó y se tomaron medidas."
+    como_saberlo: "Mira dónde está la sala, si pasan tuberías por encima y si los equipos están elevados del suelo."
+    show_if: {and: [{">=": [{var: "nivel_orden.D"}, 2]}, {"==": [{var: "hechos.instalacion_cpd"}, true]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: sin_riesgo
+        label: "No hay riesgo: planta alta y sin tuberías"
+        emits: {inundacion: sin_riesgo}
+      - code: medidas
+        label: "Hay riesgo, pero con medidas (elevación, detectores, desagües)"
+        emits: {inundacion: con_medidas}
+      - code: riesgo
+        label: "Hay riesgo y no hay medidas"
+        emits: {inundacion: riesgo}
+
+  # =================================================================== mp.if.7
+  - code: mp.if.equipamiento
+    bloque: B04
+    orden: 70
+    tipo: SINGLE
+    texto: "Cuando entra o sale un equipo (un servidor nuevo, un portátil a reparar), ¿queda anotado?"
+    por_que: "Evita que desaparezca un disco con datos sin que nadie se entere. Se comprueba contra el inventario."
+    como_saberlo: "Mira si hay un registro, albaranes archivados o un apunte en el inventario."
+    minutos_estimados: 1
+    opciones:
+      - code: registro
+        label: "Sí, hay registro de entradas y salidas"
+        emits: {registro_equipamiento: "si"}
+      - code: albaranes
+        label: "Quedan los albaranes, sin registro propio"
+        emits: {registro_equipamiento: albaranes}
+      - code: "no"
+        label: "No se anota"
+        emits: {registro_equipamiento: "no"}
+
+  # =================================================================== mp.eq.1
+  - code: mp.eq.despejado
+    bloque: B09
+    orden: 10
+    tipo: SINGLE
+    texto: "¿Hay norma de dejar la mesa despejada al terminar (papeles, memorias, notas con contraseñas)?"
+    por_que: "El auditor pasea por la oficina y mira las mesas. Es literalmente lo primero que comprueba de esta medida."
+    como_saberlo: "Piensa si existe una norma escrita y si se cumple de verdad al final del día."
+    minutos_estimados: 1
+    opciones:
+      - code: norma_cumple
+        label: "Sí, hay norma y se cumple"
+        emits: {mesa_limpia: norma_cumple}
+      - code: norma
+        label: "Hay norma, pero no siempre se cumple"
+        emits: {mesa_limpia: norma}
+      - code: "no"
+        label: "No hay norma"
+        emits: {mesa_limpia: "no"}
+
+  - code: mp.eq.almacenamiento
+    bloque: B09
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Hay dónde guardar bajo llave los documentos y soportes con información sensible?"
+    por_que: "Es el refuerzo de almacenamiento del material, obligatorio en Media y Alta."
+    como_saberlo: "Armarios o cajoneras con llave, o una sala de archivo cerrada."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí, y se usa"
+        emits: {almacenamiento_seguro: "si"}
+      - code: existe
+        label: "Existe, pero no se usa siempre"
+        emits: {almacenamiento_seguro: parcial}
+      - code: "no"
+        label: "No hay"
+        emits: {almacenamiento_seguro: "no"}
+
+  # =================================================================== mp.eq.2
+  - code: mp.eq.bloqueo
+    bloque: B09
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Los ordenadores se bloquean solos cuando nadie los usa?"
+    por_que: "Con Autenticidad media o alta es obligatorio, y el auditor comprobará los minutos configurados frente a lo que dice vuestra normativa."
+    como_saberlo: "En Windows con dominio se configura por directiva de grupo; en Intune, en las directivas de configuración. Si no lo sabes, deja el ordenador quieto y cronometra."
+    show_if: {">=": [{var: "nivel_orden.A"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: central
+        label: "Sí, está configurado de forma centralizada"
+        emits: {bloqueo_sesion: central}
+      - code: usuario
+        label: "Depende de cada usuario"
+        emits: {bloqueo_sesion: usuario}
+      - code: "no"
+        label: "No se bloquean"
+        emits: {bloqueo_sesion: "no"}
+
+  - code: mp.eq.bloqueo.minutos
+    bloque: B09
+    orden: 21
+    tipo: NUMBER
+    texto: "¿A los cuántos minutos se bloquean?"
+    por_que: "Ese número tiene que coincidir con el de vuestra normativa. Si la norma dice 10 y el sistema tiene 60, es una incoherencia que el auditor detecta enseguida."
+    show_if: {"!=": [{var: "hechos.bloqueo_sesion"}, "no"]}
+    minutos_estimados: 1
+    campos:
+      - {code: bloqueo_minutos, label: "Minutos de inactividad"}
+
+  - code: mp.eq.cierre_sesion
+    bloque: B09
+    orden: 22
+    tipo: SINGLE
+    texto: "Tras un rato largo sin uso, ¿se cierra la sesión del todo, no solo se bloquea?"
+    por_que: "Es el refuerzo de cierre de sesiones, exigible con Autenticidad alta."
+    como_saberlo: "Mira si hay configurado un tiempo máximo de sesión o cierre automático, no solo el salvapantallas."
+    show_if: {">=": [{var: "nivel_orden.A"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí, la sesión se cierra"
+        emits: {cierre_sesion: "si"}
+      - code: "no"
+        label: "Solo se bloquea la pantalla"
+        emits: {cierre_sesion: "no"}
+
+  # =================================================================== mp.eq.3
+  - code: mp.eq.portatiles
+    bloque: B09
+    orden: 30
+    tipo: SINGLE
+    texto: "¿Hay portátiles, tabletas o móviles con información del servicio?"
+    por_que: "Salen del edificio, así que se pierden y se roban. El ENS pide inventario, control y, en Alta, cifrado del disco."
+    como_saberlo: "Cuenta también los móviles con el correo corporativo configurado."
+    minutos_estimados: 1
+    opciones:
+      - code: portatiles
+        label: "Sí, portátiles"
+        emits: {portatiles: true}
+      - code: moviles
+        label: "Sí, móviles o tabletas"
+        emits: {moviles: true}
+      - code: ambos
+        label: "Sí, ambos"
+        emits: {portatiles: true, moviles: true}
+      - code: "no"
+        label: "No, todo son equipos fijos"
+        emits: {portatiles: false, moviles: false}
+
+  - code: mp.eq.cifrado
+    bloque: B09
+    orden: 31
+    tipo: SINGLE
+    texto: "¿Los discos de los portátiles están cifrados?"
+    por_que: "Si se pierde un portátil cifrado, no hay brecha de datos. Sin cifrar, hay que notificarla. En categoría Alta es obligatorio."
+    como_saberlo: "En Windows se llama BitLocker; en Mac, FileVault. La consola de gestión suele dar un informe de qué equipos lo tienen activo."
+    show_if: {"==": [{var: "hechos.portatiles"}, true]}
+    minutos_estimados: 1
+    opciones:
+      - code: todos
+        label: "Sí, todos"
+        emits: {cifrado_portatiles: todos}
+      - code: algunos
+        label: "Solo algunos"
+        emits: {cifrado_portatiles: algunos}
+      - code: "no"
+        label: "No"
+        emits: {cifrado_portatiles: "no"}
+      - code: nose
+        label: "Hay que comprobarlo en la consola"
+        emits: {cifrado_portatiles: por_comprobar}
+
+  - code: mp.eq.mdm
+    bloque: B09
+    orden: 32
+    tipo: TOOL
+    funcion: UEM_MDM
+    texto: "¿Con qué herramienta se gestionan esos dispositivos?"
+    por_que: "Sin herramienta de gestión no se puede demostrar el estado de la flota ni borrar un equipo perdido."
+    como_saberlo: "Ejemplos: Microsoft Intune, Jamf, Google Endpoint Management, Sophos Mobile, o ninguna."
+    show_if: {or: [{"==": [{var: "hechos.portatiles"}, true]}, {"==": [{var: "hechos.moviles"}, true]}]}
+    minutos_estimados: 1
+
+  - code: mp.eq.perdida
+    bloque: B09
+    orden: 33
+    tipo: SINGLE
+    texto: "Si alguien pierde un portátil o un móvil, ¿qué se hace?"
+    por_que: "El auditor pregunta por el procedimiento y por si se ha usado alguna vez."
+    como_saberlo: "Piensa si hay pasos escritos: a quién se avisa, si se puede borrar en remoto, si se registra como incidente."
+    show_if: {or: [{"==": [{var: "hechos.portatiles"}, true]}, {"==": [{var: "hechos.moviles"}, true]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: procedimiento
+        label: "Hay procedimiento y se puede borrar en remoto"
+        emits: {perdida_dispositivo: procedimiento}
+      - code: aviso
+        label: "Se avisa a informática, sin procedimiento escrito"
+        emits: {perdida_dispositivo: aviso}
+      - code: "no"
+        label: "No está previsto"
+        emits: {perdida_dispositivo: "no"}
+
+  # =================================================================== mp.eq.4
+  - code: mp.eq.otros
+    bloque: B09
+    orden: 40
+    tipo: MULTI
+    texto: "¿Qué otros aparatos están conectados a la red?"
+    por_que: "Impresoras, cámaras y sensores suelen conservar la contraseña de fábrica y son la puerta de entrada más habitual."
+    como_saberlo: "Mira qué hay enchufado a la red además de ordenadores y servidores."
+    show_if: {">=": [{var: "nivel_orden.C"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: impresoras
+        label: "Impresoras o multifunción"
+        emits: {otros_impresoras: true}
+      - code: camaras
+        label: "Cámaras o videovigilancia"
+        emits: {otros_camaras: true}
+      - code: iot
+        label: "Sensores, control de accesos, domótica"
+        emits: {otros_iot: true}
+      - code: ninguno
+        label: "Ninguno"
+        emits: {otros_dispositivos: false}
+
+  - code: mp.eq.otros.control
+    bloque: B09
+    orden: 41
+    tipo: SINGLE
+    texto: "¿Están en una red separada y con la contraseña de fábrica cambiada?"
+    por_que: "Es el refuerzo de control de dispositivos conectados a la red. Una impresora con la clave por defecto da acceso a lo que imprime todo el mundo."
+    como_saberlo: "Mira si están en una VLAN aparte y si alguien cambió la contraseña de administración al instalarlos."
+    show_if: {and: [{">=": [{var: "nivel_orden.C"}, 2]}, {"!=": [{var: "hechos.otros_dispositivos"}, false]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: segmentados
+        label: "Sí, red separada y credenciales cambiadas"
+        emits: {otros_control: segmentados}
+      - code: credenciales
+        label: "Credenciales cambiadas, pero en la misma red"
+        emits: {otros_control: credenciales}
+      - code: "no"
+        label: "No se ha tocado nada"
+        emits: {otros_control: "no"}

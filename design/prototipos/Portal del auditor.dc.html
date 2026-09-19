@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; height:100vh; min-height:720px; overflow:hidden; background:#F8FAFC">
+
+  <header style="flex:0 0 52px; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:0 20px; background:#0B4F4A; color:#FFFFFF">
+    <div style="display:flex; align-items:center; gap:14px; min-width:0">
+      <span style="font-size:14px; font-weight:600; letter-spacing:0.02em; white-space:nowrap; flex:0 0 auto">BLENS · Acceso del auditor</span>
+      <span style="width:1px; height:18px; background:rgba(255,255,255,0.25); flex:0 0 auto"></span>
+      <span style="font-size:14px; color:#CCFBF1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">Sede electrónica · Ayto. de Valverde · categoría Media · RD 311/2022</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:16px; flex:0 0 auto">
+      <span style="font-size:12px; color:#CCFBF1; white-space:nowrap">Acceso de solo lectura · caduca el 30/10/2026</span>
+      <button type="button" style="font-family:inherit; font-size:14px; font-weight:500; color:#0B4F4A; background:#FFFFFF; border:0; border-radius:6px; padding:7px 12px; cursor:pointer" style-hover="background:#CCFBF1">Descargar paquete</button>
+    </div>
+  </header>
+
+  <div style="flex:1; display:flex; min-height:0; position:relative">
+
+    <aside style="width:340px; flex:0 0 340px; display:flex; flex-direction:column; background:#FFFFFF; border-right:1px solid #E2E8F0">
+      <div style="padding:14px 16px; border-bottom:1px solid #E2E8F0; display:flex; flex-direction:column; gap:10px">
+        <input type="text" placeholder="Buscar medida o refuerzo" style="font-family:inherit; font-size:14px; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#F8FAFC; color:#0F172A" />
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="4">
+            <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+          </sc-for>
+        </div>
+        <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ revisadas }} de {{ totalMedidas }} medidas marcadas como revisadas</span>
+      </div>
+      <div style="flex:1; overflow-y:auto; padding:6px 8px 24px; display:flex; flex-direction:column; gap:1px">
+        <sc-for list="{{ medidas }}" as="m" hint-placeholder-count="10">
+          <button type="button" onClick="{{ m.onClick }}" style="{{ m.estilo }}">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+              <span style="{{ m.codigo }}">{{ m.cod }}</span>
+              <span style="{{ m.chip }}">{{ m.estado }}</span>
+            </span>
+            <span style="{{ m.titulo }}">{{ m.nombre }}</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ m.checks }} checks · {{ m.ev }} evidencias · madurez {{ m.mad }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex:1; min-width:0; overflow-y:auto">
+      <div style="max-width:940px; margin:0 auto; padding:28px 32px 96px; display:flex; flex-direction:column; gap:20px">
+
+        <div style="display:flex; flex-direction:column; gap:16px">
+          <div style="display:flex; flex-direction:column; gap:8px; min-width:0">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+              <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:14px; font-weight:500; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:3px 8px">op.exp.6</span>
+              <span style="font-size:12px; color:#475569">Marco ENS · Explotación · aplicable por categoría Media</span>
+            </div>
+            <h1 style="margin:0; font-size:24px; line-height:1.3; font-weight:600; letter-spacing:-0.01em; color:#0F172A">Protección frente a código dañino</h1>
+            <span style="font-size:14px; color:#475569; font-variant-numeric:tabular-nums">Madurez declarada L3 · umbral de categoría L3 · soportada por evidencia validada</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+            <button type="button" onClick="{{ abrirPeticion }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:9px 14px; cursor:pointer" style-hover="background:#F0FDFA">Pedir información</button>
+            <button type="button" onClick="{{ marcarRevisada }}" style="{{ botonRevisar }}">{{ textoRevisar }}</button>
+            <span style="{{ avisoRevisar }}">{{ textoAvisoRevisar }}</span>
+          </div>
+        </div>
+
+        <div style="{{ cajaPeticion }}">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Petición de información sobre op.exp.6</span>
+          <textarea placeholder="Qué necesita ver y para qué muestra" style="font-family:inherit; font-size:14px; color:#0F172A; padding:10px; border:1px solid #E2E8F0; border-radius:6px; resize:none; height:70px; background:#FFFFFF"></textarea>
+          <div style="display:flex; align-items:center; gap:10px">
+            <button type="button" onClick="{{ enviarPeticion }}" style="font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 14px; cursor:pointer">Enviar al responsable</button>
+            <button type="button" onClick="{{ abrirPeticion }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#475569; background:transparent; border:0; padding:9px 10px; cursor:pointer; border-radius:6px" style-hover="background:#F1F5F9">Cancelar</button>
+            <span style="font-size:12px; color:#475569">Plazo por defecto: 5 días hábiles.</span>
+          </div>
+        </div>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 18px; border-bottom:1px solid #E2E8F0">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Checks de la medida</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ resumenChecks }}</span>
+          </div>
+          <div style="overflow-x:auto">
+          <table style="width:100%; border-collapse:collapse; font-size:14px">
+            <thead>
+              <tr style="background:#F8FAFC; text-align:left">
+                <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Check</th>
+                <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:96px; white-space:nowrap">Evidencia</th>
+                <th style="padding:9px 14px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:120px; white-space:nowrap">Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ checks }}" as="c" hint-placeholder-count="5">
+                <tr style="{{ c.fila }}">
+                  <td style="{{ c.celdaTexto }}">
+                    <span style="display:block; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569; margin-bottom:3px">{{ c.cod }}</span>
+                    <span style="display:block">{{ c.texto }}</span>
+                    <span style="{{ c.motivoCaja }}">
+                      <span style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+                        <span style="font-size:12px; font-weight:600; color:#0F172A">Motivo del resultado <span style="{{ c.obligatorio }}">obligatorio</span></span>
+                        <span style="font-size:12px; color:#475569">Evidencia citada: {{ c.ev }}</span>
+                      </span>
+                      <textarea value="{{ c.motivoVal }}" onChange="{{ c.onMotivo }}" placeholder="Qué se ha observado y por qué no satisface el check" style="font-family:inherit; font-size:14px; color:#0F172A; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; resize:none; height:56px; background:#FFFFFF; width:100%; box-sizing:border-box"></textarea>
+                      <span style="display:flex; align-items:center; gap:10px">
+                        <button type="button" onClick="{{ c.plegar }}" style="{{ c.botonPlegar }}">Guardar motivo</button>
+                        <span style="font-size:12px; color:#475569">Se registra como hallazgo al pie de la medida.</span>
+                      </span>
+                    </span>
+                    <button type="button" onClick="{{ c.desplegar }}" style="{{ c.motivoPlegado }}">
+                      <span style="font-size:12px; font-weight:600; color:#0F172A; white-space:nowrap">Motivo ▸</span>
+                      <span style="font-size:12px; color:#475569; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1 1 0; min-width:0; text-align:left">{{ c.motivoVal }}</span>
+                    </button>
+                  </td>
+                  <td style="{{ c.celda }}"><span style="font-size:14px; color:#0F766E">{{ c.ev }}</span></td>
+                  <td style="{{ c.celdaFin }}">
+                    <span style="position:relative; display:inline-block">
+                      <button type="button" onClick="{{ c.onMenu }}" style="{{ c.chip }}">{{ c.estado }} <span style="opacity:0.6; margin-left:4px">▾</span></button>
+                      <span style="{{ c.menu }}">
+                        <sc-for list="{{ c.opciones }}" as="o" hint-placeholder-count="4">
+                          <button type="button" onClick="{{ o.onClick }}" style="{{ o.estilo }}">{{ o.nombre }}</button>
+                        </sc-for>
+                      </span>
+                    </span>
+                    <span style="{{ c.nota }}">{{ c.notaTexto }}</span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 18px; border-bottom:1px solid #E2E8F0">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Evidencias aportadas</span>
+            <div style="display:flex; align-items:center; gap:10px">
+              <span style="font-size:12px; color:#475569">Muestreo</span>
+              <sc-for list="{{ muestras }}" as="t" hint-placeholder-count="3">
+                <button type="button" onClick="{{ t.onClick }}" style="{{ t.estilo }}">{{ t.nombre }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="{{ avisoMuestra }}">Muestra de {{ tamanoMuestra }} elementos seleccionada al azar sobre 34 equipos del inventario. Semilla 4471 · registrada en la traza del expediente.</div>
+          <div style="overflow-x:auto">
+          <table style="width:100%; border-collapse:collapse; font-size:14px">
+            <thead>
+              <tr style="background:#F8FAFC; text-align:left">
+                <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Evidencia y procedencia</th>
+                <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:92px; white-space:nowrap">Fecha</th>
+                <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:92px; white-space:nowrap">Vigencia</th>
+                <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:112px; white-space:nowrap">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ evidencias }}" as="e" hint-placeholder-count="4">
+                <tr style="{{ e.fila }}" onClick="{{ e.abrir }}">
+                  <td style="{{ e.celda }}">
+                    <span style="display:flex; flex-direction:column; gap:2px">
+                      <button type="button" onClick="{{ e.abrir }}" style="font-family:inherit; font-size:14px; color:#0F766E; font-weight:500; text-decoration:underline; text-underline-offset:2px; background:transparent; border:0; padding:0; cursor:pointer; text-align:left">{{ e.nombre }}</button>
+                      <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ e.ruta }}</span>
+                      <span style="font-size:12px; color:#475569">{{ e.origen }}</span>
+                    </span>
+                  </td>
+                  <td style="{{ e.celdaNum }}">{{ e.fecha }}</td>
+                  <td style="{{ e.celdaNum }}">{{ e.vigencia }}</td>
+                  <td style="{{ e.celdaFin }}"><span style="{{ e.chip }}">{{ e.estado }}</span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          </div>
+          <div style="padding:12px 18px; border-top:1px solid #E2E8F0; font-size:12px; color:#475569">Cada fichero conserva su huella SHA-256, el usuario que lo aportó y el que lo validó. La traza completa va en el paquete de auditoría.</div>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px 18px; display:flex; flex-direction:column; gap:12px">
+          <span style="display:flex; align-items:baseline; justify-content:space-between; gap:16px">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Hallazgos de esta medida</span>
+            <span style="font-size:12px; color:#475569">Se componen a partir de los checks no conformes e insuficientes.</span>
+          </span>
+          <span style="{{ sinHallazgos }}">Ningún check de op.exp.6 está registrado como no conforme o insuficiente.</span>
+          <div style="display:flex; flex-direction:column; gap:10px">
+            <sc-for list="{{ hallazgos }}" as="h" hint-placeholder-count="1">
+              <div style="{{ h.caja }}">
+                <span style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+                  <span style="display:flex; align-items:center; gap:10px">
+                    <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ h.cod }}</span>
+                    <span style="{{ h.chip }}">{{ h.estado }}</span>
+                  </span>
+                  <span style="display:flex; align-items:center; gap:6px">
+                    <span style="font-size:12px; color:#475569">Severidad</span>
+                    <sc-for list="{{ h.severidades }}" as="sv" hint-placeholder-count="3">
+                      <button type="button" onClick="{{ sv.onClick }}" style="{{ sv.estilo }}">{{ sv.nombre }}</button>
+                    </sc-for>
+                  </span>
+                </span>
+                <span style="font-size:14px; line-height:1.5; color:#0F172A">{{ h.motivo }}</span>
+                <span style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px; color:#475569">
+                  <span>Evidencia citada: {{ h.ev }}</span>
+                  <span>Plazo propuesto: {{ h.plazo }}</span>
+                  <span>Responsable: Marta Ruiz · Sistemas</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px 18px; display:flex; flex-direction:column; gap:12px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Documentación vigente asociada</span>
+          <div style="display:flex; flex-direction:column; gap:1px">
+            <sc-for list="{{ documentos }}" as="d" hint-placeholder-count="3">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid #F1F5F9">
+                <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                  <span style="font-size:14px; font-weight:500; color:#0F172A">{{ d.nombre }}</span>
+                  <span style="font-size:12px; color:#475569">{{ d.detalle }}</span>
+                </span>
+                <span style="display:flex; align-items:center; gap:12px; flex:0 0 auto">
+                  <span style="{{ d.chip }}">{{ d.estado }}</span>
+                  <a href="#" style="font-size:14px; font-weight:500">Abrir</a>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <p style="margin:0; font-size:12px; line-height:1.55; color:#475569">Los indicadores de esta vista reflejan lo declarado y aportado por la organización auditada. No constituyen una declaración de conformidad: la conformidad la determina el auditor.</p>
+      </div>
+    </main>
+
+    <aside style="{{ visor }}">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:16px 20px; border-bottom:1px solid #E2E8F0">
+        <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+          <span style="font-size:16px; font-weight:600; color:#0F172A">{{ evNombre }}</span>
+          <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ evRuta }}</span>
+        </span>
+        <button type="button" onClick="{{ cerrarVisor }}" style="font-family:inherit; font-size:14px; color:#475569; background:transparent; border:0; padding:4px 8px; border-radius:6px; cursor:pointer; flex:0 0 auto" style-hover="background:#F1F5F9">Cerrar</button>
+      </div>
+      <div style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:20px">
+        <div style="height:180px; border:1px dashed #94A3B8; border-radius:8px; background:#F8FAFC; display:flex; align-items:center; justify-content:center; font-size:12px; color:#475569">Vista previa del fichero</div>
+        <div style="display:flex; flex-direction:column; gap:10px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Procedencia y traza</span>
+          <sc-for list="{{ evMeta }}" as="m" hint-placeholder-count="5">
+            <span style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; font-size:14px; padding:6px 0; border-bottom:1px solid #F1F5F9">
+              <span style="color:#475569; flex:0 0 40%">{{ m.k }}</span>
+              <span style="{{ m.estilo }}">{{ m.v }}</span>
+            </span>
+          </sc-for>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Versiones</span>
+          <sc-for list="{{ evVersiones }}" as="v" hint-placeholder-count="2">
+            <span style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; font-size:14px; color:#475569; font-variant-numeric:tabular-nums">
+              <span>{{ v.txt }}</span>
+              <a href="#" style="font-size:14px">Ver</a>
+            </span>
+          </sc-for>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Checks que cubre</span>
+          <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:6px 8px">{{ evChecks }}</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; padding:14px 20px; border-top:1px solid #E2E8F0; background:#F8FAFC">
+        <button type="button" style="font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 14px; cursor:pointer">Descargar original</button>
+        <button type="button" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:9px 14px; cursor:pointer" style-hover="background:#F0FDFA">Citar en un hallazgo</button>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { medida: 3, revisadas: [0, 1], muestra: 1, peticion: false, filtro: 0,
+    resultados: { 0: "conforme", 1: "insuficiente", 2: "conforme", 3: "conforme", 4: "conforme" },
+    menuCheck: null, evAbierta: null,
+    motivos: { 1: "La consola reporta 27 equipos y el inventario recoge 34. No consta justificación de los 7 restantes." },
+    severidades: {} };
+
+  componentDidMount() {
+    this._esc = (e) => { if (e.key === "Escape") this.setState({ evAbierta: null, menuCheck: null }); };
+    document.addEventListener("keydown", this._esc);
+  }
+  componentWillUnmount() { document.removeEventListener("keydown", this._esc); }
+
+  chip(tipo) {
+    const c = {
+      conforme: ["#15803D", "#F0FDF4"], insuficiente: ["#B45309", "#FFFBEB"],
+      critico: ["#B91C1C", "#FEF2F2"], caducado: ["#7C2D12", "#FEF6F0"],
+      revision: ["#1D4ED8", "#EFF6FF"], validada: ["#15803D", "#F0FDF4"],
+      noaplica: ["#64748B", "#F8FAFC"], revisada: ["#0B4F4A", "#F0FDFA"],
+      vigente: ["#15803D", "#F0FDF4"], pendiente: ["#64748B", "#F8FAFC"], noconforme: ["#B91C1C", "#FEF2F2"]
+    }[tipo];
+    return `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:3px 8px; white-space:nowrap`;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const celda = "padding:11px 10px; border-bottom:1px solid #F1F5F9; vertical-align:top; color:#0F172A; line-height:1.5; overflow-wrap:anywhere";
+    const esRevisada = s.revisadas.includes(s.medida);
+
+    const listaMedidas = [
+      ["org.1", "Política de seguridad", "revisada", 3, 2, "L3"],
+      ["op.pl.1", "Análisis de riesgos", "revisada", 4, 3, "L3"],
+      ["op.acc.4", "Proceso de gestión de derechos de acceso", "insuficiente", 5, 2, "L2"],
+      ["op.exp.6", "Protección frente a código dañino", "pendiente", 5, 4, "L3"],
+      ["op.exp.8", "Registro de la actividad", "pendiente", 4, 2, "L2"],
+      ["op.mon.1", "Detección de intrusión", "pendiente", 3, 1, "L1"],
+      ["mp.if.4", "Energía eléctrica", "noaplica", 2, 0, "—"],
+      ["mp.s.2", "Protección de servicios y aplicaciones web", "pendiente", 6, 3, "L3"],
+      ["mp.info.6", "Copias de seguridad", "pendiente", 4, 4, "L4"],
+      ["mp.per.3", "Concienciación", "pendiente", 3, 1, "L2"]
+    ];
+
+    const medidas = listaMedidas.map((m, i) => {
+      const activa = i === s.medida;
+      const rev = s.revisadas.includes(i);
+      const estado = m[2] === "noaplica" ? "no aplica" : rev ? "revisada" : m[2] === "insuficiente" ? "insuficiente" : "por revisar";
+      const tipo = m[2] === "noaplica" ? "noaplica" : rev ? "revisada" : m[2] === "insuficiente" ? "insuficiente" : "revision";
+      return {
+        cod: m[0], nombre: m[1], checks: m[3], ev: m[4], mad: m[5], estado,
+        onClick: () => this.setState({ medida: i, peticion: false }),
+        estilo: `display:flex; flex-direction:column; gap:4px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:10px 12px; border:0; border-radius:6px; background:${activa ? "#F0FDFA" : "transparent"}; box-shadow:${activa ? "inset 2px 0 0 #0F766E" : "none"}`,
+        codigo: `font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; font-weight:500; color:${activa ? "#0B4F4A" : "#475569"}`,
+        chip: this.chip(tipo),
+        titulo: `font-size:14px; font-weight:${activa ? 600 : 500}; color:#0F172A; overflow:hidden; text-overflow:ellipsis; white-space:nowrap`
+      };
+    });
+
+    const filtrosBase = [["Todas", 72], ["Por revisar", 48], ["Insuficientes", 9], ["No aplican", 6]];
+    const filtros = filtrosBase.map((f, i) => ({
+      nombre: f[0], n: f[1],
+      onClick: () => this.setState({ filtro: i }),
+      estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:5px 9px; border-radius:6px; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+    }));
+
+    const datosChecks = [
+      ["CHK-op.exp.6.1", "Existe protección antimalware en todos los equipos del alcance, puestos y servidores.", "EV-041", "conforme"],
+      ["CHK-op.exp.6.2", "La cobertura declarada coincide con el inventario de activos o se justifica la diferencia.", "EV-041, EV-042", "insuficiente"],
+      ["CHK-op.exp.6.3", "Las firmas y el motor se actualizan de forma automática y con periodicidad definida.", "EV-043", "conforme"],
+      ["CHK-op.exp.6.4", "Existe persona asignada a la revisión de alertas y hay constancia de su tratamiento.", "EV-044", "conforme"],
+      ["CHK-op.exp.6.5", "Los incidentes detectados se registran en el procedimiento de gestión de incidentes.", "EV-044", "conforme"]
+    ];
+    const etiquetas = { pendiente: "sin revisar", conforme: "conforme", insuficiente: "insuficiente", noconforme: "no conforme" };
+    const fondos = { pendiente: "#FFFFFF", conforme: "#FFFFFF", insuficiente: "#FFFBEB", noconforme: "#FEF2F2" };
+    const checks = datosChecks.map((c, i) => {
+      const est = s.resultados[i] || "pendiente";
+      return {
+        cod: c[0], texto: c[1], ev: c[2], estado: etiquetas[est],
+        celda, celdaTexto: celda + "; padding-left:16px; max-width:0",
+        celdaFin: celda + "; padding-right:14px; white-space:nowrap",
+        fila: `background:${fondos[est]}`,
+        chip: this.chip(est) + "; font-family:inherit; cursor:pointer",
+        onMenu: () => this.setState({ menuCheck: s.menuCheck === i ? null : i }),
+        menu: `display:${s.menuCheck === i ? "flex" : "none"}; position:absolute; right:0; top:calc(100% + 6px); z-index:20; flex-direction:column; width:168px; padding:4px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:6px; box-shadow:0 12px 28px rgba(15,23,42,0.16)`,
+        conMotivo: est === "noconforme" || est === "insuficiente",
+        motivoVal: s.motivos[i] || "",
+        onMotivo: (e) => this.setState({ motivos: Object.assign({}, s.motivos, { [i]: e.target.value }), editando: i }),
+        motivoCaja: `display:${(est === "noconforme" || est === "insuficiente") && (s.editando === i || !(s.motivos[i] || "").trim()) ? "flex" : "none"}; flex-direction:column; gap:8px; margin-top:10px; padding:10px; border-radius:6px; background:${est === "noconforme" ? "#FEF2F2" : "#FFFBEB"}`,
+        motivoPlegado: `display:${(est === "noconforme" || est === "insuficiente") && s.editando !== i && (s.motivos[i] || "").trim() ? "flex" : "none"}; align-items:center; gap:8px; width:100%; max-width:100%; min-width:0; box-sizing:border-box; margin-top:8px; padding:7px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#F8FAFC; font-family:inherit; cursor:pointer; text-align:left`,
+        desplegar: () => this.setState({ editando: i }),
+        plegar: () => this.setState({ editando: null }),
+        botonPlegar: `font-family:inherit; font-size:12px; font-weight:600; color:#FFFFFF; background:${(s.motivos[i] || "").trim() ? "#0F766E" : "#64748B"}; border:0; border-radius:5px; padding:6px 10px; cursor:${(s.motivos[i] || "").trim() ? "pointer" : "not-allowed"}`,
+        obligatorio: `display:${(s.motivos[i] || "").trim() ? "none" : "inline"}; margin-left:6px; font-weight:500; color:${est === "noconforme" ? "#B91C1C" : "#B45309"}`,
+        notaTexto: (s.motivos[i] || "").trim() ? "Hallazgo registrado" : "Falta el motivo",
+        nota: `display:${(est === "noconforme" || est === "insuficiente") ? "block" : "none"}; margin-top:6px; font-size:12px; color:${(s.motivos[i] || "").trim() ? "#475569" : est === "noconforme" ? "#B91C1C" : "#B45309"}`,
+        opciones: ["pendiente", "conforme", "insuficiente", "noconforme"].map((o) => ({
+          nombre: etiquetas[o],
+          onClick: () => this.setState({ resultados: Object.assign({}, s.resultados, { [i]: o }), menuCheck: null }),
+          estilo: `font-family:inherit; font-size:14px; text-align:left; padding:7px 9px; border:0; border-radius:5px; cursor:pointer; background:${est === o ? "#F0FDFA" : "transparent"}; color:${est === o ? "#0B4F4A" : "#0F172A"}; font-weight:${est === o ? 600 : 400}`
+        }))
+      };
+    });
+
+    const datosEv = [
+      ["EV-041 · Inventario de la consola del antivirus", "05_op/op.exp.6/EV-041_export_defender.csv", "Export de consola · Microsoft Defender", "12/09/2026", "90 días", "validada"],
+      ["EV-042 · Captura del panel de cobertura", "05_op/op.exp.6/EV-042_cobertura.png", "Captura aportada por Sistemas", "12/09/2026", "90 días", "revision"],
+      ["EV-043 · Política de actualización de firmas", "05_op/op.exp.6/EV-043_politica_firmas.pdf", "Documento interno v2.1", "03/02/2026", "vigente", "validada"],
+      ["EV-044 · Informe mensual de alertas", "05_op/op.exp.6/EV-044_alertas_ago.pdf", "Proveedor IT · Nexia Sistemas", "31/07/2026", "caducó 31/08", "caducado"]
+    ];
+    const evidencias = datosEv.map((e, i) => ({
+      nombre: e[0], ruta: e[1], origen: e[2], fecha: e[3], vigencia: e[4],
+      abrir: () => this.setState({ evAbierta: i }),
+      estado: e[5] === "revision" ? "en revisión" : e[5] === "caducado" ? "caducada" : "validada",
+      celda: celda + "; padding-left:16px", celdaNum: celda + "; font-variant-numeric:tabular-nums; color:#475569; white-space:nowrap",
+      celdaFin: celda + "; padding-right:16px",
+      fila: `background:${s.evAbierta === i ? "#F0FDFA" : e[5] === "caducado" ? "#FEF6F0" : "#FFFFFF"}; cursor:pointer`,
+      chip: this.chip(e[5])
+    }));
+
+    const ev = s.evAbierta === null ? null : datosEv[s.evAbierta];
+    const meta = ev ? [
+      ["Procedencia", ev[2]], ["Aportada por", "Marta Ruiz · Sistemas · " + ev[3]],
+      ["Validada por", ev[5] === "validada" ? "Jorge Peña · 13/09/2026" : "pendiente de validación interna"],
+      ["Vigencia", ev[4]], ["Huella SHA-256", "9f2c…a41b"]
+    ] : [];
+
+    const documentos = [
+      ["Normativa de seguridad", "v3.0 · aprobada el 14/01/2026 por el Comité de Seguridad", "vigente"],
+      ["Procedimiento de gestión de incidentes", "v1.4 · aprobado el 22/04/2026", "vigente"],
+      ["Declaración de Aplicabilidad", "v2.2 · aprobada el 02/09/2026 · op.exp.6 aplicable", "vigente"]
+    ].map((d) => ({ nombre: d[0], detalle: d[1], estado: d[2], chip: this.chip("vigente") }));
+
+    const tamanos = [5, 10, 15];
+    const muestras = tamanos.map((t, i) => ({
+      nombre: t + " equipos",
+      onClick: () => this.setState({ muestra: i }),
+      estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:5px 9px; border-radius:6px; border:1px solid ${s.muestra === i ? "#0F766E" : "#E2E8F0"}; background:${s.muestra === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.muestra === i ? "#0B4F4A" : "#475569"}`
+    }));
+
+    const pendientes = datosChecks.filter((c, i) => (s.resultados[i] || "pendiente") === "pendiente").length;
+    const sinMotivo = datosChecks.filter((c, i) => ["noconforme", "insuficiente"].includes(s.resultados[i] || "pendiente") && !(s.motivos[i] || "").trim()).length;
+    const conSalvedades = datosChecks.some((c, i) => ["noconforme", "insuficiente"].includes(s.resultados[i] || "pendiente"));
+    const bloqueos = [];
+    if (pendientes) bloqueos.push(`${pendientes > 1 ? "Faltan" : "Falta"} ${pendientes} check${pendientes > 1 ? "s" : ""} por resolver`);
+    if (sinMotivo) bloqueos.push(`${sinMotivo} hallazgo${sinMotivo > 1 ? "s" : ""} sin motivo`);
+
+    return {
+      medidas, filtros, checks, evidencias, documentos, muestras,
+      tamanoMuestra: tamanos[s.muestra],
+      hallazgos: datosChecks.map((c, i) => [c, i, s.resultados[i] || "pendiente"])
+        .filter((x) => x[2] === "noconforme" || x[2] === "insuficiente")
+        .map((x) => {
+          const i = x[1], est = x[2], sev = s.severidades[i] || (est === "noconforme" ? "Mayor" : "Menor");
+          return {
+            cod: x[0][0], ev: x[0][2], estado: est === "noconforme" ? "no conforme" : "insuficiente",
+            chip: this.chip(est),
+            motivo: (s.motivos[i] || "").trim() || "Sin motivo redactado. El hallazgo no se puede cerrar ni exportar al informe.",
+            plazo: est === "noconforme" ? "30 días" : "90 días",
+            caja: `display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:6px; border:1px solid #E2E8F0; border-left:3px solid ${est === "noconforme" ? "#B91C1C" : "#B45309"}; background:#F8FAFC`,
+            severidades: ["Menor", "Mayor", "Crítica"].map((n) => ({
+              nombre: n,
+              onClick: () => this.setState({ severidades: Object.assign({}, s.severidades, { [i]: n }) }),
+              estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:4px 8px; border-radius:5px; border:1px solid ${sev === n ? "#0F766E" : "#E2E8F0"}; background:${sev === n ? "#F0FDFA" : "#FFFFFF"}; color:${sev === n ? "#0B4F4A" : "#475569"}`
+            }))
+          };
+        }),
+      sinHallazgos: `display:${datosChecks.some((c, i) => ["noconforme", "insuficiente"].includes(s.resultados[i] || "pendiente")) ? "none" : "block"}; font-size:14px; color:#475569`,
+      resumenChecks: (() => {
+        const n = { conforme: 0, insuficiente: 0, noconforme: 0, pendiente: 0 };
+        datosChecks.forEach((c, i) => { n[s.resultados[i] || "pendiente"]++; });
+        const partes = [`${n.conforme} de ${datosChecks.length} conformes`];
+        if (n.insuficiente) partes.push(`${n.insuficiente} insuficiente${n.insuficiente > 1 ? "s" : ""}`);
+        if (n.noconforme) partes.push(`${n.noconforme} no conforme${n.noconforme > 1 ? "s" : ""}`);
+        if (n.pendiente) partes.push(`${n.pendiente} sin revisar`);
+        return partes.join(" · ");
+      })(),
+      visor: `display:${ev ? "flex" : "none"}; position:absolute; top:0; right:0; bottom:0; z-index:40; flex-direction:column; width:min(400px, 92vw); background:#FFFFFF; border-left:1px solid #E2E8F0; box-shadow:-16px 0 40px rgba(15,23,42,0.12)`,
+      cerrarVisor: () => this.setState({ evAbierta: null }),
+      evNombre: ev ? ev[0] : "", evRuta: ev ? ev[1] : "",
+      evChecks: ev ? (s.evAbierta === 0 ? "CHK-op.exp.6.1 · CHK-op.exp.6.2" : s.evAbierta === 1 ? "CHK-op.exp.6.2" : s.evAbierta === 2 ? "CHK-op.exp.6.3" : "CHK-op.exp.6.4 · CHK-op.exp.6.5") : "",
+      evMeta: meta.map((m) => ({ k: m[0], v: m[1], estilo: `text-align:right; color:#0F172A; font-variant-numeric:tabular-nums; ${m[0] === "Huella SHA-256" ? "font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px;" : ""}` })),
+      evVersiones: ev ? [{ txt: "v2 · " + ev[3] + " · vigente" }, { txt: "v1 · 04/06/2026 · sustituida" }] : [],
+      totalMedidas: 72, revisadas: s.revisadas.length,
+      avisoMuestra: "padding:10px 18px; background:#F0FDFA; border-bottom:1px solid #CCFBF1; font-size:12px; color:#0B4F4A; font-variant-numeric:tabular-nums",
+      abrirPeticion: () => this.setState({ peticion: !s.peticion }),
+      enviarPeticion: () => this.setState({ peticion: false }),
+      cajaPeticion: `display:${s.peticion ? "flex" : "none"}; flex-direction:column; gap:10px; padding:16px 18px; background:#FFFFFF; border:1px solid #0F766E; border-radius:8px`,
+      marcarRevisada: () => {
+        if (esRevisada) { this.setState({ revisadas: s.revisadas.filter((i) => i !== s.medida) }); return; }
+        if (bloqueos.length) return;
+        this.setState({ revisadas: s.revisadas.concat(s.medida) });
+      },
+      textoRevisar: esRevisada ? (conSalvedades ? "Revisada con salvedades · deshacer" : "Revisada · deshacer") : conSalvedades ? "Marcar revisada con salvedades" : "Marcar como revisada",
+      botonRevisar: `font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:${esRevisada ? "#0B4F4A" : bloqueos.length ? "#64748B" : "#0F766E"}; border:0; border-radius:6px; padding:9px 14px; cursor:${!esRevisada && bloqueos.length ? "not-allowed" : "pointer"}`,
+      avisoRevisar: `display:${bloqueos.length ? "block" : "none"}; font-size:12px; color:#B45309; max-width:320px`,
+      textoAvisoRevisar: esRevisada && bloqueos.length ? "La revisión ya no se sostiene: " + bloqueos.join(" · ").toLowerCase() : bloqueos.join(" · ")
+    };
+  }
+}
+</script>
+</body>
+</html>

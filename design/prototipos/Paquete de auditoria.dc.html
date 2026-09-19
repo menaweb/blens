@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:1px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Paquete de auditoría</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · categoría Media</span>
+    </div>
+    <button type="button" onClick="{{ generar }}" style="{{ botonGenerar }}">{{ textoGenerar }}</button>
+  </header>
+
+  <div style="flex:1; padding:24px 28px 64px; max-width:1180px; width:100%; margin:0 auto; box-sizing:border-box; display:flex; flex-direction:column; gap:16px">
+
+    <div style="{{ cajaEstado }}">
+      <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">{{ tituloEstado }}</span>
+        <span style="font-size:12px; line-height:1.5; color:#475569">{{ detalleEstado }}</span>
+      </span>
+      <button type="button" onClick="{{ irABloqueos }}" style="{{ botonBloqueos }}">Ver qué falta</button>
+    </div>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start">
+
+      <section style="flex:1 1 440px; min-width:0; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Contenido del paquete</span>
+          <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ resumenContenido }}</span>
+        </div>
+        <div style="display:flex; flex-direction:column">
+          <sc-for list="{{ carpetas }}" as="c" hint-placeholder-count="9">
+            <div style="{{ c.caja }}">
+              <button type="button" onClick="{{ c.onClick }}" style="display:flex; align-items:center; gap:10px; flex:1 1 260px; min-width:0; font-family:inherit; background:transparent; border:0; padding:0; cursor:pointer; text-align:left">
+                <span style="{{ c.casilla }}">{{ c.marca }}</span>
+                <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                  <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:#0F172A; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ c.nombre }}</span>
+                  <span style="font-size:12px; color:#475569">{{ c.detalle }}</span>
+                </span>
+              </button>
+              <span style="display:flex; align-items:center; gap:10px; flex:0 0 auto">
+                <span style="{{ c.chip }}">{{ c.aviso }}</span>
+                <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">{{ c.ficheros }}</span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding:12px 16px; border-top:1px solid #E2E8F0; font-size:12px; line-height:1.5; color:#475569">El índice 99_Indice se genera siempre: relaciona cada medida con sus evidencias, su ruta en el ZIP y su fecha, para que el auditor no tenga que buscar.</div>
+      </section>
+
+      <div style="flex:0 1 330px; min-width:280px; display:flex; flex-direction:column; gap:16px">
+
+        <section style="{{ cajaTarea }}">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">{{ tituloTarea }}</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ porcentaje }}</span>
+          </div>
+          <span style="display:block; height:5px; border-radius:3px; background:#E2E8F0; overflow:hidden">
+            <span style="{{ barra }}"></span>
+          </span>
+          <div style="display:flex; flex-direction:column; gap:6px">
+            <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="4">
+              <span style="display:flex; align-items:center; gap:8px">
+                <span style="{{ p.punto }}">{{ p.marca }}</span>
+                <span style="{{ p.texto }}">{{ p.nombre }}</span>
+              </span>
+            </sc-for>
+          </div>
+          <span style="{{ avisoFondo }}">Puedes seguir trabajando: te avisamos al terminar.</span>
+          <span style="{{ zonaDescarga }}">
+            <span style="display:flex; flex-direction:column; gap:3px">
+              <span style="font-size:13px; font-weight:600; color:#0F172A">paquete-ens-valverde-19092026.zip</span>
+              <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ detalleZip }}</span>
+            </span>
+            <span style="{{ avisoDesfase }}">{{ textoDesfase }}</span>
+            <span style="display:flex; gap:8px; flex-wrap:wrap">
+              <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 13px; cursor:pointer">Descargar ZIP</button>
+              <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:9px 13px; cursor:pointer" style-hover="background:#F0FDFA">Índice en PDF</button>
+            </span>
+          </span>
+          <button type="button" onClick="{{ cancelar }}" style="{{ botonCancelar }}">Cancelar la generación</button>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:10px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Paquetes anteriores</span>
+          <sc-for list="{{ historial }}" as="h" hint-placeholder-count="3">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid #F1F5F9">
+              <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                <span style="font-size:13px; color:#0F172A; font-variant-numeric:tabular-nums">{{ h.fecha }}</span>
+                <span style="font-size:12px; color:#475569">{{ h.detalle }}</span>
+              </span>
+              <a href="#" style="font-size:13px; font-weight:500; flex:0 0 auto">Descargar</a>
+            </span>
+          </sc-for>
+        </section>
+      </div>
+    </div>
+
+    <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden">
+      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Acceso del auditor</span>
+        <span style="font-size:12px; color:#475569">Alternativa a enviar el ZIP: acceso de solo lectura, con caducidad y traza.</span>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Empresa auditora y persona</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:150px">Alcance del acceso</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:96px; white-space:nowrap">Alta</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:96px; white-space:nowrap">Caduca</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:126px; white-space:nowrap">Último acceso</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:132px">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ accesos }}" as="a" hint-placeholder-count="3">
+              <tr style="{{ a.fila }}">
+                <td style="{{ a.celdaTexto }}">
+                  <span style="display:flex; flex-direction:column; gap:2px">
+                    <span style="font-size:14px; font-weight:500; color:#0F172A">{{ a.persona }}</span>
+                    <span style="font-size:12px; color:#475569">{{ a.empresa }}</span>
+                    <span style="font-size:12px; color:#475569">{{ a.correo }}</span>
+                  </span>
+                </td>
+                <td style="{{ a.celda }}"><span style="font-size:13px; color:#475569; line-height:1.45">{{ a.alcance }}</span></td>
+                <td style="{{ a.celdaNum }}">{{ a.alta }}</td>
+                <td style="{{ a.celdaNum }}">{{ a.caduca }}</td>
+                <td style="{{ a.celdaNum }}">{{ a.ultimo }}</td>
+                <td style="{{ a.celdaFin }}">
+                  <span style="display:flex; flex-direction:column; gap:6px; align-items:flex-start">
+                    <span style="{{ a.chip }}">{{ a.estado }}</span>
+                    <button type="button" onClick="{{ a.onAccion }}" style="{{ a.botonAccion }}">{{ a.accion }}</button>
+                  </span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex; gap:16px; flex-wrap:wrap; padding:16px; border-top:1px solid #E2E8F0; background:#F8FAFC">
+        <div style="flex:1 1 300px; min-width:0; display:flex; flex-direction:column; gap:8px">
+          <span style="font-size:13px; font-weight:600; color:#0F172A">Qué verá cuando entre</span>
+          <sc-for list="{{ veSi }}" as="v" hint-placeholder-count="4">
+            <span style="display:flex; align-items:flex-start; gap:8px">
+              <span style="flex:0 0 auto; margin-top:1px; width:16px; height:16px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#FFFFFF; background:#15803D">✓</span>
+              <span style="font-size:13px; line-height:1.5; color:#475569">{{ v.t }}</span>
+            </span>
+          </sc-for>
+        </div>
+        <div style="flex:1 1 300px; min-width:0; display:flex; flex-direction:column; gap:8px">
+          <span style="font-size:13px; font-weight:600; color:#0F172A">Qué no verá</span>
+          <sc-for list="{{ veNo }}" as="v" hint-placeholder-count="4">
+            <span style="display:flex; align-items:flex-start; gap:8px">
+              <span style="flex:0 0 auto; margin-top:1px; width:16px; height:16px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#FFFFFF; background:#94A3B8">–</span>
+              <span style="font-size:13px; line-height:1.5; color:#475569">{{ v.t }}</span>
+            </span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-top:1px solid #E2E8F0; flex-wrap:wrap">
+        <span style="font-size:12px; line-height:1.5; color:#475569; max-width:520px">Todo lo que consulta queda registrado: qué medidas abre, qué evidencias descarga y cuándo. Ese registro se conserva y se puede exportar.</span>
+        <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+          <a href="Portal%20del%20auditor.dc.html" style="font-size:13px; font-weight:500">Ver el portal tal y como lo ve el auditor</a>
+          <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer; white-space:nowrap">Dar acceso a otra persona</button>
+        </span>
+      </div>
+    </section>
+
+    <section id="bloqueos" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden">
+      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:600; color:#0F172A">Antes de entregarlo</span>
+        <span style="font-size:12px; color:#475569">Se puede generar igualmente: el paquete refleja la realidad, no la maquilla.</span>
+      </div>
+      <div style="display:flex; flex-direction:column">
+        <sc-for list="{{ problemas }}" as="p" hint-placeholder-count="4">
+          <div style="{{ p.caja }}">
+            <span style="display:flex; flex-direction:column; gap:3px; flex:1 1 320px; min-width:0">
+              <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                <span style="{{ p.chip }}">{{ p.tipo }}</span>
+                <span style="font-size:14px; font-weight:500; color:#0F172A">{{ p.titulo }}</span>
+              </span>
+              <span style="font-size:12px; line-height:1.45; color:#475569">{{ p.detalle }}</span>
+            </span>
+            <span style="display:flex; align-items:center; gap:10px; flex:0 0 auto; margin-left:auto">
+              <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">{{ p.n }}</span>
+              <a href="{{ p.url }}" style="font-size:13px; font-weight:500; white-space:nowrap">{{ p.accion }}</a>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { incluidas: {}, fase: "inicio", avance: 0, zip: null, accesosEstado: {} };
+
+  componentWillUnmount() { clearInterval(this._iv); }
+
+  arrancar(ficheros, carpetas) {
+    clearInterval(this._iv);
+    this.setState({ fase: "generando", avance: 0, zip: { ficheros, carpetas, mb: Math.round(ficheros * 2.1) } });
+    this._iv = setInterval(() => {
+      this.setState((st) => {
+        const n = st.avance + 7;
+        if (n >= 100) { clearInterval(this._iv); return { avance: 100, fase: "listo" }; }
+        return { avance: n };
+      });
+    }, 320);
+  }
+
+  carpetas() {
+    return [
+      ["00_Gobernanza", "Política, normativa y nombramientos", 14],
+      ["01_Alcance_y_Categorizacion", "Alcance aprobado y acta de categorización", 6],
+      ["02_Analisis_de_Riesgos", "Amenazas, riesgo residual y tratamiento", 8],
+      ["03_Declaracion_de_Aplicabilidad", "DdA vigente y justificaciones de no aplicabilidad", 4],
+      ["04_org", "Evidencias del marco organizativo", 12],
+      ["05_op", "Evidencias del marco operacional", 46],
+      ["06_mp", "Evidencias de las medidas de protección", 22],
+      ["07_Auditoria_y_Mejora", "Auditoría anterior, hallazgos y plan de acciones", 5],
+      ["99_Indice", "Índice de correspondencia medida a evidencia", 1]
+    ];
+  }
+
+  problemasBase() {
+    return [
+      [0, "warn", "documento", "Plan de continuidad sin aprobar", "op.cont.2 exige documento aprobado; el borrador está parado desde julio.", 1, "Abrir documento", "Documentos.dc.html"],
+      [2, "warn", "sin tratar", "1 amenaza sin decisión de tratamiento", "A.5, suplantación de identidad: valorada pero sin decidir si se reduce o se acepta.", 1, "Ver amenazas", "Amenazas%20y%20tratamiento.dc.html"],
+      [4, "bad", "proveedor", "Certificado de proveedor con alcance insuficiente", "Gestdoc Software aporta conformidad Básica para un sistema Media.", 1, "Ver proveedores", "Componentes%20y%20proveedores.dc.html"],
+      [4, "exp", "caducada", "1 evidencia caducada en 04_org", "Contrato con cláusulas ENS vencido; se incluye con su fecha.", 1, "Renovar evidencia", "Carpeta%20de%20evidencias.dc.html"],
+      [5, "exp", "caducada", "3 evidencias caducadas en 05_op", "Entre ellas el informe mensual de alertas del antivirus, vencido el 31/08.", 3, "Renovar evidencias", "Carpeta%20de%20evidencias.dc.html"],
+      [5, "warn", "sin soporte", "3 medidas con madurez no soportada", "Madurez declarada sin evidencia validada detrás. No suman al indicador.", 3, "Ver medidas", "Checklist%20de%20medidas.dc.html"],
+      [6, "exp", "caducada", "1 evidencia caducada en 06_mp", "Prueba de restauración de copias fuera de plazo.", 1, "Renovar evidencia", "Carpeta%20de%20evidencias.dc.html"]
+    ];
+  }
+
+  renderVals() {
+    const s = this.state;
+    const cs = this.carpetas();
+    const dentro = (i) => s.incluidas[i] === undefined ? true : s.incluidas[i];
+    const seleccionadas = cs.filter((c, i) => dentro(i));
+    const ficheros = seleccionadas.reduce((t, c) => t + c[2], 0);
+    const pb = this.problemasBase();
+    const porCarpeta = (i) => pb.filter((p) => p[0] === i).reduce((t, p) => t + p[5], 0);
+    const conProblemas = cs.reduce((t, c, i) => t + (dentro(i) ? porCarpeta(i) : 0), 0);
+
+    const carpetas = cs.map((c, i) => {
+      const on = dentro(i);
+      const fijo = c[0] === "99_Indice";
+      return {
+        nombre: c[0], detalle: c[1], ficheros: c[2] === 1 ? "1 fichero" : `${c[2]} ficheros`,
+        marca: on ? "✓" : "",
+        onClick: () => { if (!fijo) this.setState({ incluidas: Object.assign({}, s.incluidas, { [i]: !on }) }); },
+        caja: `display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:11px 16px; border-top:${i === 0 ? "0" : "1px solid #F1F5F9"}; background:${on ? "#FFFFFF" : "#F8FAFC"}`,
+        casilla: `flex:0 0 auto; width:18px; height:18px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#FFFFFF; border:1.5px solid ${on ? (fijo ? "#94A3B8" : "#0F766E") : "#94A3B8"}; background:${on ? (fijo ? "#94A3B8" : "#0F766E") : "#FFFFFF"}`,
+        chip: `display:${porCarpeta(i) && on ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; color:#B45309; background:#FFFBEB; border:1px solid #B4530933; border-radius:5px; padding:2px 7px; white-space:nowrap`,
+        aviso: porCarpeta(i) === 1 ? "1 con problema" : `${porCarpeta(i)} con problemas`
+      };
+    });
+
+    const pasos = ["Reuniendo evidencias validadas", "Generando el índice de correspondencia", "Exportando documentos vigentes", "Comprimiendo y firmando el ZIP"].map((p, i) => {
+      const umbral = (i + 1) * 25;
+      const hecho = s.avance >= umbral;
+      const activo = s.avance < umbral && s.avance >= umbral - 25;
+      return {
+        nombre: p, marca: hecho ? "✓" : "",
+        punto: `flex:0 0 auto; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#FFFFFF; background:${hecho ? "#15803D" : activo && s.fase === "generando" ? "#0F766E" : "#CBD5E1"}`,
+        texto: `font-size:13px; color:${hecho ? "#0F172A" : "#475569"}`
+      };
+    });
+
+    const problemas = pb.filter((p) => dentro(p[0])).map((p) => {
+      const c = { exp: ["#7C2D12", "#FEF6F0"], warn: ["#B45309", "#FFFBEB"], bad: ["#B91C1C", "#FEF2F2"] }[p[1]];
+      return {
+        tipo: p[2], titulo: p[3], detalle: p[4], n: cs[p[0]][0], accion: p[6], url: p[7],
+        chip: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:2px 7px; white-space:nowrap`,
+        caja: `display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid #F1F5F9; background:${p[1] === "bad" ? "#FEF2F2" : "#FFFFFF"}`
+      };
+    });
+
+    const generando = s.fase === "generando", listo = s.fase === "listo";
+    const desfasado = listo && s.zip && (s.zip.ficheros !== ficheros || s.zip.carpetas !== seleccionadas.length);
+
+    const celdaA = "padding:12px 10px; border-bottom:1px solid #F1F5F9; vertical-align:top; color:#0F172A; line-height:1.45";
+    const accesos = [
+      ["Elena Sáiz Moral", "Audidat Certificación · entidad acreditada ENAC", "e.saiz@audidat.es", "Auditoría de certificación · todo el sistema", "12/09/2026", "30/10/2026", "hoy, 08:52", "activo", "ok", "Revocar"],
+      ["Marc Oller Puig", "Audidat Certificación · equipo auditor", "m.oller@audidat.es", "Solo marcos op y mp", "12/09/2026", "30/10/2026", "17/09/2026", "activo", "ok", "Revocar"],
+      ["Rosa Iglesias León", "Consultoría Betania", "r.iglesias@betania.es", "Revisión previa · solo lectura", "02/05/2026", "30/06/2026", "28/06/2026", "caducado", "exp", "Volver a dar acceso"]
+    ].map((a, i) => {
+      const estadoFila = s.accesosEstado[i];
+      const revocado = estadoFila === "revocado";
+      const renovado = estadoFila === "renovado";
+      const caducado = a[8] === "exp" && !renovado && !revocado;
+      const activo = !revocado && !caducado;
+      const tono = revocado ? ["#B91C1C", "#FEF2F2"] : caducado ? ["#7C2D12", "#FEF6F0"] : ["#15803D", "#F0FDF4"];
+      return {
+        persona: a[0], empresa: a[1], correo: a[2], alcance: a[3], alta: a[4],
+        caduca: renovado ? "19/12/2026" : a[5],
+        ultimo: revocado ? "revocado hoy · Ana Castaño" : renovado ? "renovado hoy · Ana Castaño" : a[6],
+        estado: revocado ? "revocado" : caducado ? "caducado" : "activo",
+        accion: activo ? "Revocar" : caducado ? "Renovar 90 días" : "Volver a dar acceso",
+        chip: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${tono[0]}; background:${tono[1]}; border:1px solid ${tono[0]}33; border-radius:5px; padding:3px 8px; white-space:nowrap`,
+        onAccion: () => this.setState((prev) => {
+          const e = Object.assign({}, prev.accesosEstado);
+          if (activo) e[i] = "revocado";
+          else if (caducado) e[i] = "renovado";
+          else delete e[i];
+          return { accesosEstado: e };
+        }),
+        botonAccion: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:5px 9px; border-radius:6px; white-space:nowrap; background:#FFFFFF; border:1px solid ${activo ? "#B91C1C" : "#0F766E"}; color:${activo ? "#B91C1C" : "#0F766E"}`,
+        fila: `background:${activo ? "#FFFFFF" : "#F8FAFC"}`,
+        celda: celdaA, celdaTexto: celdaA + "; padding-left:16px",
+        celdaNum: celdaA + "; font-variant-numeric:tabular-nums; color:#475569; white-space:nowrap",
+        celdaFin: celdaA + "; padding-right:16px"
+      };
+    });
+
+    return {
+      carpetas, pasos, problemas, accesos,
+      veSi: [
+        "Las medidas aplicables con sus checks, su madurez declarada y su resultado.",
+        "Las evidencias aportadas con fecha, procedencia, huella y versiones, incluidas las caducadas.",
+        "Los documentos vigentes y la Declaración de Aplicabilidad firmada.",
+        "Sus propias peticiones de información y los hallazgos que registre."
+      ].map((t) => ({ t })),
+      veNo: [
+        "El indicador interno de listo para auditoría ni su evolución semanal.",
+        "Las respuestas del perfilado ni las tareas internas del equipo.",
+        "Los borradores de documentos y las versiones no aprobadas.",
+        "Las medidas fuera del alcance que se le ha dado."
+      ].map((t) => ({ t })),
+      resumenContenido: `${seleccionadas.length} de 9 carpetas · ${ficheros} ficheros`,
+      historial: [
+        { fecha: "02/09/2026", detalle: "Entregado a Audidat · 238 MB · 398 ficheros" },
+        { fecha: "14/05/2026", detalle: "Revisión interna previa · 201 MB" },
+        { fecha: "12/03/2026", detalle: "Auditoría de certificación · 187 MB" }
+      ],
+      generar: () => { if (generando) return; this.arrancar(ficheros, seleccionadas.length); },
+      textoGenerar: generando ? "Generando…" : desfasado ? "Regenerar con la selección actual" : listo ? "Volver a generar" : "Generar paquete",
+      botonGenerar: `font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:${generando ? "#64748B" : "#0F766E"}; border:0; border-radius:6px; padding:8px 12px; cursor:${generando ? "progress" : "pointer"}; white-space:nowrap`,
+      cajaTarea: `display:${s.fase === "inicio" ? "none" : "flex"}; flex-direction:column; gap:12px; padding:16px; background:#FFFFFF; border:1px solid ${desfasado ? "#B45309" : listo ? "#15803D33" : "#0F766E"}; border-radius:8px`,
+      detalleZip: `${s.zip ? s.zip.mb : 0} MB · ${s.zip ? s.zip.ficheros : 0} ficheros · SHA-256 9f2c…a41b`,
+      avisoDesfase: `display:${listo && desfasado ? "block" : "none"}; font-size:12px; line-height:1.5; color:#B45309`,
+      textoDesfase: s.zip ? `Has cambiado la selección desde que se generó: ahora hay ${ficheros} ficheros en ${seleccionadas.length} carpetas. Vuelve a generarlo antes de entregarlo.` : "",
+      tituloTarea: listo && desfasado ? "Paquete desfasado" : listo ? "Paquete listo" : "Generando el paquete",
+      porcentaje: listo ? "completado" : `${s.avance} %`,
+      barra: `display:block; height:100%; width:${s.avance}%; border-radius:3px; background:${listo ? "#15803D" : "#0F766E"}`,
+      avisoFondo: `display:${generando ? "block" : "none"}; font-size:12px; line-height:1.5; color:#475569`,
+      zonaDescarga: `display:${listo ? "flex" : "none"}; flex-direction:column; gap:10px; padding-top:4px`,
+      botonCancelar: `display:${generando ? "block" : "none"}; font-family:inherit; font-size:13px; font-weight:500; color:#B91C1C; background:transparent; border:0; padding:6px 0; cursor:pointer; text-align:left`,
+      cancelar: () => { clearInterval(this._iv); this.setState({ fase: "inicio", avance: 0, zip: null }); },
+      cajaEstado: `display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:12px 16px; border-radius:8px; background:${conProblemas ? "#FFFBEB" : "#F0FDFA"}; border:1px solid ${conProblemas ? "#B4530933" : "#CCFBF1"}`,
+      tituloEstado: conProblemas
+        ? (conProblemas === 1 ? "1 asunto que el auditor verá" : `${conProblemas} asuntos que el auditor verá`)
+        : "El paquete no tiene asuntos abiertos",
+      detalleEstado: conProblemas
+        ? "El paquete se genera igualmente y los incluye tal y como están: evidencias caducadas, madurez sin soporte y documentos sin aprobar aparecen con su estado real."
+        : "Todas las carpetas seleccionadas tienen sus evidencias validadas y en vigor.",
+      irABloqueos: () => { const el = document.getElementById("bloqueos"); if (el) window.scrollTo({ top: el.offsetTop - 20, behavior: "smooth" }); },
+      botonBloqueos: `display:${conProblemas ? "inline-block" : "none"}; font-family:inherit; font-size:13px; font-weight:500; color:#B45309; background:#FFFFFF; border:1px solid #B45309; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap; flex:0 0 auto`
+    };
+  }
+}
+</script>
+</body>
+</html>

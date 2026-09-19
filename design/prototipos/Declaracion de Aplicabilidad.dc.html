@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:1px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Declaración de Aplicabilidad</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">v2.3 borrador · categoría Media</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap" style-hover="background:#F1F5F9">Comparar con v2.2</button>
+      <button type="button" onClick="{{ enviarAprobacion }}" style="{{ botonAprobar }}">{{ textoAprobar }}</button>
+    </div>
+  </header>
+
+  <div style="flex:1; padding:24px 28px 64px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box; display:flex; flex-direction:column; gap:14px">
+
+    <div style="{{ cajaEstado }}">
+      <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+        <span style="font-size:13px; font-weight:600; color:#0F172A">{{ tituloEstado }}</span>
+        <span style="font-size:12px; line-height:1.5; color:#475569">{{ detalleEstado }}</span>
+      </span>
+      <span style="display:flex; gap:8px; flex:0 0 auto; flex-wrap:wrap">
+        <sc-for list="{{ pendientes }}" as="p" hint-placeholder-count="2">
+          <button type="button" onClick="{{ p.onClick }}" style="{{ p.estilo }}">{{ p.texto }}</button>
+        </sc-for>
+      </span>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <input type="text" placeholder="Buscar medida o refuerzo" style="font-family:inherit; font-size:13px; padding:7px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; color:#0F172A; flex:1 1 200px; min-width:0" />
+      <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="5">
+        <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+      </sc-for>
+    </div>
+
+    <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden">
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Medida o refuerzo</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:176px">Origen de la aplicabilidad</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:112px; white-space:nowrap">Decisión</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:200px">Justificación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ filas }}" as="r" hint-placeholder-count="10">
+              <tr style="{{ r.fila }}">
+                <td style="{{ r.celdaTexto }}">
+                  <span style="display:flex; flex-direction:column; gap:3px">
+                    <span style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap">
+                      <span style="{{ r.estiloCod }}">{{ r.cod }}</span>
+                      <span style="font-size:14px; font-weight:500; color:#0F172A">{{ r.nombre }}</span>
+                      <span style="{{ r.chipTipo }}">{{ r.tipo }}</span>
+                    </span>
+                    <span style="{{ r.avisoSeleccion }}">{{ r.textoSeleccion }}</span>
+                  </span>
+                </td>
+                <td style="{{ r.celda }}"><span style="font-size:13px; color:#475569; line-height:1.45">{{ r.origen }}</span></td>
+                <td style="{{ r.celda }}">
+                  <select value="{{ r.decision }}" onChange="{{ r.onDecision }}" style="{{ r.selector }}">
+                    <option value="aplica">aplica</option>
+                    <option value="noaplica">no aplica</option>
+                    <option value="pendiente">por decidir</option>
+                  </select>
+                </td>
+                <td style="{{ r.celdaFin }}">
+                  <span style="{{ r.zonaJust }}">
+                    <textarea value="{{ r.justificacion }}" onChange="{{ r.onJustificacion }}" placeholder="Obligatoria para no aplicar" style="{{ r.campoJust }}"></textarea>
+                    <span style="{{ r.avisoJust }}">Sin justificación no se puede aprobar.</span>
+                  </span>
+                  <span style="{{ r.textoNoAplicaNo }}">—</span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 16px; border-top:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+        <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ conteo }}</span>
+        <span style="font-size:12px; color:#475569">El origen lo calcula la categoría y el nivel de cada dimensión; las selecciones de refuerzo las resuelve la organización.</span>
+      </div>
+    </section>
+
+    <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:18px; display:flex; flex-direction:column; gap:12px">
+      <span style="font-size:14px; font-weight:600; color:#0F172A">Historial de versiones</span>
+      <sc-for list="{{ versiones }}" as="v" hint-placeholder-count="3">
+        <span style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid #F1F5F9; flex-wrap:wrap">
+          <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+            <span style="font-size:13px; font-weight:500; color:#0F172A">{{ v.titulo }}</span>
+            <span style="font-size:12px; color:#475569">{{ v.detalle }}</span>
+          </span>
+          <span style="{{ v.chip }}">{{ v.estado }}</span>
+        </span>
+      </sc-for>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { decisiones: {}, justificaciones: {}, filtro: 0, enviada: false };
+
+  datos() {
+    return [
+      ["org.1", "Política de seguridad", "medida", "Categoría Media", "aplica", ""],
+      ["org.4", "Proceso de autorización", "medida", "Categoría Media", "aplica", ""],
+      ["op.acc.4", "Proceso de gestión de derechos de acceso", "medida", "Categoría Media", "aplica", ""],
+      ["op.acc.5(2)", "Doble factor de autenticación", "refuerzo", "Autenticidad nivel medio", "pendiente", "", "Selección: doble factor o certificado cualificado. Hay que elegir una."],
+      ["op.exp.6", "Protección frente a código dañino", "medida", "Categoría Media", "aplica", ""],
+      ["op.exp.8(1)", "Registro centralizado y sincronizado", "refuerzo", "Trazabilidad nivel medio", "aplica", ""],
+      ["op.mon.1", "Detección de intrusión", "medida", "Categoría Media", "aplica", ""],
+      ["mp.if.4", "Energía eléctrica", "medida", "Disponibilidad nivel medio", "noaplica", "El CPD es de un tercero certificado; el suministro y su respaldo son responsabilidad del proveedor, según el contrato del 12/03/2026."],
+      ["mp.if.9", "Instalaciones alternativas", "medida", "Disponibilidad nivel alto", "noaplica", ""],
+      ["mp.s.2", "Protección de servicios y aplicaciones web", "medida", "Categoría Media", "aplica", ""],
+      ["mp.info.3(1)", "Cifrado en soporte extraíble", "refuerzo", "Confidencialidad nivel medio", "pendiente", "", "Selección: cifrado del soporte o prohibición de uso. Hay que elegir una."],
+      ["mp.per.3", "Concienciación", "medida", "Categoría Media", "aplica", ""]
+    ];
+  }
+
+  renderVals() {
+    const s = this.state, todas = this.datos();
+    const dec = (i) => s.decisiones[i] === undefined ? todas[i][4] : s.decisiones[i];
+    const just = (i) => s.justificaciones[i] === undefined ? todas[i][5] : s.justificaciones[i];
+
+    const criterios = [null, "refuerzo", "noaplica", "pendiente", "falta"];
+    const cumple = (i, c) => {
+      const d = dec(i);
+      if (c === null) return true;
+      if (c === "refuerzo") return todas[i][2] === "refuerzo";
+      if (c === "noaplica") return d === "noaplica";
+      if (c === "pendiente") return d === "pendiente";
+      if (c === "falta") return d === "noaplica" && !just(i).trim();
+      return true;
+    };
+
+    const base = "padding:10px; border-bottom:1px solid #F1F5F9; vertical-align:top; color:#0F172A; line-height:1.45";
+    const filas = todas.map((m, i) => [m, i]).filter((x) => cumple(x[1], criterios[s.filtro])).map((x) => {
+      const m = x[0], i = x[1], d = dec(i), j = just(i);
+      const faltaJust = d === "noaplica" && !j.trim();
+      const esRefuerzo = m[2] === "refuerzo";
+      return {
+        cod: m[0], nombre: m[1], tipo: m[2], origen: m[3], decision: d, justificacion: j,
+        onDecision: (e) => this.setState({ decisiones: Object.assign({}, s.decisiones, { [i]: e.target.value }) }),
+        onJustificacion: (e) => this.setState({ justificaciones: Object.assign({}, s.justificaciones, { [i]: e.target.value }) }),
+        estiloCod: `font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:${esRefuerzo ? "#0B4F4A" : "#475569"}`,
+        chipTipo: `display:${esRefuerzo ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:2px 7px`,
+        avisoSeleccion: `display:${m[6] && d === "pendiente" ? "block" : "none"}; font-size:12px; color:#B45309`,
+        textoSeleccion: m[6] || "",
+        selector: `font-family:inherit; font-size:13px; color:#0F172A; padding:5px 7px; border:1px solid ${d === "pendiente" ? "#B45309" : "#E2E8F0"}; border-radius:6px; background:#FFFFFF; cursor:pointer`,
+        zonaJust: `display:${d === "noaplica" ? "flex" : "none"}; flex-direction:column; gap:4px`,
+        campoJust: `font-family:inherit; font-size:13px; line-height:1.45; color:#0F172A; padding:7px 9px; border:1px solid ${faltaJust ? "#B91C1C" : "#E2E8F0"}; border-radius:6px; resize:vertical; min-height:56px; background:#F8FAFC; width:100%; box-sizing:border-box`,
+        avisoJust: `display:${faltaJust ? "block" : "none"}; font-size:12px; color:#B91C1C`,
+        textoNoAplicaNo: `display:${d === "noaplica" ? "none" : "block"}; font-size:13px; color:#94A3B8`,
+        fila: `background:${faltaJust ? "#FEF2F2" : d === "pendiente" ? "#FFFBEB" : "#FFFFFF"}`,
+        celda: base, celdaTexto: base + "; padding-left:16px", celdaFin: base + "; padding-right:16px"
+      };
+    });
+
+    const cuenta = (c) => todas.filter((m, i) => cumple(i, c)).length;
+    const filtros = [["Todas", null], ["Refuerzos", "refuerzo"], ["No aplican", "noaplica"], ["Por decidir", "pendiente"], ["Sin justificar", "falta"]]
+      .map((f, i) => ({
+        nombre: f[0], n: cuenta(f[1]),
+        onClick: () => this.setState({ filtro: i }),
+        estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+      }));
+
+    const nPend = cuenta("pendiente"), nFalta = cuenta("falta");
+    const bloqueada = nPend + nFalta > 0;
+
+    const pendientes = [];
+    if (nPend) pendientes.push({ texto: `Resolver ${nPend} selección${nPend > 1 ? "es" : ""}`, onClick: () => this.setState({ filtro: 3 }), estilo: "font-family:inherit; font-size:13px; font-weight:500; color:#B45309; background:#FFFFFF; border:1px solid #B45309; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap" });
+    if (nFalta) pendientes.push({ texto: `Justificar ${nFalta} no aplicable${nFalta > 1 ? "s" : ""}`, onClick: () => this.setState({ filtro: 4 }), estilo: "font-family:inherit; font-size:13px; font-weight:500; color:#B91C1C; background:#FFFFFF; border:1px solid #B91C1C; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap" });
+
+    const versiones = [
+      ["v2.2 · aprobada el 02/09/2026", "Ana Castaño, responsable del sistema · 118 medidas aplicables, 6 no aplicables", "vigente", "#15803D", "#F0FDF4"],
+      ["v2.1 · aprobada el 14/05/2026", "Ana Castaño · cambio de categoría de Básica a Media", "sustituida", "#64748B", "#F8FAFC"],
+      ["v2.0 · aprobada el 14/01/2026", "Ana Castaño · primera declaración del sistema", "sustituida", "#64748B", "#F8FAFC"]
+    ].map((v) => ({
+      titulo: v[0], detalle: v[1], estado: v[2],
+      chip: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${v[3]}; background:${v[4]}; border:1px solid ${v[3]}33; border-radius:5px; padding:3px 8px; white-space:nowrap; flex:0 0 auto`
+    }));
+
+    return {
+      filas, filtros, versiones, pendientes,
+      conteo: `${filas.length} de ${todas.length} filas · ${cuenta("noaplica")} no aplicables`,
+      cajaEstado: `display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:12px 16px; border-radius:8px; background:${bloqueada ? "#FFFBEB" : "#F0FDFA"}; border:1px solid ${bloqueada ? "#B4530933" : "#CCFBF1"}`,
+      tituloEstado: s.enviada && bloqueada ? "Enviada a aprobación, pero ha dejado de ser aprobable"
+        : s.enviada ? "Enviada a aprobación"
+        : bloqueada ? "El borrador aún no se puede aprobar" : "Lista para enviar a aprobación",
+      detalleEstado: s.enviada && bloqueada
+        ? `Alguien ha modificado el borrador después de enviarlo: ${[nPend ? `${nPend} selección${nPend > 1 ? "es" : ""} sin resolver` : null, nFalta ? `${nFalta} no aplicable${nFalta > 1 ? "s" : ""} sin justificar` : null].filter(Boolean).join(" y ")}. Retírala de aprobación, corrige y vuelve a enviarla.`
+        : s.enviada
+        ? "Pendiente de la firma de Ana Castaño, responsable del sistema. Al firmar se creará la v2.3 y la v2.2 pasará a sustituida."
+        : bloqueada
+          ? "Quedan decisiones abiertas. Una Declaración con selecciones sin resolver o con no aplicables sin justificar no es aprobable."
+          : "Todas las medidas tienen decisión y los no aplicables están justificados.",
+      enviarAprobacion: () => { if (s.enviada || !bloqueada) this.setState({ enviada: !s.enviada }); },
+      textoAprobar: s.enviada ? "Retirar de aprobación" : "Enviar a aprobación",
+      botonAprobar: `font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:${s.enviada ? "#0B4F4A" : bloqueada ? "#64748B" : "#0F766E"}; border:0; border-radius:6px; padding:8px 12px; cursor:${!s.enviada && bloqueada ? "not-allowed" : "pointer"}; white-space:nowrap`
+    };
+  }
+}
+</script>
+</body>
+</html>

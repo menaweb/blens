@@ -1,0 +1,423 @@
+# Seed BLENS · Catálogo de amenazas (MAGERIT v3, Libro II)
+# Modelos: MageritThreat + MageritThreatDefault (CLAUDE.md §7.1)
+#
+# dims: dimensiones que puede afectar la amenaza (C confidencialidad, I integridad,
+#       D disponibilidad, A autenticidad, T trazabilidad).
+# default_frequency: veces al año, orientativo. Es un PUNTO DE PARTIDA editable por el cliente;
+#       el análisis de riesgos vale por lo que el cliente ajusta, no por el valor por defecto.
+# default_degradation: proporción del valor del activo que se pierde si ocurre (0..1), por dimensión.
+# aplica_a: tipos de activo donde tiene sentido proponerla (código de asset_types.yaml).
+#
+# ⚠️ Los valores por defecto son una primera calibración de BLENS, no de MAGERIT:
+# la metodología no fija cifras. Revisar con datos reales de incidentes en cuanto haya clientes.
+
+version: 1
+catalog: MAGERIT-v3
+
+threats:
+
+  # ---------------------------------------------------------------- [N] Desastres naturales
+  - code: N.1
+    name: "Fuego"
+    category: NATURAL
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.02
+    default_degradation: {D: 1.0}
+
+  - code: N.2
+    name: "Daños por agua"
+    category: NATURAL
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.05
+    default_degradation: {D: 0.8}
+
+  - code: N.*
+    name: "Otros desastres naturales"
+    category: NATURAL
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.02
+    default_degradation: {D: 1.0}
+
+  # ------------------------------------------------------------- [I] De origen industrial
+  - code: I.1
+    name: "Fuego de origen industrial"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.05
+    default_degradation: {D: 1.0}
+
+  - code: I.2
+    name: "Daños por agua de origen industrial"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.05
+    default_degradation: {D: 0.8}
+
+  - code: I.5
+    name: "Avería de origen físico o lógico"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [HW, SW, MEDIA, AUX, COM]
+    default_frequency: 1.0
+    default_degradation: {D: 0.5}
+
+  - code: I.6
+    name: "Corte del suministro eléctrico"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [HW, AUX, L, COM]
+    default_frequency: 1.0
+    default_degradation: {D: 0.6}
+
+  - code: I.7
+    name: "Condiciones inadecuadas de temperatura o humedad"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.3
+    default_degradation: {D: 0.5}
+
+  - code: I.8
+    name: "Fallo de servicios de comunicaciones"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [COM, S]
+    default_frequency: 2.0
+    default_degradation: {D: 0.7}
+
+  - code: I.9
+    name: "Interrupción de otros servicios o suministros esenciales"
+    category: INDUSTRIAL
+    dims: [D]
+    aplica_a: [AUX, L, S]
+    default_frequency: 0.3
+    default_degradation: {D: 0.5}
+
+  - code: I.10
+    name: "Degradación de los soportes de almacenamiento"
+    category: INDUSTRIAL
+    dims: [D, I]
+    aplica_a: [MEDIA, HW]
+    default_frequency: 0.3
+    default_degradation: {D: 0.6, I: 0.5}
+
+  - code: I.11
+    name: "Emanaciones electromagnéticas"
+    category: INDUSTRIAL
+    dims: [C]
+    aplica_a: [HW, COM, L]
+    default_frequency: 0.05
+    default_degradation: {C: 0.3}
+
+  # ------------------------------------------------ [E] Errores y fallos no intencionados
+  - code: E.1
+    name: "Errores de los usuarios"
+    category: ERROR
+    dims: [C, I, D]
+    aplica_a: [D, S, SW, MEDIA]
+    default_frequency: 6.0
+    default_degradation: {C: 0.2, I: 0.3, D: 0.2}
+
+  - code: E.2
+    name: "Errores del administrador"
+    category: ERROR
+    dims: [C, I, D]
+    aplica_a: [D, S, SW, HW, COM]
+    default_frequency: 2.0
+    default_degradation: {C: 0.4, I: 0.5, D: 0.5}
+
+  - code: E.3
+    name: "Errores de monitorización (registro de actividad)"
+    category: ERROR
+    dims: [T]
+    aplica_a: [D, S, SW, HW]
+    default_frequency: 1.0
+    default_degradation: {T: 0.6}
+
+  - code: E.4
+    name: "Errores de configuración"
+    category: ERROR
+    dims: [C, I, D]
+    aplica_a: [SW, HW, COM, S]
+    default_frequency: 2.0
+    default_degradation: {C: 0.4, I: 0.3, D: 0.3}
+
+  - code: E.7
+    name: "Deficiencias en la organización"
+    category: ERROR
+    dims: [C, I, D, T]
+    aplica_a: [P, S]
+    default_frequency: 1.0
+    default_degradation: {C: 0.2, I: 0.2, D: 0.2, T: 0.3}
+
+  - code: E.8
+    name: "Difusión de software dañino"
+    category: ERROR
+    dims: [C, I, D]
+    aplica_a: [SW, HW, D]
+    default_frequency: 2.0
+    default_degradation: {C: 0.5, I: 0.6, D: 0.7}
+
+  - code: E.9
+    name: "Errores de encaminamiento"
+    category: ERROR
+    dims: [C]
+    aplica_a: [COM, S, SW]
+    default_frequency: 0.5
+    default_degradation: {C: 0.4}
+
+  - code: E.10
+    name: "Errores de secuencia"
+    category: ERROR
+    dims: [I]
+    aplica_a: [COM, S, SW]
+    default_frequency: 0.5
+    default_degradation: {I: 0.3}
+
+  - code: E.15
+    name: "Alteración accidental de la información"
+    category: ERROR
+    dims: [I]
+    aplica_a: [D, K, MEDIA]
+    default_frequency: 2.0
+    default_degradation: {I: 0.5}
+
+  - code: E.18
+    name: "Destrucción de información"
+    category: ERROR
+    dims: [D]
+    aplica_a: [D, K, MEDIA]
+    default_frequency: 1.0
+    default_degradation: {D: 0.8}
+
+  - code: E.19
+    name: "Fugas de información"
+    category: ERROR
+    dims: [C]
+    aplica_a: [D, K, S, MEDIA, P]
+    default_frequency: 1.0
+    default_degradation: {C: 0.7}
+
+  - code: E.20
+    name: "Vulnerabilidades de los programas"
+    category: ERROR
+    dims: [C, I, D]
+    aplica_a: [SW, S]
+    default_frequency: 4.0
+    default_degradation: {C: 0.5, I: 0.5, D: 0.5}
+
+  - code: E.21
+    name: "Errores de mantenimiento o actualización de programas"
+    category: ERROR
+    dims: [I, D]
+    aplica_a: [SW, S]
+    default_frequency: 2.0
+    default_degradation: {I: 0.3, D: 0.5}
+
+  - code: E.23
+    name: "Errores de mantenimiento o actualización de equipos"
+    category: ERROR
+    dims: [D]
+    aplica_a: [HW, COM, AUX, MEDIA]
+    default_frequency: 1.0
+    default_degradation: {D: 0.5}
+
+  - code: E.24
+    name: "Caída del sistema por agotamiento de recursos"
+    category: ERROR
+    dims: [D]
+    aplica_a: [HW, SW, COM, S]
+    default_frequency: 1.0
+    default_degradation: {D: 0.7}
+
+  - code: E.25
+    name: "Pérdida de equipos"
+    category: ERROR
+    dims: [C, D]
+    aplica_a: [HW, MEDIA]
+    default_frequency: 1.0
+    default_degradation: {C: 0.6, D: 0.4}
+
+  - code: E.28
+    name: "Indisponibilidad del personal"
+    category: ERROR
+    dims: [D]
+    aplica_a: [P, S]
+    default_frequency: 2.0
+    default_degradation: {D: 0.4}
+
+  # ------------------------------------------------------- [A] Ataques intencionados
+  - code: A.3
+    name: "Manipulación de los registros de actividad"
+    category: ATAQUE
+    dims: [T, I]
+    aplica_a: [D, S, SW, HW]
+    default_frequency: 0.3
+    default_degradation: {T: 0.9, I: 0.5}
+
+  - code: A.4
+    name: "Manipulación de la configuración"
+    category: ATAQUE
+    dims: [C, I, D]
+    aplica_a: [SW, HW, COM, S]
+    default_frequency: 0.5
+    default_degradation: {C: 0.6, I: 0.6, D: 0.6}
+
+  - code: A.5
+    name: "Suplantación de la identidad del usuario"
+    category: ATAQUE
+    dims: [C, I, A]
+    aplica_a: [S, SW, D, K, COM]
+    default_frequency: 2.0
+    default_degradation: {C: 0.7, I: 0.6, A: 0.9}
+
+  - code: A.6
+    name: "Abuso de privilegios de acceso"
+    category: ATAQUE
+    dims: [C, I, D]
+    aplica_a: [S, SW, D, HW, COM]
+    default_frequency: 1.0
+    default_degradation: {C: 0.7, I: 0.6, D: 0.4}
+
+  - code: A.7
+    name: "Uso no previsto"
+    category: ATAQUE
+    dims: [C, I, D]
+    aplica_a: [S, SW, HW, COM, MEDIA]
+    default_frequency: 2.0
+    default_degradation: {C: 0.3, I: 0.3, D: 0.3}
+
+  - code: A.8
+    name: "Difusión deliberada de software dañino"
+    category: ATAQUE
+    dims: [C, I, D]
+    aplica_a: [SW, HW, D, S]
+    default_frequency: 1.5
+    default_degradation: {C: 0.7, I: 0.8, D: 0.9}
+    nota: "Es la puerta habitual del ransomware: conviene revisar la frecuencia con datos propios."
+
+  - code: A.11
+    name: "Acceso no autorizado"
+    category: ATAQUE
+    dims: [C, I]
+    aplica_a: [S, SW, D, K, HW, COM, MEDIA, L]
+    default_frequency: 2.0
+    default_degradation: {C: 0.8, I: 0.6}
+
+  - code: A.12
+    name: "Análisis de tráfico"
+    category: ATAQUE
+    dims: [C]
+    aplica_a: [COM]
+    default_frequency: 0.5
+    default_degradation: {C: 0.3}
+
+  - code: A.13
+    name: "Repudio"
+    category: ATAQUE
+    dims: [T, A]
+    aplica_a: [S, D]
+    default_frequency: 0.5
+    default_degradation: {T: 0.8, A: 0.6}
+
+  - code: A.14
+    name: "Interceptación de información"
+    category: ATAQUE
+    dims: [C]
+    aplica_a: [COM, D, K]
+    default_frequency: 0.5
+    default_degradation: {C: 0.8}
+
+  - code: A.15
+    name: "Modificación deliberada de la información"
+    category: ATAQUE
+    dims: [I]
+    aplica_a: [D, K, S, SW, MEDIA]
+    default_frequency: 0.5
+    default_degradation: {I: 0.9}
+
+  - code: A.18
+    name: "Destrucción de información"
+    category: ATAQUE
+    dims: [D]
+    aplica_a: [D, K, MEDIA, S]
+    default_frequency: 0.5
+    default_degradation: {D: 1.0}
+
+  - code: A.19
+    name: "Divulgación de información"
+    category: ATAQUE
+    dims: [C]
+    aplica_a: [D, K, S, MEDIA, P]
+    default_frequency: 0.5
+    default_degradation: {C: 1.0}
+
+  - code: A.22
+    name: "Manipulación de programas"
+    category: ATAQUE
+    dims: [C, I, D]
+    aplica_a: [SW, S]
+    default_frequency: 0.3
+    default_degradation: {C: 0.7, I: 0.8, D: 0.6}
+
+  - code: A.23
+    name: "Manipulación de los equipos"
+    category: ATAQUE
+    dims: [C, D]
+    aplica_a: [HW, COM, MEDIA, AUX]
+    default_frequency: 0.3
+    default_degradation: {C: 0.6, D: 0.6}
+
+  - code: A.24
+    name: "Denegación de servicio"
+    category: ATAQUE
+    dims: [D]
+    aplica_a: [S, SW, HW, COM]
+    default_frequency: 1.0
+    default_degradation: {D: 0.8}
+
+  - code: A.25
+    name: "Robo"
+    category: ATAQUE
+    dims: [C, D]
+    aplica_a: [HW, MEDIA, AUX]
+    default_frequency: 0.5
+    default_degradation: {C: 0.7, D: 0.6}
+
+  - code: A.26
+    name: "Ataque destructivo"
+    category: ATAQUE
+    dims: [D]
+    aplica_a: [HW, MEDIA, AUX, L]
+    default_frequency: 0.1
+    default_degradation: {D: 1.0}
+
+  - code: A.28
+    name: "Indisponibilidad del personal por causa deliberada"
+    category: ATAQUE
+    dims: [D]
+    aplica_a: [P, S]
+    default_frequency: 0.3
+    default_degradation: {D: 0.5}
+
+  - code: A.29
+    name: "Extorsión"
+    category: ATAQUE
+    dims: [C, I, D]
+    aplica_a: [P, D, S]
+    default_frequency: 0.2
+    default_degradation: {C: 0.6, I: 0.4, D: 0.5}
+
+  - code: A.30
+    name: "Ingeniería social"
+    category: ATAQUE
+    dims: [C, I, A]
+    aplica_a: [P, S, D]
+    default_frequency: 4.0
+    default_degradation: {C: 0.6, I: 0.4, A: 0.7}
+    nota: "Es la vía de entrada más frecuente hoy: phishing y fraude del CEO."

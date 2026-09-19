@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:1px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Medidas</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · categoría Media · umbral L3</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <button type="button" onClick="{{ alternarDensidad }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap" style-hover="background:#F1F5F9">{{ textoDensidad }}</button>
+      <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:7px 11px; cursor:pointer; white-space:nowrap" style-hover="background:#F0FDFA">Exportar</button>
+    </div>
+  </header>
+
+  <div style="flex:1; padding:24px 28px 64px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box; display:flex; flex-direction:column; gap:14px">
+
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <input type="text" placeholder="Buscar medida" style="font-family:inherit; font-size:13px; padding:7px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; color:#0F172A; flex:1 1 200px; min-width:0" />
+      <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="5">
+        <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:11px 14px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px">
+      <span style="font-size:13px; color:#475569">Escala de madurez</span>
+      <sc-for list="{{ escala }}" as="e" hint-placeholder-count="6">
+        <span style="display:flex; align-items:baseline; gap:5px">
+          <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; font-weight:500; color:#0F172A">{{ e.n }}</span>
+          <span style="font-size:12px; color:#475569">{{ e.t }}</span>
+        </span>
+      </sc-for>
+    </div>
+
+    <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden">
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Medida</th>
+              <th style="padding:9px 8px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:86px; white-space:nowrap">Aplicable</th>
+              <th style="padding:9px 8px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:88px; white-space:nowrap">Actual</th>
+              <th style="padding:9px 8px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:68px; white-space:nowrap">Objetivo</th>
+              <th style="padding:9px 8px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:78px; white-space:nowrap">Delta</th>
+              <th style="padding:9px 8px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:92px; white-space:nowrap">Evidencias</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:118px; white-space:nowrap">Responsable</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ medidas }}" as="m" hint-placeholder-count="10">
+              <tr style="{{ m.fila }}">
+                <td style="{{ m.celdaTexto }}">
+                  <span style="display:flex; flex-direction:column; gap:2px">
+                    <span style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap">
+                      <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ m.cod }}</span>
+                      <a href="#" style="font-size:14px; font-weight:500">{{ m.nombre }}</a>
+                    </span>
+                    <span style="{{ m.avisoSoporte }}">madurez no soportada: sin evidencia validada, no suma al indicador</span>
+                  </span>
+                </td>
+                <td style="{{ m.celda }}">
+                  <button type="button" onClick="{{ m.alternarAplica }}" style="{{ m.chipAplica }}">{{ m.textoAplica }}</button>
+                </td>
+                <td style="{{ m.celda }}">
+                  <select value="{{ m.actual }}" onChange="{{ m.onActual }}" style="{{ m.selector }}">
+                    <sc-for list="{{ niveles }}" as="n" hint-placeholder-count="6">
+                      <option value="{{ n.v }}">{{ n.t }}</option>
+                    </sc-for>
+                  </select>
+                </td>
+                <td style="{{ m.celdaNum }}">{{ m.objetivo }}</td>
+                <td style="{{ m.celda }}"><span style="{{ m.chipDelta }}">{{ m.delta }}</span></td>
+                <td style="{{ m.celda }}"><a href="#" style="{{ m.enlaceEv }}">{{ m.evidencias }}</a></td>
+                <td style="{{ m.celdaFin }}">
+                  <span style="display:flex; flex-direction:column; gap:2px">
+                    <span style="font-size:13px; color:#0F172A; white-space:nowrap">{{ m.responsable }}</span>
+                    <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums; white-space:nowrap">{{ m.fecha }}</span>
+                  </span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 16px; border-top:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+        <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ conteo }}</span>
+        <span style="font-size:12px; color:#475569">Se puede recorrer y editar con el teclado: tabulador entre celdas editables, flechas dentro del selector.</span>
+      </div>
+    </section>
+
+    <span style="{{ avisoCambio }}">{{ textoCambio }}</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { filtro: 0, comoda: false, niveles: {}, noAplica: [], ultimo: null };
+
+  datos() {
+    return [
+      ["org.1", "Política de seguridad", 3, 3, "2 / 2", "Ana Castaño", "14/01/2026", true],
+      ["org.2", "Normativa de seguridad", 2, 3, "1 / 2", "Ana Castaño", "22/04/2026", true],
+      ["org.3", "Procedimientos de seguridad", 3, 3, "2 / 2", "Ana Castaño", "22/04/2026", true],
+      ["org.4", "Proceso de autorización", 1, 3, "0 / 1", "Marta Ruiz", "—", false],
+      ["op.pl.1", "Análisis de riesgos", 3, 3, "3 / 3", "Jorge Peña", "02/09/2026", true],
+      ["op.pl.5", "Componentes certificados", 2, 3, "1 / 2", "Jorge Peña", "12/09/2026", true],
+      ["op.acc.4", "Proceso de gestión de derechos de acceso", 3, 3, "0 / 3", "Marta Ruiz", "30/09/2026", false],
+      ["op.exp.4", "Mantenimiento y actualizaciones", 2, 3, "1 / 2", "Jorge Peña", "18/08/2026", true],
+      ["op.exp.6", "Protección frente a código dañino", 3, 3, "3 / 4", "Marta Ruiz", "12/09/2026", true],
+      ["op.exp.8", "Registro de la actividad", 2, 3, "1 / 3", "Marta Ruiz", "04/07/2026", true],
+      ["op.mon.1", "Detección de intrusión", 1, 3, "0 / 2", "Jorge Peña", "—", false],
+      ["mp.if.1", "Áreas separadas y control de acceso", 3, 3, "2 / 2", "Jorge Peña", "11/03/2026", true],
+      ["mp.info.6", "Copias de seguridad", 4, 3, "4 / 4", "Jorge Peña", "01/09/2026", true],
+      ["mp.per.3", "Concienciación", 1, 3, "0 / 2", "Ana Castaño", "—", false],
+      ["mp.s.2", "Protección de servicios y aplicaciones web", 3, 3, "2 / 3", "Jorge Peña", "27/08/2026", true]
+    ];
+  }
+
+  renderVals() {
+    const s = this.state;
+    const pad = s.comoda ? "13px" : "8px";
+    const base = `padding:${pad} 8px; border-bottom:1px solid #F1F5F9; vertical-align:middle; color:#0F172A; line-height:1.45`;
+
+    const todas = this.datos();
+    const criterios = [null, "gap", "soporte", "objetivo", "noaplica"];
+    const crit = criterios[s.filtro];
+
+    const filtradas = todas.filter((m, i) => {
+      const noAp = s.noAplica.includes(i);
+      const act = s.niveles[i] === undefined ? m[2] : s.niveles[i];
+      if (crit === "noaplica") return noAp;
+      if (noAp) return false;
+      if (crit === "gap") return act < m[3];
+      if (crit === "soporte") return act >= m[3] && !m[7];
+      if (crit === "objetivo") return act >= m[3] && m[7];
+      return true;
+    });
+
+    const niveles = [0, 1, 2, 3, 4, 5].map((n) => ({ v: n, t: "L" + n }));
+    const escala = [["L0", "inexistente"], ["L1", "inicial"], ["L2", "repetible"], ["L3", "definido"], ["L4", "gestionado"], ["L5", "optimizado"]]
+      .map((e) => ({ n: e[0], t: e[1] }));
+
+    const medidas = filtradas.map((m) => {
+      const i = todas.indexOf(m);
+      const noAp = s.noAplica.includes(i);
+      const act = s.niveles[i] === undefined ? m[2] : s.niveles[i];
+      const d = act - m[3];
+      const colorDelta = noAp ? ["#64748B", "#F8FAFC"] : d >= 0 ? ["#15803D", "#F0FDF4"] : d === -1 ? ["#B45309", "#FFFBEB"] : ["#B91C1C", "#FEF2F2"];
+      const soporte = !noAp && act >= m[3] && !m[7];
+      return {
+        cod: m[0], nombre: m[1], objetivo: "L" + m[3], evidencias: m[4], responsable: m[5], fecha: m[6],
+        actual: act,
+        delta: noAp ? "—" : d > 0 ? "+" + d : String(d),
+        onActual: (e) => this.setState({
+          niveles: Object.assign({}, s.niveles, { [i]: parseInt(e.target.value, 10) }),
+          ultimo: `${m[0]} · madurez ${"L" + e.target.value} · guardado`
+        }),
+        alternarAplica: () => this.setState({
+          noAplica: noAp ? s.noAplica.filter((x) => x !== i) : s.noAplica.concat(i),
+          ultimo: noAp ? `${m[0]} · vuelve a ser aplicable` : `${m[0]} · marcada como no aplicable, falta la justificación`
+        }),
+        textoAplica: noAp ? "no aplica" : "sí",
+        chipAplica: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:3px 8px; border-radius:5px; white-space:nowrap; border:1px solid ${noAp ? "#64748B33" : "#15803D33"}; background:${noAp ? "#F8FAFC" : "#F0FDF4"}; color:${noAp ? "#64748B" : "#15803D"}`,
+        selector: `font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:${noAp ? "#94A3B8" : "#0F172A"}; padding:4px 6px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; cursor:pointer`,
+        chipDelta: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; font-variant-numeric:tabular-nums; color:${colorDelta[0]}; background:${colorDelta[1]}; border:1px solid ${colorDelta[0]}33; border-radius:5px; padding:3px 8px`,
+        enlaceEv: `font-size:13px; font-variant-numeric:tabular-nums; color:${m[7] ? "#0F766E" : "#B45309"}; font-weight:500`,
+        avisoSoporte: `display:${soporte ? "block" : "none"}; font-size:12px; color:#B45309`,
+        fila: `background:${noAp ? "#F8FAFC" : soporte ? "#FFFBEB" : "#FFFFFF"}`,
+        celda: base, celdaTexto: base + "; padding-left:16px; max-width:0",
+        celdaNum: base + "; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; color:#475569",
+        celdaFin: base + "; padding-right:16px"
+      };
+    });
+
+    const cuenta = (c) => todas.filter((m, i) => {
+      const noAp = s.noAplica.includes(i);
+      const act = s.niveles[i] === undefined ? m[2] : s.niveles[i];
+      if (c === "noaplica") return noAp;
+      if (noAp) return false;
+      if (c === "gap") return act < m[3];
+      if (c === "soporte") return act >= m[3] && !m[7];
+      if (c === "objetivo") return act >= m[3] && m[7];
+      return true;
+    }).length;
+
+    const filtros = [["Todas", null], ["Por debajo del objetivo", "gap"], ["Madurez no soportada", "soporte"], ["En objetivo", "objetivo"], ["No aplican", "noaplica"]]
+      .map((f, i) => ({
+        nombre: f[0], n: cuenta(f[1]),
+        onClick: () => this.setState({ filtro: i }),
+        estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+      }));
+
+    return {
+      medidas, filtros, escala, niveles,
+      conteo: filtradas.length === 1 ? "1 medida" : `${filtradas.length} medidas de ${todas.length}`,
+      alternarDensidad: () => this.setState({ comoda: !s.comoda }),
+      textoDensidad: s.comoda ? "Vista densa" : "Vista cómoda",
+      avisoCambio: `display:${s.ultimo ? "block" : "none"}; font-size:12px; color:#475569`,
+      textoCambio: s.ultimo || ""
+    };
+  }
+}
+</script>
+</body>
+</html>

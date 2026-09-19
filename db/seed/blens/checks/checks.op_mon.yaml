@@ -1,0 +1,136 @@
+# Seed BLENS · Checks de verificación — familia op.mon
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.mon
+checks:
+  - code: "CHK-op.mon.1.1"
+    measure: op.mon.1
+    item: "op.mon.1.1"
+    descripcion: "Se dispondrá de herramientas de detección o prevención de intrusiones"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.mon.1-01, EV-op.mon.1-02, EV-op.mon.1-03]
+  - code: "CHK-op.mon.1.r1.1"
+    measure: op.mon.1
+    refuerzo: op.mon.1.r1
+    item: "op.mon.1.r1.1"
+    descripcion: "El sistema dispondrá de herramientas de detección o prevención de intrusiones basadas en reglas"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.1.r2.1"
+    measure: op.mon.1
+    refuerzo: op.mon.1.r2
+    item: "op.mon.1.r2.1"
+    descripcion: "Existirán procedimientos de respuesta a las alertas generadas por el sistema de detección o prevención de intrusiones"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.mon.1-04]
+  - code: "CHK-op.mon.1.r3.1"
+    measure: op.mon.1
+    refuerzo: op.mon.1.r3
+    item: "op.mon.1.r3.1"
+    descripcion: "El sistema ejecutará automáticamente acciones predeterminadas de respuesta a las alertas generadas…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.2.1"
+    measure: op.mon.2
+    item: "op.mon.2.1"
+    descripcion: "Atendiendo a la categoría de seguridad del sistema, se recopilarán los datos necesarios para conocer el grado de implantación de las medidas de seguridad que resulten aplicables y, en su caso, para proveer el informe…"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.mon.2-01, EV-op.mon.2-02]
+  - code: "CHK-op.mon.2.r1.1"
+    measure: op.mon.2
+    refuerzo: op.mon.2.r1
+    item: "op.mon.2.r1.1"
+    descripcion: "Se recopilarán los datos precisos que posibiliten evaluar el comportamiento del sistema de gestión de incidentes, de acuerdo con la Instrucción Técnica de Seguridad de Notificación de Incidentes de Seguridad y con la…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.mon.2-03]
+  - code: "CHK-op.mon.2.r2.1"
+    measure: op.mon.2
+    refuerzo: op.mon.2.r2
+    item: "op.mon.2.r2.1"
+    descripcion: "Se recopilarán los datos precisos para conocer la eficiencia del sistema de seguridad, en relación con los recursos consumidos, en términos de horas y presupuesto"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.1"
+    measure: op.mon.3
+    item: "op.mon.3.1"
+    descripcion: "Se dispondrá de un sistema automático de recolección de eventos de seguridad"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.mon.3-01, EV-op.mon.3-02]
+  - code: "CHK-op.mon.3.r1.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r1
+    item: "op.mon.3.r1.1"
+    descripcion: "Se dispondrá de un sistema automático de recolección de eventos de seguridad que permita la correlación de los mismos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.mon.3-03]
+  - code: "CHK-op.mon.3.r2.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r2
+    item: "op.mon.3.r2.1"
+    descripcion: "Se dispondrá de soluciones de vigilancia que permitan determinar la superficie de exposición con relación a vulnerabilidades y deficiencias de configuración"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r3.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r3
+    item: "op.mon.3.r3.1"
+    descripcion: "Se dispondrá de sistemas para detección de amenazas avanzadas y comportamientos anómalos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r3.2"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r3
+    item: "op.mon.3.r3.2"
+    descripcion: "Se dispondrá de sistemas para la detección de amenazas persistentes avanzadas (Advanced Persistent Threat, APT) mediante la detección de anomalías significativas en el tráfico de la red"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r4.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r4
+    item: "op.mon.3.r4.1"
+    descripcion: "Se dispondrá de observatorios digitales con fines de cibervigilancia dedicados a la detección y seguimiento de anomalías que pudieran representar indicadores de amenaza en contenidos digitales"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r5.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r5
+    item: "op.mon.3.r5.1"
+    descripcion: "Limitación de las consultas, monitorizando volumen y frecuencia"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r5.2"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r5
+    item: "op.mon.3.r5.2"
+    descripcion: "Alerta a los administradores de seguridad de comportamientos sospechosos en tiempo real"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r6.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r6
+    item: "op.mon.3.r6.1"
+    descripcion: "Verificación de configuración"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r6.2"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r6
+    item: "op.mon.3.r6.2"
+    descripcion: "Análisis de vulnerabilidades"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r6.3"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r6
+    item: "op.mon.3.r6.3"
+    descripcion: "Pruebas de penetración"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.mon.3.r7.1"
+    measure: op.mon.3
+    refuerzo: op.mon.3.r7
+    item: "op.mon.3.r7.1"
+    descripcion: "En las interconexiones que lo requieran se aplicarán controles en los flujos de intercambio de información a través del uso de metadatos"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []

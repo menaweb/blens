@@ -1,0 +1,565 @@
+# Seed BLENS · Preguntas de perfilado — familia op.exp (Explotación)
+# Especificación: docs/cuestionario_perfilado.md (§1bis redacción, §3 bloques)
+# Modelos: ProfileQuestion / ProfileOption (CLAUDE.md §7.1)
+#
+# VARIABLES disponibles en show_if (JSON Logic):
+#   categoria_orden   1=BASICA 2=MEDIA 3=ALTA
+#   nivel_orden.C|I|T|A|D   0=NA 1=BAJO 2=MEDIO 3=ALTO
+#   hechos.<clave>    hechos emitidos por respuestas anteriores (ProfileFact)
+# Los tipos TOOL y VENDOR crean SecurityComponent / proveedor y disparan el flujo CPSTIC (CLAUDE.md §10bis.2b).
+
+version: 1
+familia: op.exp
+bloques:
+  - code: B07
+    titulo: Inventario y arquitectura
+    minutos_estimados: 4
+  - code: B10
+    titulo: "Explotación: malware, parches, cambios y claves"
+    minutos_estimados: 9
+  - code: B12
+    titulo: Registro, monitorización e incidentes
+    minutos_estimados: 8
+
+questions:
+
+  # ------------------------------------------------------------------ op.exp.1
+  - code: op.exp.inventario
+    bloque: B07
+    orden: 10
+    tipo: SINGLE
+    texto: "¿Tenéis una lista de los equipos, servidores y aplicaciones que usáis?"
+    por_que: "El auditor empieza por aquí: si no sabemos qué hay, no se puede proteger. Y comprobará que la lista está viva, no que existió una vez."
+    como_saberlo: "Piensa si hay un Excel, un inventario en el sistema de tickets o una herramienta que descubra los equipos sola."
+    a_quien_preguntar: "Quien gestiona los ordenadores (informático propio o proveedor de soporte)"
+    minutos_estimados: 1
+    opciones:
+      - code: herramienta
+        label: "Sí, con una herramienta que se actualiza sola"
+        emits: {inventario: herramienta}
+      - code: excel
+        label: "Sí, en un Excel o documento"
+        emits: {inventario: excel}
+      - code: parcial
+        label: "Solo de algunas cosas (por ejemplo, los servidores)"
+        emits: {inventario: parcial}
+      - code: proveedor
+        label: "Lo tiene nuestro proveedor"
+        emits: {inventario: proveedor}
+      - code: no
+        label: "No hay lista"
+        emits: {inventario: "no"}
+
+  - code: op.exp.inventario.responsable
+    bloque: B07
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Cada equipo o aplicación de la lista tiene una persona responsable?"
+    por_que: "Sin responsable nadie parchea ni renueva. Es lo que permite repartir el trabajo del resto del ENS."
+    como_saberlo: "Mira si el inventario tiene una columna de responsable, propietario o departamento."
+    show_if: {"!=": [{var: "hechos.inventario"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: si_todos
+        label: "Sí, todos"
+        emits: {inventario_responsable: todos}
+      - code: si_criticos
+        label: "Solo los importantes"
+        emits: {inventario_responsable: criticos}
+      - code: "no"
+        label: "No consta"
+        emits: {inventario_responsable: "no"}
+
+  - code: op.exp.inventario.revision
+    bloque: B07
+    orden: 12
+    tipo: SINGLE
+    texto: "¿Cada cuánto se comprueba que la lista sigue siendo cierta?"
+    por_que: "En Media y Alta hay que identificar los activos periódicamente; una lista de hace dos años es un hallazgo seguro."
+    como_saberlo: "Piensa en la última vez que alguien dio de baja en la lista un equipo retirado."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: continua
+        label: "Continuamente, la herramienta lo detecta"
+        emits: {inventario_revision: continua}
+      - code: semestral
+        label: "Cada 6 meses o menos"
+        emits: {inventario_revision: semestral}
+      - code: anual
+        label: "Una vez al año"
+        emits: {inventario_revision: anual}
+      - code: nunca
+        label: "No se revisa"
+        emits: {inventario_revision: nunca}
+
+  - code: op.exp.inventario.sbom
+    bloque: B07
+    orden: 13
+    tipo: BOOL
+    texto: "¿Sabéis qué componentes y librerías incluye el software que usáis o desarrolláis?"
+    por_que: "Es el refuerzo de lista de componentes software (SBOM): sirve para saber si os afecta una vulnerabilidad conocida sin ir preguntando."
+    como_saberlo: "Si desarrolláis, mirad si el proceso de compilación genera un SBOM. Si es software de terceros, si el fabricante lo publica."
+    glosario:
+      SBOM: "Lista de ingredientes del software: qué librerías y versiones lleva dentro"
+    show_if: {">=": [{var: "categoria_orden"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí"
+        emits: {sbom: true}
+      - code: "no"
+        label: "No"
+        emits: {sbom: false}
+
+  # ------------------------------------------------------------ op.exp.2 y .3
+  - code: op.exp.bastionado
+    bloque: B10
+    orden: 10
+    tipo: SINGLE
+    texto: "Cuando se instala un ordenador o servidor nuevo, ¿se aplica una configuración de seguridad definida?"
+    por_que: "Un equipo recién instalado trae servicios y usuarios que no necesitáis. El auditor pedirá ver la configuración base y que se aplica siempre igual."
+    como_saberlo: "Mirad si existe una imagen o plantilla de instalación, directivas de grupo (GPO), perfiles de Intune o una guía escrita que alguien sigue."
+    a_quien_preguntar: "Quien instala y mantiene los equipos"
+    glosario:
+      GPO: "Directiva de grupo: configuración que Windows aplica automáticamente a los equipos del dominio"
+      bastionado: "Dejar un equipo con lo mínimo necesario: sin servicios de más, sin usuarios por defecto, con las opciones seguras activadas"
+    minutos_estimados: 2
+    opciones:
+      - code: guia_ccn
+        label: "Sí, siguiendo guías del CCN o CIS"
+        emits: {bastionado: guia_reconocida}
+      - code: propia
+        label: "Sí, con una configuración propia escrita"
+        emits: {bastionado: propia}
+      - code: costumbre
+        label: "Se hace siempre parecido, pero no está escrito"
+        emits: {bastionado: costumbre}
+      - code: proveedor
+        label: "Lo hace nuestro proveedor"
+        emits: {bastionado: proveedor}
+      - code: "no"
+        label: "Se instala y se usa tal cual"
+        emits: {bastionado: "no"}
+
+  - code: op.exp.bastionado.herramienta
+    bloque: B10
+    orden: 11
+    tipo: TOOL
+    funcion: GESTION_CONFIGURACION
+    texto: "¿Con qué herramienta se aplica y se comprueba esa configuración?"
+    por_que: "Con herramienta se puede demostrar el estado de todos los equipos. Sin ella, habrá que revisar equipo por equipo delante del auditor."
+    como_saberlo: "Ejemplos habituales: Intune, Active Directory con GPO, Ansible, Puppet, SCCM, o la herramienta CLARA del CCN para comprobar el cumplimiento."
+    show_if: {in: [{var: "hechos.bastionado"}, ["guia_reconocida", "propia", "costumbre"]]}
+    minutos_estimados: 1
+
+  - code: op.exp.config.cambios_control
+    bloque: B10
+    orden: 12
+    tipo: SINGLE
+    texto: "Si alguien cambia la configuración de un servidor, ¿queda registrado quién y cuándo?"
+    por_que: "Es el refuerzo de responsabilidad y control del estado de la configuración: hay que poder reconstruir qué se tocó."
+    como_saberlo: "Mirad si los cambios pasan por un ticket, por un repositorio de configuración (Git) o si quedan en el registro del sistema."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: repositorio
+        label: "Sí, en un repositorio de configuración"
+        emits: {config_trazabilidad: repositorio}
+      - code: tickets
+        label: "Sí, en tickets"
+        emits: {config_trazabilidad: tickets}
+      - code: logs
+        label: "Solo en los registros del sistema"
+        emits: {config_trazabilidad: logs}
+      - code: "no"
+        label: "No queda registrado"
+        emits: {config_trazabilidad: "no"}
+
+  # ------------------------------------------------------------------ op.exp.4
+  - code: op.exp.parcheo
+    bloque: B10
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Cómo se instalan las actualizaciones de seguridad?"
+    por_que: "El auditor pedirá el porcentaje de equipos al día y el plazo para los parches críticos. \"Se actualiza solo\" no es evidencia."
+    como_saberlo: "Mirad si hay una herramienta que reporte el estado (WSUS, Intune, Patch Manager…) o si cada equipo se actualiza por su cuenta."
+    a_quien_preguntar: "Quien administra los sistemas"
+    minutos_estimados: 2
+    opciones:
+      - code: centralizado
+        label: "Con una herramienta centralizada que da informes"
+        emits: {parcheo: centralizado}
+      - code: automatico_local
+        label: "Cada equipo se actualiza solo, sin informe central"
+        emits: {parcheo: automatico_local}
+      - code: manual
+        label: "A mano, cuando se puede"
+        emits: {parcheo: manual}
+      - code: proveedor
+        label: "Lo hace nuestro proveedor"
+        emits: {parcheo: proveedor}
+
+  - code: op.exp.parcheo.plazo
+    bloque: B10
+    orden: 21
+    tipo: SINGLE
+    texto: "¿En cuánto tiempo se instala un parche crítico desde que se publica?"
+    por_que: "Vuestro propio plazo es lo que el auditor comprobará. Es mejor declarar 30 días y cumplirlos que declarar 72 horas y no cumplirlas."
+    como_saberlo: "Si no está escrito, responded con lo que pasa en la práctica."
+    minutos_estimados: 1
+    opciones:
+      - code: h72
+        label: "Menos de 72 horas"
+        emits: {parcheo_plazo_critico: 3}
+      - code: d15
+        label: "Hasta 15 días"
+        emits: {parcheo_plazo_critico: 15}
+      - code: d30
+        label: "Hasta 30 días"
+        emits: {parcheo_plazo_critico: 30}
+      - code: sin_plazo
+        label: "No hay plazo definido"
+        emits: {parcheo_plazo_critico: null}
+
+  - code: op.exp.preproduccion
+    bloque: B10
+    orden: 22
+    tipo: SINGLE
+    texto: "¿Las actualizaciones se prueban en algún sitio antes de tocar producción?"
+    por_que: "Es el refuerzo de pruebas en preproducción, obligatorio en Media y Alta."
+    como_saberlo: "Basta con que exista un entorno, un grupo piloto de equipos o una máquina de pruebas donde se instala primero."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: entorno
+        label: "Sí, en un entorno de preproducción"
+        emits: {preproduccion: entorno}
+      - code: piloto
+        label: "Sí, en un grupo piloto de equipos"
+        emits: {preproduccion: piloto}
+      - code: "no"
+        label: "No, se instala directamente"
+        emits: {preproduccion: "no"}
+
+  # ------------------------------------------------------------------ op.exp.5
+  - code: op.exp.cambios
+    bloque: B10
+    orden: 30
+    tipo: SINGLE
+    texto: "Antes de hacer un cambio importante en los sistemas, ¿alguien lo aprueba?"
+    por_que: "En Media y Alta el auditor cogerá tres cambios al azar del último año y pedirá ver su petición, su prueba y su aprobación."
+    como_saberlo: "Mirad si los cambios se piden por ticket, se tratan en una reunión o se avisan por correo."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: itsm
+        label: "Sí, por ticket con aprobación"
+        emits: {cambios: itsm}
+      - code: comite
+        label: "Sí, en una reunión o comité"
+        emits: {cambios: comite}
+      - code: correo
+        label: "Se avisa por correo, sin aprobación formal"
+        emits: {cambios: correo}
+      - code: "no"
+        label: "No hay proceso"
+        emits: {cambios: "no"}
+
+  - code: op.exp.cambios.herramienta
+    bloque: B10
+    orden: 31
+    tipo: TOOL
+    funcion: ITSM
+    texto: "¿En qué herramienta se gestionan esos cambios?"
+    por_que: "De ahí saldrá la muestra de cambios que revise el auditor."
+    como_saberlo: "Ejemplos: Jira Service Management, GLPI, OTRS, ServiceNow, Redmine."
+    show_if: {in: [{var: "hechos.cambios"}, ["itsm", "comite"]]}
+    minutos_estimados: 1
+
+  - code: op.exp.vuelta_atras
+    bloque: B10
+    orden: 32
+    tipo: BOOL
+    texto: "¿Los cambios llevan previsto cómo deshacerlos si algo va mal?"
+    por_que: "Es el refuerzo de prevención de fallos en categoría Alta."
+    como_saberlo: "Mirad si las peticiones de cambio incluyen un apartado de plan de vuelta atrás o rollback."
+    show_if: {">=": [{var: "categoria_orden"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí, siempre"
+        emits: {rollback: true}
+      - code: "no"
+        label: "No está previsto"
+        emits: {rollback: false}
+
+  # ------------------------------------------------------------------ op.exp.6
+  - code: op.exp.antimalware
+    bloque: B10
+    orden: 40
+    tipo: TOOL
+    funcion: EPP_EDR
+    texto: "¿Qué antivirus tienen los ordenadores y servidores?"
+    por_que: "El auditor comprobará que están protegidos todos, no solo algunos, y que el antivirus está actualizado y alguien mira sus avisos."
+    como_saberlo: "Si usáis Microsoft 365, entrad en el portal de Defender, en Dispositivos. Si tenéis otro (ESET, Sophos, CrowdStrike, SentinelOne…), su consola muestra cuántos equipos aparecen."
+    a_quien_preguntar: "Quien gestiona los ordenadores"
+    glosario:
+      EDR: "Antivirus avanzado que además vigila comportamientos sospechosos y permite responder en remoto"
+    minutos_estimados: 2
+    opciones:
+      - code: contratado
+        label: "Uno contratado"
+        emits: {antimalware: contratado}
+      - code: windows
+        label: "El que trae Windows"
+        emits: {antimalware: windows_defender}
+      - code: parcial
+        label: "Solo en algunos equipos"
+        emits: {antimalware: parcial}
+      - code: proveedor
+        label: "Lo gestiona nuestro proveedor"
+        emits: {antimalware: proveedor}
+      - code: "no"
+        label: "No hay antivirus"
+        emits: {antimalware: "no"}
+
+  - code: op.exp.antimalware.cobertura
+    bloque: B10
+    orden: 41
+    tipo: NUMBER
+    texto: "¿Cuántos equipos hay en total y cuántos aparecen en la consola del antivirus?"
+    por_que: "La diferencia entre las dos cifras es exactamente lo que preguntará el auditor."
+    como_saberlo: "El total sale del inventario; los protegidos, de la consola."
+    show_if: {"!=": [{var: "hechos.antimalware"}, "no"]}
+    minutos_estimados: 1
+    campos:
+      - {code: equipos_total, label: "Equipos en total"}
+      - {code: equipos_protegidos, label: "Equipos en la consola"}
+
+  - code: op.exp.lista_blanca
+    bloque: B10
+    orden: 42
+    tipo: SINGLE
+    texto: "¿Está limitado qué programas se pueden ejecutar en los equipos?"
+    por_que: "Es el refuerzo de lista blanca, de categoría Alta: solo se ejecuta lo autorizado."
+    como_saberlo: "Mirad si usáis AppLocker, Windows Defender Application Control, o la lista de aplicaciones permitidas del EDR."
+    show_if: {">=": [{var: "categoria_orden"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: completa
+        label: "Sí, solo se ejecuta lo autorizado"
+        emits: {lista_blanca: completa}
+      - code: parcial
+        label: "Solo en servidores o equipos críticos"
+        emits: {lista_blanca: parcial}
+      - code: "no"
+        label: "No, se puede instalar de todo"
+        emits: {lista_blanca: "no"}
+
+  # ------------------------------------------------------------ op.exp.7 y .9
+  - code: op.exp.incidentes.proc
+    bloque: B12
+    orden: 10
+    tipo: SINGLE
+    texto: "Si mañana os cifran un servidor, ¿hay escrito a quién avisar y qué hacer?"
+    por_que: "El auditor pedirá el procedimiento y, sobre todo, pruebas de que se usa cuando pasa algo."
+    como_saberlo: "Buscad un procedimiento de gestión de incidentes, un teléfono de guardia o una cadena de avisos escrita."
+    minutos_estimados: 2
+    opciones:
+      - code: escrito_probado
+        label: "Sí, escrito y ya se ha usado"
+        emits: {proc_incidentes: escrito_probado}
+      - code: escrito
+        label: "Sí, escrito"
+        emits: {proc_incidentes: escrito}
+      - code: sabido
+        label: "Se sabe qué hacer, pero no está escrito"
+        emits: {proc_incidentes: sabido}
+      - code: "no"
+        label: "No hay nada"
+        emits: {proc_incidentes: "no"}
+
+  - code: op.exp.incidentes.registro
+    bloque: B12
+    orden: 11
+    tipo: TOOL
+    funcion: REGISTRO_INCIDENTES
+    texto: "¿Dónde se anotan los incidentes de seguridad que ocurren?"
+    por_que: "Es op.exp.9. Un registro vacío es peor que un registro con incidentes bien gestionados: nadie se cree que no haya pasado nada."
+    como_saberlo: "Puede ser el sistema de tickets, una hoja de cálculo, la herramienta LUCIA del CCN o la del SOC."
+    minutos_estimados: 1
+
+  - code: op.exp.incidentes.notificacion
+    bloque: B12
+    orden: 12
+    tipo: SINGLE
+    texto: "Si un incidente es grave, ¿a quién lo notificáis fuera de la organización?"
+    por_que: "Es el refuerzo de notificación, obligatorio en Media y Alta. El destinatario cambia según el tipo de entidad."
+    como_saberlo: "Los organismos públicos notifican al CCN-CERT; las empresas suelen notificar a su cliente público y, si aplica, a INCIBE-CERT."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: ccn
+        label: "Al CCN-CERT"
+        emits: {notificacion_incidentes: ccn_cert}
+      - code: incibe
+        label: "A INCIBE-CERT"
+        emits: {notificacion_incidentes: incibe}
+      - code: cliente
+        label: "Al organismo que nos contrata"
+        emits: {notificacion_incidentes: cliente}
+      - code: "no"
+        label: "No está definido"
+        emits: {notificacion_incidentes: "no"}
+
+  # ------------------------------------------------------------------ op.exp.8
+  - code: op.exp.registro
+    bloque: B12
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Se guarda un registro de quién entra en los sistemas y qué hace?"
+    por_que: "Sin registros no se puede investigar un incidente ni demostrar quién hizo qué. El nivel exigido depende de vuestra Trazabilidad."
+    como_saberlo: "Mirad si los registros de los servidores y del directorio se envían a algún sitio central, o si cada máquina guarda los suyos."
+    show_if: {">=": [{var: "nivel_orden.T"}, 1]}
+    a_quien_preguntar: "Quien administra los sistemas"
+    minutos_estimados: 2
+    opciones:
+      - code: centralizado
+        label: "Sí, centralizados en una herramienta"
+        emits: {registro_actividad: centralizado}
+      - code: local
+        label: "Sí, pero cada equipo guarda los suyos"
+        emits: {registro_actividad: local}
+      - code: parcial
+        label: "Solo de algunos sistemas"
+        emits: {registro_actividad: parcial}
+      - code: "no"
+        label: "No se guardan"
+        emits: {registro_actividad: "no"}
+
+  - code: op.exp.registro.herramienta
+    bloque: B12
+    orden: 21
+    tipo: TOOL
+    funcion: SIEM
+    texto: "¿Con qué herramienta se centralizan?"
+    por_que: "De ahí saldrá la evidencia de qué sistemas envían registros y cuáles no."
+    como_saberlo: "Ejemplos: Microsoft Sentinel, Wazuh, Graylog, Splunk, Elastic, o la plataforma del SOC que os presta el servicio."
+    show_if: {"==": [{var: "hechos.registro_actividad"}, "centralizado"]}
+    minutos_estimados: 1
+
+  - code: op.exp.registro.retencion
+    bloque: B12
+    orden: 22
+    tipo: SINGLE
+    texto: "¿Cuánto tiempo se guardan esos registros?"
+    por_que: "Muchos incidentes se descubren semanas después. El auditor compara el plazo configurado con el que dice vuestra normativa."
+    como_saberlo: "En la configuración de retención de vuestro sistema de registros. En Microsoft 365, en el portal de cumplimiento, apartado de Auditoría."
+    show_if: {">=": [{var: "nivel_orden.T"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: m3
+        label: "Menos de 3 meses"
+        emits: {retencion_logs_meses: 2}
+      - code: m6
+        label: "Entre 3 y 6 meses"
+        emits: {retencion_logs_meses: 6}
+      - code: m12
+        label: "Entre 6 y 12 meses"
+        emits: {retencion_logs_meses: 12}
+      - code: mas
+        label: "Más de un año"
+        emits: {retencion_logs_meses: 24}
+
+  - code: op.exp.registro.revision
+    bloque: B12
+    orden: 23
+    tipo: SINGLE
+    texto: "¿Alguien revisa esos registros, o solo se miran cuando hay un problema?"
+    por_que: "Es el refuerzo de revisión de los registros, obligatorio con Trazabilidad media o alta. Guardar sin mirar no cuenta."
+    como_saberlo: "Mirad si hay alertas configuradas, un informe periódico o un servicio de SOC que avisa."
+    show_if: {">=": [{var: "nivel_orden.T"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: soc
+        label: "Un SOC los vigila de forma continua"
+        emits: {revision_logs: soc}
+      - code: alertas
+        label: "Hay alertas automáticas que avisan"
+        emits: {revision_logs: alertas}
+      - code: periodica
+        label: "Alguien los revisa periódicamente"
+        emits: {revision_logs: periodica}
+      - code: incidente
+        label: "Solo cuando hay un problema"
+        emits: {revision_logs: reactiva}
+
+  - code: op.exp.reloj
+    bloque: B12
+    orden: 24
+    tipo: SINGLE
+    texto: "¿Todos los equipos tienen la hora sincronizada con la misma fuente?"
+    por_que: "Es el refuerzo de sincronización del reloj: si cada máquina tiene su hora, los registros no sirven para reconstruir un incidente."
+    como_saberlo: "Mirad si los equipos usan un servidor de hora (NTP) común, por ejemplo el del dominio o el del Real Instituto y Observatorio de la Armada."
+    glosario:
+      NTP: "Protocolo que mantiene la hora de todos los equipos igual y exacta"
+    show_if: {">=": [{var: "nivel_orden.T"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: "si"
+        label: "Sí, todos con la misma fuente"
+        emits: {ntp: comun}
+      - code: parcial
+        label: "Los servidores sí, los puestos no lo sé"
+        emits: {ntp: parcial}
+      - code: "no"
+        label: "No está configurado"
+        emits: {ntp: "no"}
+
+  # ----------------------------------------------------------------- op.exp.10
+  - code: op.exp.claves
+    bloque: B10
+    orden: 50
+    tipo: MULTI
+    texto: "¿Dónde se guardan las contraseñas de administración, los certificados y las claves de cifrado?"
+    por_que: "Es la medida que más veces se incumple sin saberlo: claves en un Excel, en el código o en un correo."
+    como_saberlo: "Pensad dónde está hoy la contraseña del administrador del servidor principal. Esa es la respuesta honesta."
+    a_quien_preguntar: "Quien administra los sistemas"
+    minutos_estimados: 2
+    opciones:
+      - code: gestor
+        label: "En un gestor de contraseñas compartido"
+        emits: {claves_custodia: gestor}
+      - code: hsm
+        label: "En un HSM o servicio de claves del proveedor de nube"
+        emits: {claves_custodia: hsm}
+      - code: sobre
+        label: "En sobre cerrado o caja fuerte"
+        emits: {claves_custodia: sobre}
+      - code: excel
+        label: "En un documento o hoja de cálculo"
+        emits: {claves_custodia: documento}
+      - code: memoria
+        label: "Las sabe el administrador y no están escritas"
+        emits: {claves_custodia: memoria}
+
+  - code: op.exp.claves.algoritmos
+    bloque: B10
+    orden: 51
+    tipo: SINGLE
+    texto: "¿Se comprueba que los algoritmos y certificados que usáis siguen siendo los recomendados?"
+    por_que: "Es el refuerzo de algoritmos autorizados, obligatorio en Media y Alta. El CCN publica qué algoritmos se consideran válidos y cambian con el tiempo."
+    como_saberlo: "Mirad si alguien revisa las versiones de TLS de vuestras webs y VPN, y la caducidad de los certificados."
+    show_if: {">=": [{var: "categoria_orden"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: revisado
+        label: "Sí, se revisa periódicamente"
+        emits: {algoritmos: revisado}
+      - code: instalacion
+        label: "Se eligió al instalar y no se ha vuelto a mirar"
+        emits: {algoritmos: instalacion}
+      - code: "no"
+        label: "No se ha mirado"
+        emits: {algoritmos: "no"}

@@ -1,0 +1,211 @@
+# Brief de diseño — para Claude Design
+
+> Documento compañero de `CLAUDE.md`. Qué pantallas hay que diseñar, en qué orden, con qué contenido real y qué estados. Contexto imprescindible: `CLAUDE.md` §5bis (convenciones de UI/UX), `docs/cuestionario_perfilado.md` §1bis (redacción de preguntas) y `docs/competencia_y_ux.md` §3 a §5 (indicador, portal del auditor y antipatrones).
+
+---
+
+## 1. Qué es BLENS y para quién se diseña
+
+Plataforma para cumplir el Esquema Nacional de Seguridad español. El usuario habitual **no es un experto en seguridad**: es el informático de una pyme proveedora de la Administración, o el responsable de seguridad de un ayuntamiento, que tiene que certificarse y no sabe por dónde empezar. Llega asustado y con prisa.
+
+**La promesa visual:** en todo momento el usuario debe ver **dónde está, qué le falta y qué tiene que hacer ahora**. Si una pantalla no responde a esas tres preguntas, sobra.
+
+Tono: sobrio, institucional pero no gris, cercano sin ser informal. Es una herramienta de trabajo que se usa muchas horas, no una app de consumo. Nada de gamificación: que suba un número no significa estar conforme.
+
+---
+
+## 2. Marca y sistema
+
+**No existe landing todavía**, así que estos tokens son el punto de partida y la landing se hará después con ellos. Ajustables, pero una vez fijados se usan en todo.
+
+### Color
+| Token | Valor | Uso |
+|---|---|---|
+| `--brand-900` | `#0B4F4A` | Cabeceras oscuras, texto sobre claro |
+| `--brand-700` | `#0F766E` | **Color principal**: botones, enlaces, elementos activos |
+| `--brand-500` | `#14A79B` | Acentos, gráficas, estados hover |
+| `--brand-100` | `#CCFBF1` | Fondos suaves, resaltados |
+| `--brand-50` | `#F0FDFA` | Fondo de sección |
+| `--ink-900` | `#0F172A` | Texto principal |
+| `--ink-600` | `#475569` | Texto secundario |
+| `--ink-400` | `#94A3B8` | Texto deshabilitado, bordes |
+| `--surface` | `#FFFFFF` / `#F8FAFC` | Fondo de tarjeta y de página |
+
+**Semánticos** (nunca solos: siempre con icono o texto):
+`--ok #15803D` cumple · `--warn #B45309` insuficiente · `--danger #B91C1C` crítico · `--muted #64748B` no aplica · `--info #1D4ED8` informativo · `--expired #7C2D12` caducado (distinto del rojo crítico) · `--ai #7C3AED` sugerido por IA.
+
+El teal es el color de la marca y de la acción. **El verde semántico nunca es el teal**, para que "es un botón" y "esto cumple" no se confundan.
+
+### Tipografía
+- **Interfaz:** Inter, con `font-feature-settings: "tnum"` activado. Hay muchas tablas y porcentajes y los números tienen que alinearse.
+- **Códigos de medida** (`op.exp.6`, `CHK-op.acc.4.2`): monoespaciada (JetBrains Mono o la del sistema). Aparecen constantemente y deben reconocerse de un vistazo.
+- **Escala:** 12 / 14 / 16 / 20 / 24 / 32. El cuerpo de tabla a 14, la pregunta del perfilado a 20.
+
+### Espaciado y forma
+- Rejilla de 4 px. Radio 8 px en tarjetas y 6 px en controles. Sombras suaves, nada de relieve marcado.
+- Ancho máximo de lectura en el perfilado: 680 px. Las tablas ocupan todo el ancho.
+- **Densidad:** alta en tablas y listados, con opción de vista cómoda. Esto es una herramienta de datos.
+- **Accesibilidad WCAG AA:** contraste, foco visible, uso completo con teclado (también en el grafo y las tablas), `prefers-reduced-motion`.
+- **Idioma:** español. Preparar para más idiomas, sin prioridad.
+- **Móvil:** la app es de escritorio, con dos excepciones que sí deben funcionar bien en el móvil: **subir evidencias** (hacer la foto del CPD o del extintor en el sitio) y **consultar el estado**.
+
+---
+
+## 3. Estados que toda pantalla debe contemplar
+
+Se diseñan explícitamente, no se improvisan:
+
+1. **Vacío de verdad** (cliente nuevo, sin nada): es la primera impresión y la que más convierte. Tiene que decir qué hacer, no lamentar que no haya datos.
+2. **Cargando** (hay cálculos y tareas en segundo plano: PDF, ZIP, recálculos).
+3. **Error** con salida: qué pasó y qué puede hacer.
+4. **Caducado:** una evidencia o un certificado que venció. Estado propio, no un rojo genérico.
+5. **Pendiente de revisión** y **rechazado con motivo**.
+6. **Sugerido por IA:** distintivo claro, con confianza y origen, y acción de aceptar o corregir. Nunca se confunde con un dato confirmado.
+7. **No aplica justificado:** visible, no escondido.
+
+---
+
+## 4. Estructura de navegación
+
+Barra lateral con las secciones, y arriba el selector de sistema (un cliente puede tener varios) y el indicador de listo para auditoría siempre visible.
+
+```
+Inicio (dashboard)
+Mi sistema
+  ├─ Categorización
+  ├─ Declaración de Aplicabilidad
+  └─ Perfilado
+Cumplimiento
+  ├─ Medidas (checklist)
+  └─ Evidencias (la carpeta)
+Riesgos
+  ├─ Activos y dependencias
+  └─ Amenazas y tratamiento
+Documentos
+Componentes y proveedores
+Incidentes y acciones
+Auditoría
+  ├─ Paquete
+  └─ Acceso del auditor
+```
+
+---
+
+## 5. Pantallas a diseñar, por prioridad
+
+### Prioridad 1 — lo que convierte y lo que se usa a diario
+
+**P1. Categorización gratuita (sin cuenta)**
+Asistente de 5 pasos, uno por dimensión. Cada paso: una pregunta en lenguaje llano con ejemplos reconocibles, y cuatro opciones (no aplica, bajo, medio, alto). Resultado: categoría resultante, número de medidas aplicables y qué implica. Llamada a la acción para guardar el resultado creando cuenta. Debe verse serio y rápido: es la puerta del producto.
+
+**P2. Perfilado (el corazón)**
+- Lista de bloques con progreso, minutos estimados y responsable asignado.
+- Ficha de pregunta: texto grande, **por qué se pregunta**, **dónde mirarlo** (con la ruta de menús de las herramientas que el propio cliente ya declaró), opciones como situaciones reales, y glosario al pasar el ratón.
+- Botón secundario **"preguntárselo a otra persona"** que pide a quién y crea la tarea. No existe la opción "no lo sé" en el menú.
+- Al responder algo que abre camino (por ejemplo, declarar un CPD propio), se ve aparecer el bloque nuevo: el usuario entiende por qué crece el cuestionario.
+- Guardado automático visible y posibilidad de salir y volver.
+
+**P3. La carpeta de evidencias**
+El objeto central del producto. Dos vistas de lo mismo:
+- **Árbol de carpetas** con la estructura del paquete de auditoría (00_Gobernanza, 01_Alcance…), con su estado por carpeta.
+- **Lista de requisitos** filtrable por marco, familia, estado, responsable y "caduca pronto".
+Cada fila: qué se pide, medida a la que responde, estado, responsable y vencimiento.
+
+**P4. Detalle de un requisito de evidencia**
+Aquí se gana o se pierde la usabilidad:
+- Qué hay que demostrar y a qué medida o requisito responde.
+- **Opciones alternativas** ordenadas por solidez ("con una basta"), con la preferida destacada.
+- **Qué debe verse:** lista de criterios marcables.
+- **Rechazos típicos** como aviso antes de subir, no después.
+- Zona de subida (arrastrar, o cámara en móvil), con la ruta concreta para su producto.
+- Historial: versiones, quién subió, quién validó, fecha de caducidad.
+
+**P5. Dashboard**
+- **Indicador de listo para auditoría** con sus **tres componentes separados** (madurez suficiente, evidencia viva, documentación vigente). Debajo, en texto pequeño pero claro: esto no es una declaración de conformidad.
+- Heat-map por familia y marco.
+- Ranking de gaps con acción directa.
+- Delta desde la semana anterior.
+- Avisos agrupados: evidencias que caducan, certificados de proveedor que vencen, tareas vencidas.
+
+### Prioridad 2 — trabajo de fondo
+
+**P6. Checklist de medidas.** Tabla densa: medida, aplicable, madurez actual y objetivo, delta con semáforo, responsable, fecha, evidencias enlazadas y aviso de "madurez no soportada". Filtros y edición en línea, con navegación por teclado.
+
+**P7. Declaración de Aplicabilidad.** Tabla de medidas y refuerzos con su origen de aplicabilidad (categoría o nivel de dimensión), selecciones de refuerzo a resolver, no aplicables con justificación obligatoria, y flujo de aprobación con versión.
+
+**P8. Riesgos: activos y dependencias.** El grafo es donde la competencia falla, así que hay que hacerlo bien: multiselección de nodos, **porcentaje de dependencia visible en la arista**, zoom y desplazamiento fluidos, autoajuste, detección de ciclos con mensaje claro, y alternativa en tabla para quien prefiera teclado.
+
+**P9. Riesgos: amenazas y tratamiento.** Por amenaza y dimensión: riesgo intrínseco frente a residual, lado a lado, con las salvaguardas que lo reducen y su madurez. **Simulador**: "si subo op.mon.1 a L4, el riesgo baja a X". Decisión de tratamiento con responsable y plazo.
+
+**P10. Componentes y proveedores.** Lista de componentes de seguridad con su ruta de op.pl.5 (CPSTIC, certificado del artículo 19 o compensatoria), versión, caducidad de la cualificación y avisos. Proveedores con su certificado ENS, alcance y vigencia.
+
+**P11. Documentos.** Lista por tipo con estado (borrador, en revisión, aprobado, vigente, obsoleto), versiones, diff y descargas. Editor sencillo del documento generado.
+
+**P12. Incidentes y plan de acciones.** Registro de incidentes y lista de hallazgos con responsable, plazo y estado.
+
+### Prioridad 3 — específicas
+
+**P13. Portal del auditor.** Interfaz **distinta y minimalista**, sin el resto de la aplicación. Por medida: checks, evidencias con fecha y procedencia, documentos vigentes. Herramienta de muestreo, peticiones de información y marcado de revisado. Debe transmitir rigor y no hacerle perder un minuto: es quien decide si tu cliente se certifica.
+
+**P14. Panel de administración del CPSTIC** (interno): subida de la guía, diff del mes con altas, bajas y dudosas, y aprobación.
+
+**P15. Página pública de confianza** (post-v1): estado ENS del cliente para enseñar en licitaciones.
+
+---
+
+## 6. Piezas reutilizables que conviene resolver una vez
+
+- **Semáforo de madurez** (L0-L5 con objetivo y delta).
+- **Chip de estado de evidencia:** pendiente, aportada, en revisión, validada, rechazada, caducada, fuera de alcance, no aplica.
+- **Tarjeta de pregunta** del perfilado, con sus cuatro apoyos.
+- **Bloque de criterios de aceptación** marcable.
+- **Aviso de rechazo típico** (preventivo, no alarmista).
+- **Distintivo de sugerencia de IA** con nivel de confianza y enlace al origen.
+- **Selector de sistema** y migas de pan.
+- **Panel de tarea en segundo plano** (generando PDF, ZIP o recalculando).
+- **Tabla de datos** con filtros, orden, densidad y export.
+
+---
+
+## 7. Textos de ejemplo reales (usar estos, no *lorem ipsum*)
+
+Pregunta del perfilado:
+> **¿Los ordenadores y servidores tienen antivirus?**
+> *Por qué:* el auditor comprobará que están protegidos todos, y que el antivirus está actualizado y alguien mira sus avisos.
+> *Cómo saberlo:* si usáis Microsoft 365, entrad en el portal de Defender, en Dispositivos.
+> Opciones: uno contratado · el que trae Windows · solo en algunos equipos · lo gestiona nuestro proveedor · no hay antivirus
+
+Requisito de evidencia:
+> **Inventario de la consola del antivirus** · op.exp.6 · caduca en 90 días
+> Con una de estas tres basta: export de la consola (preferida), captura del panel de cobertura, o informe del proveedor.
+> Debe verse: el total de equipos protegidos · que coincide con el inventario · que incluye servidores · sin equipos sin comunicar.
+> El auditor lo rechazará si: es la captura de un solo equipo, o si la cobertura es del 80 % sin explicar el 20 % restante.
+
+Estado vacío del dashboard:
+> **Aún no hay datos de cumplimiento.** Empieza por categorizar tu sistema: son 5 preguntas y 2 minutos, y de ahí sale todo lo demás.
+
+---
+
+## 8. Lo que NO se debe diseñar
+
+- Insignias, medallas, celebraciones ni barras que sugieran que ya se cumple.
+- Rojos alarmistas por todas partes en el primer uso: un cliente nuevo está a cero por definición y eso es normal.
+- Menús duplicados ni un "modo experto" que solo cambie de sitio las mismas opciones.
+- Pantallas que exijan entender el ENS para usarse.
+- Notificaciones sueltas por cada cambio: van agrupadas y accionables.
+
+---
+
+## 9. Prompts de arranque para Claude Design
+
+**Pantalla 1 · Categorización gratuita**
+> Lee `docs/brief_diseno.md` (§2 tokens, §3 estados) y `docs/cuestionario_perfilado.md` §1bis. Diseña el asistente de categorización de BLENS: 5 pasos, uno por dimensión (confidencialidad, integridad, disponibilidad, autenticidad, trazabilidad), con cuatro opciones cada uno (no aplica, bajo, medio, alto) y ejemplos reconocibles. Más la pantalla de resultado con la categoría obtenida, el número de medidas aplicables y la llamada a crear cuenta. Se usa sin registro y es la puerta del producto: tiene que transmitir seriedad y rapidez. Nada de gamificación.
+
+**Pantalla 2 · Ficha de pregunta del perfilado**
+> Usa el ejemplo real del antivirus de `docs/cuestionario_perfilado.md` §1bis. Diseña la pantalla de una pregunta con sus cuatro apoyos: el texto, el porqué, dónde mirarlo y las opciones como situaciones reales, más glosario al pasar el ratón. Incluye el botón secundario "preguntárselo a otra persona" (no existe la opción "no lo sé") y la barra de progreso por bloques con minutos estimados y responsable asignado.
+
+**Pantalla 3 · Detalle de requisito de evidencia**
+> Usa el ejemplo del inventario de la consola del antivirus de `docs/brief_diseno.md` §7. Diseña la pantalla de un requisito: qué hay que demostrar, las tres opciones alternativas ordenadas por solidez con la preferida destacada, los criterios marcables de "qué debe verse", el aviso de rechazos típicos antes de subir, la zona de subida y el historial con estado y caducidad.
+
+**Pantalla 4 · Dashboard**
+> Diseña el panel principal con el indicador "listo para auditoría" y sus tres componentes separados (madurez suficiente, evidencia viva, documentación vigente), el heat-map por familia y marco, el ranking de carencias con acción directa y los avisos agrupados. Incluye el estado vacío de un cliente nuevo, que es la primera impresión. Recuerda: el indicador no es una declaración de conformidad y el diseño debe decirlo sin alarmar a quien acaba de empezar.

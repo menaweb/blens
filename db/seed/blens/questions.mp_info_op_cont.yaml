@@ -1,0 +1,409 @@
+# Seed BLENS · Preguntas de perfilado — familias mp.info (Protección de la información) y op.cont (Continuidad)
+# Especificación: docs/cuestionario_perfilado.md (§1bis redacción, bloques B13 y B14)
+#
+# APLICABILIDAD (todo por nivel de dimensión salvo mp.info.1, que va por categoría):
+#   mp.info.1 datos personales   → categoría (todas)
+#   mp.info.2 calificación       → Confidencialidad ≥ MEDIO
+#   mp.info.3 firma electrónica  → Integridad o Autenticidad ≥ BAJO
+#   mp.info.4 sellos de tiempo   → Trazabilidad = ALTO
+#   mp.info.5 limpieza de docs   → Confidencialidad ≥ BAJO
+#   mp.info.6 copias             → Disponibilidad ≥ BAJO
+#   op.cont.1 análisis impacto   → Disponibilidad ≥ MEDIO
+#   op.cont.2/3/4                → Disponibilidad = ALTO
+# Variables: nivel_orden.C|I|T|A|D · nivel_orden.IA = máximo de Integridad y Autenticidad
+
+version: 1
+familias: [mp.info, op.cont]
+bloques:
+  - code: B13
+    titulo: Copias de seguridad y continuidad
+    minutos_estimados: 8
+  - code: B14
+    titulo: Protección de la información
+    minutos_estimados: 7
+
+questions:
+
+  # ================================================================== mp.info.6
+  - code: mp.info.copias.herramienta
+    bloque: B13
+    orden: 10
+    tipo: TOOL
+    funcion: BACKUP
+    texto: "¿Con qué hacéis las copias de seguridad?"
+    por_que: "De esa herramienta saldrá la evidencia principal: qué se copia, cada cuánto y si las copias terminan bien."
+    como_saberlo: "Ejemplos habituales: Veeam, Acronis, Azure Backup, AWS Backup, la copia del hipervisor, o un script con tareas programadas. Si lo hace vuestro proveedor, indícalo también."
+    a_quien_preguntar: "Quien administra los servidores"
+    show_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    minutos_estimados: 1
+
+  - code: mp.info.copias.alcance
+    bloque: B13
+    orden: 11
+    tipo: LIST
+    texto: "¿De qué se hacen copias, cada cuánto y dónde se guardan?"
+    por_que: "El auditor compara esta lista con el inventario. El fallo típico es copiar el servidor pero no la base de datos, o no copiar lo que está en la nube."
+    como_saberlo: "Mira los trabajos configurados en la herramienta de copias. Añade también lo que esté en Microsoft 365, Google Workspace o aplicaciones de terceros."
+    show_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    minutos_estimados: 3
+    campos:
+      - {code: sistema, label: "Sistema o información"}
+      - {code: frecuencia, label: "Cada cuánto"}
+      - {code: destino, label: "Dónde se guarda"}
+      - {code: retencion, label: "Cuánto tiempo se conserva"}
+
+  - code: mp.info.copias.fuera
+    bloque: B13
+    orden: 12
+    tipo: SINGLE
+    texto: "¿Alguna copia se guarda fuera del sitio donde están los servidores?"
+    por_que: "Si el incendio o el ransomware alcanzan a los servidores y a las copias, no hay recuperación. El auditor pregunta expresamente por esto."
+    como_saberlo: "Piensa dónde está físicamente el disco o la cinta de las copias. Si están en la nube, en qué cuenta y con qué credenciales."
+    show_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: nube_separada
+        label: "Sí, en la nube, con cuenta separada"
+        emits: {copias_fuera: nube_separada}
+      - code: otra_sede
+        label: "Sí, en otra sede o local"
+        emits: {copias_fuera: otra_sede}
+      - code: misma_red
+        label: "Están en otro equipo, pero en la misma red"
+        emits: {copias_fuera: misma_red}
+      - code: mismo_equipo
+        label: "En el mismo servidor o cabina"
+        emits: {copias_fuera: mismo_equipo}
+
+  - code: mp.info.copias.proteccion
+    bloque: B13
+    orden: 13
+    tipo: MULTI
+    texto: "¿Cómo se protegen las copias?"
+    por_que: "Es el refuerzo de protección de copias, obligatorio con Disponibilidad alta. Y contra el ransomware, la inmutabilidad es lo que de verdad salva."
+    como_saberlo: "Mira en la herramienta si las copias se cifran, si el almacenamiento es inmutable o de solo lectura, y quién puede borrarlas."
+    show_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: cifradas
+        label: "Están cifradas"
+        emits: {copias_cifradas: true}
+      - code: inmutables
+        label: "El almacenamiento es inmutable o de solo lectura"
+        emits: {copias_inmutables: true}
+      - code: credenciales_separadas
+        label: "Se acceden con credenciales distintas de las de administración"
+        emits: {copias_credenciales: true}
+      - code: ninguna
+        label: "Ninguna de estas"
+        emits: {copias_proteccion: "no"}
+
+  - code: mp.info.copias.restauracion
+    bloque: B13
+    orden: 14
+    tipo: SINGLE
+    texto: "¿Cuándo fue la última vez que restaurasteis algo de verdad desde una copia?"
+    por_que: "Una copia que nunca se ha restaurado no es una copia: es una suposición. Es el refuerzo de pruebas de recuperación y uno de los hallazgos más frecuentes."
+    como_saberlo: "Vale tanto una prueba planificada como una restauración real por un incidente, si quedó constancia."
+    show_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: ultimo_trimestre
+        label: "En los últimos tres meses"
+        emits: {prueba_restauracion: trimestre}
+      - code: ultimo_anio
+        label: "Este año"
+        emits: {prueba_restauracion: anio}
+      - code: hace_mas
+        label: "Hace más de un año"
+        emits: {prueba_restauracion: antiguo}
+      - code: nunca
+        label: "Nunca se ha probado"
+        emits: {prueba_restauracion: nunca}
+
+  - code: mp.info.copias.responsable
+    bloque: B13
+    orden: 15
+    tipo: SINGLE
+    texto: "¿Alguien comprueba que las copias de cada día han terminado bien?"
+    por_que: "Lo habitual es que las copias fallen en silencio durante semanas. El auditor pedirá el registro de ejecuciones y mirará los fallos."
+    como_saberlo: "Mira si llega un correo diario de resultado y si alguien lo abre."
+    show_if: {">=": [{var: "nivel_orden.D"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: revision_diaria
+        label: "Sí, se revisa a diario"
+        emits: {copias_supervision: diaria}
+      - code: alertas
+        label: "Solo llega aviso si falla"
+        emits: {copias_supervision: alertas}
+      - code: ocasional
+        label: "Se mira de vez en cuando"
+        emits: {copias_supervision: ocasional}
+      - code: "no"
+        label: "Nadie lo revisa"
+        emits: {copias_supervision: "no"}
+
+  # ================================================================== op.cont.1
+  - code: op.cont.impacto
+    bloque: B13
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Habéis analizado qué pasaría si el servicio se para y durante cuánto tiempo se puede aguantar?"
+    por_que: "Es el análisis de impacto (op.cont.1), obligatorio con Disponibilidad media o alta. Marca cuánto hay que invertir en continuidad."
+    como_saberlo: "Busca un documento que diga, para cada servicio, cuánto puede estar parado y cuántos datos se pueden perder."
+    show_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: formal
+        label: "Sí, hay un análisis documentado"
+        emits: {bia: formal}
+      - code: informal
+        label: "Lo tenemos claro, pero no está escrito"
+        emits: {bia: informal}
+      - code: "no"
+        label: "No se ha analizado"
+        emits: {bia: "no"}
+
+  - code: op.cont.rto_rpo
+    bloque: B13
+    orden: 21
+    tipo: SINGLE
+    texto: "Si el sistema se cae un lunes por la mañana, ¿cuánto puede estar parado antes de que sea un problema grave?"
+    por_que: "Ese plazo decide si basta con copias o hace falta un plan de continuidad con medios alternativos."
+    como_saberlo: "Responde con lo que diría vuestra dirección, no con lo técnicamente posible."
+    show_if: {">=": [{var: "nivel_orden.D"}, 2]}
+    minutos_estimados: 1
+    opciones:
+      - code: h4
+        label: "Menos de 4 horas"
+        emits: {rto_horas: 4}
+      - code: h24
+        label: "Un día"
+        emits: {rto_horas: 24}
+      - code: d3
+        label: "Dos o tres días"
+        emits: {rto_horas: 72}
+      - code: semana
+        label: "Una semana o más"
+        emits: {rto_horas: 168}
+
+  # ============================================================ op.cont.2, 3 y 4
+  - code: op.cont.plan
+    bloque: B13
+    orden: 30
+    tipo: SINGLE
+    texto: "¿Existe un plan escrito de qué hacer si el sistema se cae del todo?"
+    por_que: "Es el plan de continuidad (op.cont.2). Con Disponibilidad alta es obligatorio y el auditor mirará si está probado, no solo si existe."
+    como_saberlo: "Busca un documento con responsables, teléfonos, orden de recuperación de sistemas y criterios para activarlo."
+    show_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    minutos_estimados: 2
+    opciones:
+      - code: plan_probado
+        label: "Sí, y se ha probado"
+        emits: {pcn: probado}
+      - code: plan
+        label: "Sí, pero no se ha probado"
+        emits: {pcn: sin_probar}
+      - code: borrador
+        label: "Hay algo empezado"
+        emits: {pcn: borrador}
+      - code: "no"
+        label: "No hay plan"
+        emits: {pcn: "no"}
+
+  - code: op.cont.pruebas
+    bloque: B13
+    orden: 31
+    tipo: SINGLE
+    texto: "¿Cuándo se probó por última vez ese plan?"
+    por_que: "Es op.cont.3. Una prueba de mesa ya cuenta si queda acta; lo que no cuenta es no haber probado nunca."
+    como_saberlo: "Vale una simulación en sala, un simulacro real o una recuperación completa en un entorno de pruebas."
+    show_if: {and: [{">=": [{var: "nivel_orden.D"}, 3]}, {in: [{var: "hechos.pcn"}, ["probado", "sin_probar"]]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: este_anio
+        label: "Este año"
+        emits: {pcn_prueba: anio}
+      - code: hace_dos
+        label: "Hace uno o dos años"
+        emits: {pcn_prueba: antiguo}
+      - code: nunca
+        label: "Nunca"
+        emits: {pcn_prueba: nunca}
+
+  - code: op.cont.medios
+    bloque: B13
+    orden: 32
+    tipo: MULTI
+    texto: "Si vuestra sala de servidores quedara inutilizable, ¿dónde levantaríais el servicio?"
+    por_que: "Son los medios alternativos (op.cont.4). No basta con decir «en la nube»: el auditor pedirá el contrato o la infraestructura ya preparada."
+    como_saberlo: "Mira si hay un contrato de recuperación, una segunda sede, una suscripción en la nube reservada o un acuerdo con el proveedor."
+    show_if: {">=": [{var: "nivel_orden.D"}, 3]}
+    minutos_estimados: 2
+    opciones:
+      - code: nube
+        label: "En la nube, con recursos ya preparados"
+        emits: {medios_alternativos: nube}
+      - code: segunda_sede
+        label: "En otra sede propia"
+        emits: {medios_alternativos: sede}
+      - code: contrato
+        label: "Con un proveedor contratado para eso"
+        emits: {medios_alternativos: contrato}
+      - code: improvisar
+        label: "Habría que improvisar"
+        emits: {medios_alternativos: "no"}
+
+  # ================================================================== mp.info.1
+  - code: mp.info.personales
+    bloque: B14
+    orden: 10
+    tipo: SINGLE
+    texto: "¿El sistema trata datos personales?"
+    por_que: "mp.info.1 aplica siempre e implica cumplir también el RGPD. El auditor pedirá el registro de actividades de tratamiento y la relación con el delegado de protección de datos."
+    como_saberlo: "Cuenta como datos personales cualquier dato de una persona identificable: nóminas, expedientes, correos, vídeo, listas de usuarios."
+    minutos_estimados: 1
+    opciones:
+      - code: si_especiales
+        label: "Sí, incluidos datos de salud, ideología u otros especialmente protegidos"
+        emits: {datos_personales: especiales}
+      - code: "si"
+        label: "Sí, datos personales ordinarios"
+        emits: {datos_personales: "si"}
+      - code: "no"
+        label: "No"
+        emits: {datos_personales: "no"}
+
+  - code: mp.info.dpd
+    bloque: B14
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Quién es vuestro delegado de protección de datos?"
+    por_que: "En el sector público es obligatorio. El auditor comprobará que existe y que participa en lo que le corresponde."
+    como_saberlo: "Suele figurar en la web, en el apartado de privacidad."
+    show_if: {"!=": [{var: "hechos.datos_personales"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: interno
+        label: "Una persona de la organización"
+        emits: {dpd: interno}
+      - code: externo
+        label: "Un servicio externo"
+        emits: {dpd: externo}
+      - code: "no"
+        label: "No hay"
+        emits: {dpd: "no"}
+
+  # ================================================================== mp.info.2
+  - code: mp.info.calificacion
+    bloque: B14
+    orden: 20
+    tipo: SINGLE
+    texto: "¿Se distingue qué información es confidencial y cuál se puede compartir?"
+    por_que: "Es la calificación de la información (mp.info.2), obligatoria con Confidencialidad media o alta. Sin ella, nadie sabe qué proteger más."
+    como_saberlo: "Mira si los documentos llevan alguna marca (uso interno, confidencial) o si hay una norma que lo explique."
+    show_if: {">=": [{var: "nivel_orden.C"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: norma_y_marcado
+        label: "Sí, hay norma y los documentos van marcados"
+        emits: {calificacion: norma_marcado}
+      - code: norma
+        label: "Hay norma, pero no se marca"
+        emits: {calificacion: norma}
+      - code: costumbre
+        label: "Se sabe por costumbre"
+        emits: {calificacion: costumbre}
+      - code: "no"
+        label: "No se distingue"
+        emits: {calificacion: "no"}
+
+  # ================================================================== mp.info.3
+  - code: mp.info.firma
+    bloque: B14
+    orden: 30
+    tipo: MULTI
+    texto: "¿Se firman documentos electrónicamente?"
+    por_que: "mp.info.3 aplica desde nivel bajo de Integridad o Autenticidad. El tipo de certificado determina el refuerzo a declarar."
+    como_saberlo: "Cuenta las firmas de resoluciones, contratos y expedientes. Mira si se usan certificados de la FNMT, de empleado público o de sello de órgano."
+    show_if: {">=": [{var: "nivel_orden.IA"}, 1]}
+    minutos_estimados: 2
+    opciones:
+      - code: sello_organo
+        label: "Sí, con sello de órgano o de entidad"
+        emits: {firma: sello_organo}
+      - code: empleado_publico
+        label: "Sí, con certificado de empleado público"
+        emits: {firma: empleado}
+      - code: personal
+        label: "Sí, con certificado personal"
+        emits: {firma: personal}
+      - code: plataforma
+        label: "Sí, con una plataforma de firma contratada"
+        emits: {firma: plataforma}
+      - code: "no"
+        label: "No se firma electrónicamente"
+        emits: {firma: "no"}
+
+  - code: mp.info.firma.verificacion
+    bloque: B14
+    orden: 31
+    tipo: SINGLE
+    texto: "Cuando os llega un documento firmado, ¿se comprueba que la firma es válida?"
+    por_que: "Es el refuerzo de verificación y validación de firma, obligatorio con Integridad o Autenticidad media o alta."
+    como_saberlo: "Mira si se usa VALIDe, @firma o la validación integrada en vuestro gestor de expedientes."
+    show_if: {and: [{">=": [{var: "nivel_orden.IA"}, 2]}, {"!=": [{var: "hechos.firma"}, "no"]}]}
+    minutos_estimados: 1
+    opciones:
+      - code: automatica
+        label: "Sí, la aplicación lo valida sola"
+        emits: {firma_verificacion: automatica}
+      - code: manual
+        label: "Sí, a mano cuando hay dudas"
+        emits: {firma_verificacion: manual}
+      - code: "no"
+        label: "No se comprueba"
+        emits: {firma_verificacion: "no"}
+
+  # ================================================================== mp.info.4
+  - code: mp.info.sellos
+    bloque: B14
+    orden: 40
+    tipo: SINGLE
+    texto: "¿Se usan sellos de tiempo para acreditar cuándo ocurrió algo?"
+    por_que: "mp.info.4 solo aplica con Trazabilidad alta, pero entonces es obligatorio y debe usar un prestador cualificado."
+    como_saberlo: "Mira si vuestro gestor de expedientes o de firma añade sello de tiempo, y de qué prestador."
+    show_if: {">=": [{var: "nivel_orden.T"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: cualificado
+        label: "Sí, de un prestador cualificado"
+        emits: {sellos_tiempo: cualificado}
+      - code: propio
+        label: "Sí, con un servicio propio"
+        emits: {sellos_tiempo: propio}
+      - code: "no"
+        label: "No se usan"
+        emits: {sellos_tiempo: "no"}
+
+  # ================================================================== mp.info.5
+  - code: mp.info.limpieza
+    bloque: B14
+    orden: 50
+    tipo: SINGLE
+    texto: "Antes de publicar o enviar un documento, ¿se limpian los datos ocultos que lleva dentro?"
+    por_que: "Es mp.info.5. Un PDF publicado puede llevar el nombre del autor, comentarios, control de cambios o texto tachado pero recuperable. Ha costado disgustos públicos."
+    como_saberlo: "Mira si hay una herramienta de limpieza de metadatos o si alguien revisa las propiedades del documento antes de publicarlo."
+    show_if: {">=": [{var: "nivel_orden.C"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: herramienta
+        label: "Sí, con una herramienta"
+        emits: {limpieza_documentos: herramienta}
+      - code: manual
+        label: "Sí, a mano"
+        emits: {limpieza_documentos: manual}
+      - code: "no"
+        label: "No se hace"
+        emits: {limpieza_documentos: "no"}

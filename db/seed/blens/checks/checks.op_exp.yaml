@@ -1,0 +1,608 @@
+# Seed BLENS · Checks de verificación — familia op.exp
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.exp
+checks:
+  - code: "CHK-op.exp.1.1"
+    measure: op.exp.1
+    item: "op.exp.1.1"
+    descripcion: "Se mantendrá un inventario actualizado de todos los elementos del sistema, detallando su naturaleza e identificando a su responsable; es decir, la persona que toma las decisiones relativas al mismo"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.1-01, EV-op.exp.1-02]
+  - code: "CHK-op.exp.1.r1.1"
+    measure: op.exp.1
+    refuerzo: op.exp.1.r1
+    item: "op.exp.1.r1.1"
+    descripcion: "El etiquetado del equipamiento y del cableado formará parte del inventario"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.1.r2.1"
+    measure: op.exp.1
+    refuerzo: op.exp.1.r2
+    item: "op.exp.1.r2.1"
+    descripcion: "Se dispondrá de herramientas que permitan visualizar de forma continua el estado de todos los equipos en la red, en particular, los servidores y los dispositivos de red y de comunicaciones"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.1-03]
+  - code: "CHK-op.exp.1.r3.1"
+    measure: op.exp.1
+    refuerzo: op.exp.1.r3
+    item: "op.exp.1.r3.1"
+    descripcion: "Se dispondrá de herramientas que permitan categorizar los activos críticos por contexto de la organización y riesgos de seguridad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.1.r4.1"
+    measure: op.exp.1
+    refuerzo: op.exp.1.r4
+    item: "op.exp.1.r4.1"
+    descripcion: "Se mantendrá actualizada una relación formal de los componentes software de terceros empleados en el despliegue del sistema…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.1-04]
+  - code: "CHK-op.exp.2.1"
+    measure: op.exp.2
+    item: "op.exp.2.1"
+    descripcion: "Se retiren cuentas y contraseñas estándar"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.2"
+    measure: op.exp.2
+    item: "op.exp.2.2"
+    descripcion: "Se aplicará la regla de «mínima funcionalidad», es decir:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.2a"
+    measure: op.exp.2
+    item: "a)"
+    item_padre: "op.exp.2.2"
+    descripcion: "El sistema debe proporcionar la funcionalidad mínima imprescindible para que la organización alcance sus objetivos"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.2b"
+    measure: op.exp.2
+    item: "b)"
+    item_padre: "op.exp.2.2"
+    descripcion: "No proporcionará funciones injustificadas (de operación, administración o auditoría) al objeto de reducir al mínimo su perímetro de exposición, eliminándose o desactivándose aquellas funciones que sean innecesarias o…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.3"
+    measure: op.exp.2
+    item: "op.exp.2.3"
+    descripcion: "Se aplicará la regla de «seguridad por defecto», es decir:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.3a"
+    measure: op.exp.2
+    item: "a)"
+    item_padre: "op.exp.2.3"
+    descripcion: "Las medidas de seguridad serán respetuosas con el usuario y protegerán a éste, salvo que se exponga conscientemente a un riesgo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.3b"
+    measure: op.exp.2
+    item: "b)"
+    item_padre: "op.exp.2.3"
+    descripcion: "Para reducir la seguridad, el usuario tendrá que realizar acciones conscientes"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.3c"
+    measure: op.exp.2
+    item: "c)"
+    item_padre: "op.exp.2.3"
+    descripcion: "El uso natural, en los casos que el usuario no ha consultado el manual, será un uso seguro"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.2.4"
+    measure: op.exp.2
+    item: "op.exp.2.4"
+    descripcion: "Las máquinas virtuales estarán configuradas y gestionadas de un modo seguro. La gestión del parcheado, cuentas de usuarios, software antivirus, etc…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.2-01, EV-op.exp.2-02]
+  - code: "CHK-op.exp.3.1"
+    measure: op.exp.3
+    item: "op.exp.3.1"
+    descripcion: "Se mantenga en todo momento la regla de «funcionalidad mínima» ([op.exp.2])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.2"
+    measure: op.exp.3
+    item: "op.exp.3.2"
+    descripcion: "Se mantenga en todo momento la regla de «mínimo privilegio» ([op.exp.2])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.3"
+    measure: op.exp.3
+    item: "op.exp.3.3"
+    descripcion: "El sistema se adapte a las nuevas necesidades, previamente autorizadas. (Ver [op.acc.4])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.4"
+    measure: op.exp.3
+    item: "op.exp.3.4"
+    descripcion: "El sistema reaccione a vulnerabilidades notificadas. (Ver [op.exp.4])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.5"
+    measure: op.exp.3
+    item: "op.exp.3.5"
+    descripcion: "El sistema reaccione a incidentes. (Ver [op.exp.7])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.6"
+    measure: op.exp.3
+    item: "op.exp.3.6"
+    descripcion: "La configuración de seguridad solamente podrá editarse por personal debidamente autorizado"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.r1.1"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r1
+    item: "op.exp.3.r1.1"
+    descripcion: "Existirán configuraciones hardware/software, autorizadas y mantenidas regularmente, para los servidores, elementos de red y estaciones de trabajo"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.exp.3-01]
+  - code: "CHK-op.exp.3.r1.2"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r1
+    item: "op.exp.3.r1.2"
+    descripcion: "Se verificará periódicamente la configuración hardware/software del sistema para asegurar que no se han introducido ni instalado elementos no autorizados"
+    metodo: [DOCUMENTAL, MUESTREO]
+    evidencia_esperada: [EV-op.exp.3-01]
+  - code: "CHK-op.exp.3.r1.3"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r1
+    item: "op.exp.3.r1.3"
+    descripcion: "Se mantendrá una lista de servicios autorizados para servidores y estaciones de trabajo"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.3-01]
+  - code: "CHK-op.exp.3.r2.1"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r2
+    item: "op.exp.3.r2.1"
+    descripcion: "La configuración de seguridad del sistema operativo y aplicaciones, tanto de estaciones y servidores como de la electrónica de red del sistema, será responsabilidad de un número muy limitado de administradores del…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.r3.1"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r3
+    item: "op.exp.3.r3.1"
+    descripcion: "Se realizarán copias de seguridad de la configuración del sistema de forma que sea posible reconstruirlo en parte o en su totalidad tras un incidente"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.r4.1"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r4
+    item: "op.exp.3.r4.1"
+    descripcion: "La configuración de seguridad del sistema operativo y de las aplicaciones se mantendrá actualizada a través de una aplicación o procedimiento manual que permita la instalación de las correspondientes modificaciones de…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.3.r5.1"
+    measure: op.exp.3
+    refuerzo: op.exp.3.r5
+    item: "op.exp.3.r5.1"
+    descripcion: "Se dispondrá de herramientas que permitan conocer de forma periódica el estado de seguridad de la configuración de los dispositivos de red y, en el caso de que resulte deficiente, permitir su corrección"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.4.1"
+    measure: op.exp.4
+    item: "op.exp.4.1"
+    descripcion: "Se atenderá a las especificaciones de los fabricantes en lo relativo a instalación y mantenimiento de los sistemas, lo que incluirá un seguimiento continuo de los anuncios de defectos"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.exp.4-01, EV-op.exp.4-02, EV-op.exp.4-03]
+  - code: "CHK-op.exp.4.2"
+    measure: op.exp.4
+    item: "op.exp.4.2"
+    descripcion: "Se dispondrá de un procedimiento para analizar, priorizar y determinar cuándo aplicar las actualizaciones de seguridad, parches, mejoras y nuevas versiones…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.4-01, EV-op.exp.4-02, EV-op.exp.4-03]
+  - code: "CHK-op.exp.4.3"
+    measure: op.exp.4
+    item: "op.exp.4.3"
+    descripcion: "El mantenimiento solo podrá realizarse por personal debidamente autorizado"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.4-01, EV-op.exp.4-02, EV-op.exp.4-03]
+  - code: "CHK-op.exp.4.r1.1"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r1
+    item: "op.exp.4.r1.1"
+    descripcion: "Antes de poner en producción una nueva versión o una versión parcheada, se comprobará en un entorno de prueba controlado y consistente en configuración al entorno de producción, que la nueva instalación funciona…"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.exp.4-04]
+  - code: "CHK-op.exp.4.r2.1"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r2
+    item: "op.exp.4.r2.1"
+    descripcion: "Antes de la aplicación de las configuraciones, parches y actualizaciones de seguridad se preverá un mecanismo para revertirlos en caso de aparición de efectos adversos"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.4.r3.1"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r3
+    item: "op.exp.4.r3.1"
+    descripcion: "Se deberá comprobar de forma periódica la integridad del firmware utilizado en los dispositivos hardware del sistema (infraestructura de red, BIOS, etc.)…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.4.r4.1"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r4
+    item: "op.exp.4.r4.1"
+    descripcion: "Se desplegará a nivel de sistema una estrategia de monitorización continua de amenazas y vulnerabilidades. Esta estrategia detallará:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.4.r4.11"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r4
+    item: "1."
+    item_padre: "op.exp.4.r4.1"
+    descripcion: "Los indicadores críticos de seguridad a emplear"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.4.r4.12"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r4
+    item: "2."
+    item_padre: "op.exp.4.r4.1"
+    descripcion: "La política de aplicación de parches de seguridad de los componentes software relacionados en las listas de [op.exp.1.r4], [op.ext.3.r3] y [mp.sw.1.r5])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.4.r4.13"
+    measure: op.exp.4
+    refuerzo: op.exp.4.r4
+    item: "3."
+    item_padre: "op.exp.4.r4.1"
+    descripcion: "Los criterios de revisión regular y excepcional de las amenazas sobre el sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.5.1"
+    measure: op.exp.5
+    item: "op.exp.5.1"
+    descripcion: "Los cambios se planificarán para reducir el impacto sobre la prestación de los servicios afectados…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.5-01]
+  - code: "CHK-op.exp.5.2"
+    measure: op.exp.5
+    item: "op.exp.5.2"
+    descripcion: "La información a registrar para cada petición de cambio será suficiente para que quien deba autorizarlos no tenga dudas al respecto y permita gestionarlo hasta su desestimación o implementación"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: [EV-op.exp.5-01]
+  - code: "CHK-op.exp.5.3"
+    measure: op.exp.5
+    item: "op.exp.5.3"
+    descripcion: "Las pruebas de preproducción, siempre que sea posible realizarlas, se efectuarán en equipos equivalentes a los de producción, al menos en los aspectos específicos del cambio"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.5-01]
+  - code: "CHK-op.exp.5.4"
+    measure: op.exp.5
+    item: "op.exp.5.4"
+    descripcion: "Mediante un análisis de riesgos se determinará si los cambios son relevantes para la seguridad del sistema…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.5-01]
+  - code: "CHK-op.exp.5.5"
+    measure: op.exp.5
+    item: "op.exp.5.5"
+    descripcion: "Una vez implementado el cambio, se realizarán las pruebas de aceptación convenientes. Si son positivas, se actualizará la documentación de configuración (diagramas de red, manuales, el inventario, etc…"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.exp.5-01]
+  - code: "CHK-op.exp.5.r1.1"
+    measure: op.exp.5
+    refuerzo: op.exp.5.r1
+    item: "op.exp.5.r1.1"
+    descripcion: "Antes de la aplicación de los cambios, se deberá tener en cuenta la posibilidad de revertirlos en caso de la aparición de efectos adversos"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.exp.5-02]
+  - code: "CHK-op.exp.5.r1.2"
+    measure: op.exp.5
+    refuerzo: op.exp.5.r1
+    item: "op.exp.5.r1.2"
+    descripcion: "Todos los fallos en el software y hardware deberán ser comunicados al responsable designado en la organización de la seguridad"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.5-02]
+  - code: "CHK-op.exp.5.r1.3"
+    measure: op.exp.5
+    refuerzo: op.exp.5.r1
+    item: "op.exp.5.r1.3"
+    descripcion: "Todos los cambios en el sistema deberán documentarse, incluyendo una valoración del impacto que dicho cambio supone en la seguridad del sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.5-02]
+  - code: "CHK-op.exp.6.1"
+    measure: op.exp.6
+    item: "op.exp.6.1"
+    descripcion: "Se dispondrá de mecanismos de prevención y reacción frente a código dañino, incluyendo el correspondiente mantenimiento de acuerdo a las recomendaciones del fabricante"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.6-01, EV-op.exp.6-02, EV-op.exp.6-03, EV-op.exp.6-04, EV-op.exp.6-06]
+  - code: "CHK-op.exp.6.2"
+    measure: op.exp.6
+    item: "op.exp.6.2"
+    descripcion: "Se instalará software de protección frente a código dañino en todos los equipos: puestos de usuario, servidores y elementos perimetrales"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.6-01, EV-op.exp.6-02, EV-op.exp.6-03, EV-op.exp.6-04, EV-op.exp.6-06]
+  - code: "CHK-op.exp.6.3"
+    measure: op.exp.6
+    item: "op.exp.6.3"
+    descripcion: "Todo fichero procedente de fuentes externas será analizado antes de trabajar con él"
+    metodo: [MUESTREO]
+    evidencia_esperada: [EV-op.exp.6-01, EV-op.exp.6-02, EV-op.exp.6-03, EV-op.exp.6-04, EV-op.exp.6-06]
+  - code: "CHK-op.exp.6.4"
+    measure: op.exp.6
+    item: "op.exp.6.4"
+    descripcion: "Las bases de datos de detección de código dañino permanecerán permanentemente actualizadas"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.exp.6-01, EV-op.exp.6-02, EV-op.exp.6-03, EV-op.exp.6-04, EV-op.exp.6-06]
+  - code: "CHK-op.exp.6.5"
+    measure: op.exp.6
+    item: "op.exp.6.5"
+    descripcion: "El software de detección de código dañino instalado en los puestos de usuario deberá estar configurado de forma adecuada e implementará protección en tiempo real de acuerdo a las recomendaciones del fabricante"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.6-01, EV-op.exp.6-02, EV-op.exp.6-03, EV-op.exp.6-04, EV-op.exp.6-06]
+  - code: "CHK-op.exp.6.r1.1"
+    measure: op.exp.6
+    refuerzo: op.exp.6.r1
+    item: "op.exp.6.r1.1"
+    descripcion: "Todo el sistema se escaneará regularmente para detectar código dañino"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.exp.6-05]
+  - code: "CHK-op.exp.6.r2.1"
+    measure: op.exp.6
+    refuerzo: op.exp.6.r2
+    item: "op.exp.6.r2.1"
+    descripcion: "Las funciones críticas se analizarán al arrancar el sistema en prevención de modificaciones no autorizadas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.6.r3.1"
+    measure: op.exp.6
+    refuerzo: op.exp.6.r3
+    item: "op.exp.6.r3.1"
+    descripcion: "Solamente se podrán ejecutar aquellas aplicaciones previamente autorizadas. Se implementará una lista blanca para impedir la ejecución de aplicaciones no autorizadas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.6-07]
+  - code: "CHK-op.exp.6.r4.1"
+    measure: op.exp.6
+    refuerzo: op.exp.6.r4
+    item: "op.exp.6.r4.1"
+    descripcion: "Se emplearán herramientas de seguridad orientadas a detectar, investigar y resolver actividades sospechosas en puestos de usuario y servidores (EDR - Endpoint Detection and Response)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.6.r5.1"
+    measure: op.exp.6
+    refuerzo: op.exp.6.r5
+    item: "op.exp.6.r5.1"
+    descripcion: "El software de detección de código dañino permitirá realizar configuraciones avanzadas y revisar el sistema en el arranque y cada vez que se conecte un dispositivo extraíble"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.6.r5.2"
+    measure: op.exp.6
+    refuerzo: op.exp.6.r5
+    item: "op.exp.6.r5.2"
+    descripcion: "El software de detección de código dañino instalado en servidores y elementos perimetrales deberá estar configurado de forma adecuada e implementará protección en tiempo real de acuerdo a las recomendaciones del…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.1"
+    measure: op.exp.7
+    item: "op.exp.7.1"
+    descripcion: "Se dispondrá de un proceso integral para hacer frente a los incidentes que puedan tener un impacto en la seguridad del sistema, que incluya el informe de eventos de seguridad y debilidades, detallando los criterios de…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.7-01]
+  - code: "CHK-op.exp.7.2"
+    measure: op.exp.7
+    item: "op.exp.7.2"
+    descripcion: "La gestión de incidentes que afecten a datos personales tendrá en cuenta lo dispuesto en el Reglamento General de Protección de Datos; la Ley Orgánica 3/2018, de 5 de diciembre, en especial su disposición adicional…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.7-01]
+  - code: "CHK-op.exp.7.r1.1"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r1
+    item: "op.exp.7.r1.1"
+    descripcion: "Se dispondrá de soluciones de ventanilla única para la notificación de incidentes al CCN-CERT, que permita la distribución de notificaciones a las diferentes entidades de manera federada, utilizando para ello…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.7-02]
+  - code: "CHK-op.exp.7.r2.1"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "op.exp.7.r2.1"
+    descripcion: "Implantación de medidas urgentes, incluyendo la detención de servicios, el aislamiento del sistema afectado, la recogida de evidencias y protección de los registros, según convenga al caso"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r2.2"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "op.exp.7.r2.2"
+    descripcion: "Asignación de recursos para investigar las causas, analizar las consecuencias y resolver el incidente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r2.3"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "op.exp.7.r2.3"
+    descripcion: "Informar del incidente a los responsables de la información y servicios afectados y de las actuaciones llevadas a cabo para su resolución"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r2.4"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "op.exp.7.r2.4"
+    descripcion: "Medidas para:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r2.4a"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "a)"
+    item_padre: "op.exp.7.r2.4"
+    descripcion: "Prevenir que se repita el incidente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r2.4b"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "b)"
+    item_padre: "op.exp.7.r2.4"
+    descripcion: "Incluir en los procedimientos de usuario la identificación y forma de tratar el incidente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r2.4c"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r2
+    item: "c)"
+    item_padre: "op.exp.7.r2.4"
+    descripcion: "Actualizar, extender, mejorar u optimizar los procedimientos de resolución de incidentes"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r3.1"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r3
+    item: "op.exp.7.r3.1"
+    descripcion: "La reconfiguración dinámica incluye, por ejemplo, cambios en las reglas de los enrutadores (routers), listas de control de acceso, parámetros del sistema de detección / prevención de intrusiones y reglas en los…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r3.2"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r3
+    item: "op.exp.7.r3.2"
+    descripcion: "El organismo adaptará los procedimientos de reconfiguración dinámica reaccionando a los anuncios recibidos del CCN-CERT relativos a ciberamenazas sofisticadas y campañas de ataques"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.7.r4.1"
+    measure: op.exp.7
+    refuerzo: op.exp.7.r4
+    item: "op.exp.7.r4.1"
+    descripcion: "Se dispondrá de herramientas que automaticen el proceso de prevención y respuesta mediante la detección e identificación de anomalías, la segmentación dinámica de la red para reducir la superficie de ataque, el…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.8.1"
+    measure: op.exp.8
+    item: "op.exp.8.1"
+    descripcion: "Se generará un registro de auditoría, que incluirá, al menos, el identificador del usuario o entidad asociado al evento, fecha y hora, sobre qué información se realiza el evento, tipo de evento y el resultado del evento…"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.8-01, EV-op.exp.8-02]
+  - code: "CHK-op.exp.8.2"
+    measure: op.exp.8
+    item: "op.exp.8.2"
+    descripcion: "Se activarán los registros de actividad en los servidores"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.8-01, EV-op.exp.8-02]
+  - code: "CHK-op.exp.8.r1.1"
+    measure: op.exp.8
+    refuerzo: op.exp.8.r1
+    item: "op.exp.8.r1.1"
+    descripcion: "Se revisarán informalmente, de forma periódica, los registros de actividad, buscando patrones anormales"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.exp.8-06]
+  - code: "CHK-op.exp.8.r2.1"
+    measure: op.exp.8
+    refuerzo: op.exp.8.r2
+    item: "op.exp.8.r2.1"
+    descripcion: "El sistema deberá disponer de una referencia de tiempo (timestamp) para facilitar las funciones de registro de eventos y auditoría…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.8-05]
+  - code: "CHK-op.exp.8.r3.1"
+    measure: op.exp.8
+    refuerzo: op.exp.8.r3
+    item: "op.exp.8.r3.1"
+    descripcion: "En la documentación de seguridad del sistema se deberán indicar los eventos de seguridad que serán auditados y el tiempo de retención de los registros antes de ser eliminados"
+    metodo: [INSPECCION_TECNICA, MUESTREO]
+    evidencia_esperada: [EV-op.exp.8-03]
+  - code: "CHK-op.exp.8.r4.1"
+    measure: op.exp.8
+    refuerzo: op.exp.8.r4
+    item: "op.exp.8.r4.1"
+    descripcion: "Los registros de actividad y, en su caso, las copias de seguridad de los mismos, solamente podrán ser accedidos o eliminarse por personal debidamente autorizado"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.8-04]
+  - code: "CHK-op.exp.8.r5.1"
+    measure: op.exp.8
+    refuerzo: op.exp.8.r5
+    item: "op.exp.8.r5.1"
+    descripcion: "El sistema deberá implementar herramientas para analizar y revisar la actividad del sistema y la información de auditoría, en búsqueda de comprometimientos de la seguridad posibles o reales"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.8.r5.2"
+    measure: op.exp.8
+    refuerzo: op.exp.8.r5
+    item: "op.exp.8.r5.2"
+    descripcion: "Se dispondrá de un sistema automático de recolección de registros, correlación de eventos y respuesta automática ante los mismos"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-op.exp.9.1"
+    measure: op.exp.9
+    item: "op.exp.9.1"
+    descripcion: "Se registrarán los reportes iniciales, intermedios y finales de los incidentes, las actuaciones de emergencia y las modificaciones del sistema derivadas del incidente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.9-01, EV-op.exp.9-02]
+  - code: "CHK-op.exp.9.2"
+    measure: op.exp.9
+    item: "op.exp.9.2"
+    descripcion: "Se registrará aquella evidencia que pueda dirimirse en un ámbito jurisdiccional, especialmente cuando el incidente pueda comportar acciones disciplinarias sobre el personal interno, sobre proveedores externos o en la…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.exp.9-01, EV-op.exp.9-02]
+  - code: "CHK-op.exp.9.3"
+    measure: op.exp.9
+    item: "op.exp.9.3"
+    descripcion: "Como consecuencia del análisis de los incidentes, se revisará la determinación de los eventos auditables"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.exp.9-01, EV-op.exp.9-02]
+  - code: "CHK-op.exp.10.1"
+    measure: op.exp.10
+    item: "op.exp.10.1"
+    descripcion: "Las claves criptográficas se protegerán durante todo su ciclo de vida:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.1(1"
+    measure: op.exp.10
+    item: "(1)"
+    item_padre: "op.exp.10.1"
+    descripcion: "generación,"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.1(2"
+    measure: op.exp.10
+    item: "(2)"
+    item_padre: "op.exp.10.1"
+    descripcion: "transporte al punto de explotación,"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.1(3"
+    measure: op.exp.10
+    item: "(3)"
+    item_padre: "op.exp.10.1"
+    descripcion: "custodia durante la explotación,"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.1(4"
+    measure: op.exp.10
+    item: "(4)"
+    item_padre: "op.exp.10.1"
+    descripcion: "archivo posterior a su retirada de explotación activa y"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.1(5"
+    measure: op.exp.10
+    item: "(5)"
+    item_padre: "op.exp.10.1"
+    descripcion: "destrucción final"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.2"
+    measure: op.exp.10
+    item: "op.exp.10.2"
+    descripcion: "Los medios de generación estarán aislados de los medios de explotación"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.3"
+    measure: op.exp.10
+    item: "op.exp.10.3"
+    descripcion: "Las claves retiradas de operación que deban ser archivadas, lo serán en medios aislados de los de explotación"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-01, EV-op.exp.10-02]
+  - code: "CHK-op.exp.10.r1.1"
+    measure: op.exp.10
+    refuerzo: op.exp.10.r1
+    item: "op.exp.10.r1.1"
+    descripcion: "Se emplearán algoritmos y parámetros autorizados por el CCN"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.exp.10-03]
+  - code: "CHK-op.exp.10.r2.1"
+    measure: op.exp.10
+    refuerzo: op.exp.10.r2
+    item: "op.exp.10.r2.1"
+    descripcion: "Se emplearán cifradores que cumplan con los requisitos establecidos en la guía CCN-STIC que sea de aplicación"
+    metodo: [INSPECCION_TECNICA, DOCUMENTAL]
+    evidencia_esperada: []

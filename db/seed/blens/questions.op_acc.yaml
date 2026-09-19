@@ -1,0 +1,384 @@
+# Seed BLENS · Preguntas de perfilado — familia op.acc (Control de acceso)
+# Especificación: docs/cuestionario_perfilado.md (§1bis redacción, bloque B08)
+#
+# VARIABLES adicionales (calculadas por ens_applicability y expuestas al motor de reglas):
+#   nivel_orden.TA    = máximo de Trazabilidad y Autenticidad          → aplicabilidad de op.acc.1
+#   nivel_orden.CITA  = máximo de C, I, Trazabilidad y Autenticidad    → resto de op.acc
+#   (op.acc aplica por NIVEL DE DIMENSIÓN, no por categoría: ojo al escribir condiciones)
+#
+# Nota de producto: el control de accesos es el bloque que más no conformidades concentra
+# en auditorías ENS. Estas preguntas son las que más trabajo ahorran al cliente.
+
+version: 1
+familia: op.acc
+bloques:
+  - code: B08
+    titulo: Identidades y acceso
+    minutos_estimados: 12
+
+questions:
+
+  # ------------------------------------------------------------------ op.acc.1
+  - code: op.acc.directorio
+    bloque: B08
+    orden: 10
+    tipo: TOOL
+    funcion: IDENTIDAD
+    texto: "¿Dónde se crean y se borran las cuentas de usuario?"
+    por_que: "Es el punto de partida de todo el control de accesos: de ahí saldrá la lista de usuarios que revisará el auditor."
+    como_saberlo: "Piensa qué usuario y contraseña usa la gente para entrar al ordenador o al correo. Lo habitual: Active Directory, Entra ID (antes Azure AD), Google Workspace, o cada aplicación por su cuenta."
+    a_quien_preguntar: "Quien administra los sistemas"
+    minutos_estimados: 1
+
+  - code: op.acc.nominales
+    bloque: B08
+    orden: 11
+    tipo: SINGLE
+    texto: "¿Cada persona tiene su propia cuenta, o hay cuentas que usan varios?"
+    por_que: "Si varias personas comparten una cuenta, no se puede saber quién hizo qué. Es de los primeros hallazgos que encuentra un auditor."
+    como_saberlo: "Busca cuentas tipo «administrador», «recepcion» o «taller» que use más de una persona."
+    show_if: {">=": [{var: "nivel_orden.TA"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: todas_nominales
+        label: "Todas las cuentas son de una sola persona"
+        emits: {cuentas_nominales: todas}
+      - code: algunas_genericas
+        label: "Hay alguna cuenta compartida"
+        emits: {cuentas_nominales: algunas_genericas}
+      - code: muchas_genericas
+        label: "Se comparten bastantes"
+        emits: {cuentas_nominales: muchas_genericas}
+      - code: no_se
+        label: "Depende de la aplicación"
+        emits: {cuentas_nominales: mixto}
+
+  - code: op.acc.genericas.justificacion
+    bloque: B08
+    orden: 12
+    tipo: TEXT
+    texto: "¿Qué cuentas se comparten y por qué?"
+    por_que: "Compartir cuenta puede aceptarse si está justificado y se sabe quién la usó en cada momento. Sin justificación, es no conformidad."
+    como_saberlo: "Indica la cuenta, para qué sirve y cómo sabéis quién la usó (por ejemplo, un registro aparte o un gestor de contraseñas con trazas)."
+    show_if: {in: [{var: "hechos.cuentas_nominales"}, ["algunas_genericas", "muchas_genericas", "mixto"]]}
+    minutos_estimados: 2
+
+  - code: op.acc.bajas
+    bloque: B08
+    orden: 13
+    tipo: SINGLE
+    texto: "Cuando alguien se va de la organización, ¿en cuánto tiempo pierde el acceso?"
+    por_que: "El auditor cogerá dos o tres bajas del último año y comprobará si sus cuentas siguen activas. Es el hallazgo más repetido."
+    como_saberlo: "Piensa en la última persona que se fue: ¿su cuenta está deshabilitada?"
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: mismo_dia
+        label: "El mismo día"
+        emits: {baja_acceso: mismo_dia}
+      - code: dias
+        label: "En unos días"
+        emits: {baja_acceso: dias}
+      - code: variable
+        label: "Depende, no hay plazo"
+        emits: {baja_acceso: variable}
+      - code: quedan
+        label: "Alguna cuenta antigua sigue activa"
+        emits: {baja_acceso: pendientes}
+
+  # ------------------------------------------------------------------ op.acc.2
+  - code: op.acc.autorizacion
+    bloque: B08
+    orden: 20
+    tipo: SINGLE
+    texto: "Para dar acceso a una aplicación o carpeta, ¿quién lo autoriza?"
+    por_que: "Los permisos los concede quien es responsable de esa información, no quien tiene las manos en el teclado. El auditor pedirá ver la autorización."
+    como_saberlo: "Mira si los accesos se piden por ticket o correo, y quién contesta que sí."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 2
+    opciones:
+      - code: responsable_ticket
+        label: "El responsable de la información, por ticket"
+        emits: {autorizacion_acceso: responsable_formal}
+      - code: responsable_correo
+        label: "El responsable, por correo"
+        emits: {autorizacion_acceso: responsable_informal}
+      - code: jefe
+        label: "El jefe de la persona"
+        emits: {autorizacion_acceso: jefe}
+      - code: informatica
+        label: "Lo decide informática"
+        emits: {autorizacion_acceso: ti}
+      - code: sin_proceso
+        label: "No hay un proceso claro"
+        emits: {autorizacion_acceso: "no"}
+
+  - code: op.acc.minimo_privilegio
+    bloque: B08
+    orden: 21
+    tipo: SINGLE
+    texto: "¿La gente tiene solo los permisos que necesita para su trabajo?"
+    por_que: "Es el principio de mínimo privilegio. En la práctica se incumple porque los permisos se acumulan al cambiar de puesto y nadie los quita."
+    como_saberlo: "Piensa en alguien que haya cambiado de departamento: ¿conserva los accesos del puesto anterior?"
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: por_perfiles
+        label: "Sí, hay perfiles por puesto"
+        emits: {minimo_privilegio: perfiles}
+      - code: caso_a_caso
+        label: "Se mira caso a caso"
+        emits: {minimo_privilegio: caso}
+      - code: acumulan
+        label: "Los permisos se acumulan al cambiar de puesto"
+        emits: {minimo_privilegio: acumulan}
+      - code: amplios
+        label: "Casi todos tienen acceso a casi todo"
+        emits: {minimo_privilegio: amplios}
+
+  - code: op.acc.dispositivos
+    bloque: B08
+    orden: 22
+    tipo: SINGLE
+    texto: "¿Se controla desde qué equipos se puede entrar al sistema?"
+    por_que: "Es el refuerzo de control de acceso a dispositivos: no basta con saber quién entra, también desde dónde."
+    como_saberlo: "Mira si hay acceso condicional, filtrado por dirección de red o equipos registrados en el dominio."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 3]}
+    minutos_estimados: 1
+    opciones:
+      - code: condicional
+        label: "Sí, solo desde equipos gestionados"
+        emits: {control_dispositivo: condicional}
+      - code: red
+        label: "Solo desde nuestra red o la VPN"
+        emits: {control_dispositivo: red}
+      - code: "no"
+        label: "Desde cualquier equipo"
+        emits: {control_dispositivo: "no"}
+
+  # ------------------------------------------------------------------ op.acc.3
+  - code: op.acc.segregacion
+    bloque: B08
+    orden: 30
+    tipo: MULTI
+    texto: "¿Hay tareas que no puede hacer la misma persona?"
+    por_que: "Es la segregación de funciones. Con equipos pequeños no siempre es posible, y entonces hay que compensarlo con supervisión y registro."
+    como_saberlo: "Piensa en estas parejas: quien desarrolla y quien pone en producción; quien pide un acceso y quien lo concede; quien administra un sistema y quien revisa sus registros."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: desarrollo_produccion
+        label: "Quien desarrolla no pone en producción"
+        emits: {segregacion_desarrollo: true}
+      - code: solicitud_concesion
+        label: "Quien pide un acceso no lo concede"
+        emits: {segregacion_accesos: true}
+      - code: admin_auditoria
+        label: "Quien administra no revisa los registros"
+        emits: {segregacion_auditoria: true}
+      - code: ninguna
+        label: "Somos pocos y no se puede separar"
+        emits: {segregacion: imposible}
+
+  - code: op.acc.segregacion.compensacion
+    bloque: B08
+    orden: 31
+    tipo: TEXT
+    texto: "Si no se pueden separar esas tareas, ¿cómo lo compensáis?"
+    por_que: "Un auditor acepta la imposibilidad en una organización pequeña si hay supervisión, registro de las acciones de administrador y revisión por un tercero."
+    como_saberlo: "Describe quién supervisa y con qué frecuencia. Si nadie lo hace, dilo: BLENS propondrá una medida compensatoria para la Declaración de Aplicabilidad."
+    show_if: {"==": [{var: "hechos.segregacion"}, "imposible"]}
+    minutos_estimados: 2
+
+  # ------------------------------------------------------------------ op.acc.4
+  - code: op.acc.revision
+    bloque: B08
+    orden: 40
+    tipo: SINGLE
+    texto: "¿Alguien comprueba cada cierto tiempo quién tiene acceso a qué?"
+    por_que: "Es la revisión periódica de permisos. Es lo que detecta a la gente que se fue, los permisos heredados y las cuentas olvidadas."
+    como_saberlo: "Busca una lista o un correo periódico donde los responsables confirmen los accesos de su equipo."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: semestral
+        label: "Sí, cada 6 meses o menos"
+        emits: {revision_accesos: semestral, revision_accesos_dias: 180}
+      - code: anual
+        label: "Sí, una vez al año"
+        emits: {revision_accesos: anual, revision_accesos_dias: 365}
+      - code: bajas
+        label: "Solo cuando alguien se va"
+        emits: {revision_accesos: reactiva}
+      - code: "no"
+        label: "No se revisa"
+        emits: {revision_accesos: "no"}
+
+  - code: op.acc.privilegiadas
+    bloque: B08
+    orden: 41
+    tipo: NUMBER
+    texto: "¿Cuántas personas tienen permisos de administrador?"
+    por_que: "El auditor compara ese número con el tamaño de la organización. Diez administradores en una empresa de veinte personas es un hallazgo."
+    como_saberlo: "Mira el grupo de administradores del dominio o los roles con privilegios en la nube."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 1
+    campos:
+      - {code: admins_total, label: "Personas con permisos de administrador"}
+      - {code: usuarios_total, label: "Usuarios en total"}
+
+  - code: op.acc.pam
+    bloque: B08
+    orden: 42
+    tipo: TOOL
+    funcion: PAM
+    texto: "¿Usáis alguna herramienta para custodiar y vigilar las cuentas de administrador?"
+    por_que: "En Alta hay que controlar el uso de privilegios, no solo quién los tiene."
+    como_saberlo: "Ejemplos: una bóveda de contraseñas con registro de uso, o una solución de acceso privilegiado (PAM) con grabación de sesiones."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 3]}
+    minutos_estimados: 1
+
+  # ------------------------------------------------------------ op.acc.5 y .6
+  - code: op.acc.autenticacion.internos
+    bloque: B08
+    orden: 50
+    tipo: MULTI
+    texto: "¿Cómo entra vuestro personal a los sistemas?"
+    por_que: "La norma obliga a elegir un mecanismo mínimo según el nivel de vuestras dimensiones. BLENS lo traduce al refuerzo que hay que declarar en la Declaración de Aplicabilidad."
+    como_saberlo: "Piensa qué hace falta para entrar: solo contraseña, contraseña más un código del móvil, un certificado instalado, o una tarjeta o llave física."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 2
+    opciones:
+      - code: password
+        label: "Solo usuario y contraseña"
+        emits: {auth_internos: [password], refuerzo_sugerido_op_acc_6: op.acc.6.r1}
+      - code: mfa
+        label: "Contraseña más un segundo factor (app, SMS o llave)"
+        emits: {auth_internos: [mfa], refuerzo_sugerido_op_acc_6: op.acc.6.r2}
+      - code: certificado
+        label: "Certificado electrónico"
+        emits: {auth_internos: [certificado], refuerzo_sugerido_op_acc_6: op.acc.6.r3}
+      - code: certificado_fisico
+        label: "Certificado en tarjeta o token físico"
+        emits: {auth_internos: [certificado_fisico], refuerzo_sugerido_op_acc_6: op.acc.6.r4}
+
+  - code: op.acc.mfa.cobertura
+    bloque: B08
+    orden: 51
+    tipo: SINGLE
+    texto: "¿El segundo factor es obligatorio para todo el mundo?"
+    por_que: "«Está disponible» no vale. El auditor mira si hay excepciones y si están justificadas, sobre todo entre los administradores."
+    como_saberlo: "En Entra ID, en Acceso condicional, mira si la política se aplica a todos los usuarios y qué exclusiones tiene."
+    show_if: {in: ["mfa", {var: "hechos.auth_internos"}]}
+    minutos_estimados: 1
+    opciones:
+      - code: todos
+        label: "Sí, para todos"
+        emits: {mfa_cobertura: todos}
+      - code: admins
+        label: "Solo para administradores"
+        emits: {mfa_cobertura: admins}
+      - code: remoto
+        label: "Solo al entrar desde fuera"
+        emits: {mfa_cobertura: remoto}
+      - code: voluntario
+        label: "Está disponible, pero no es obligatorio"
+        emits: {mfa_cobertura: voluntario}
+
+  - code: op.acc.remoto
+    bloque: B08
+    orden: 52
+    tipo: SINGLE
+    texto: "¿Se puede entrar al sistema desde fuera de la oficina?"
+    por_que: "El acceso remoto exige doble factor en todos los niveles. Es el refuerzo R9 de op.acc.6."
+    como_saberlo: "Cuenta la VPN, el escritorio remoto, el correo web y las aplicaciones en la nube: todo lo que se abre desde casa."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: vpn_mfa
+        label: "Sí, por VPN con doble factor"
+        emits: {acceso_remoto: vpn_mfa}
+      - code: vpn
+        label: "Sí, por VPN sin doble factor"
+        emits: {acceso_remoto: vpn}
+      - code: nube
+        label: "Sí, las aplicaciones están en internet"
+        emits: {acceso_remoto: nube}
+      - code: "no"
+        label: "No, solo desde la oficina"
+        emits: {acceso_remoto: "no"}
+
+  - code: op.acc.externos
+    bloque: B08
+    orden: 60
+    tipo: SINGLE
+    texto: "¿Entran al sistema personas ajenas a la organización (ciudadanos, clientes, proveedores)?"
+    por_que: "Los usuarios externos tienen su propia medida (op.acc.5) y su propio refuerzo a elegir."
+    como_saberlo: "Piensa en la sede electrónica, el área de cliente o los accesos de soporte del proveedor."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    minutos_estimados: 1
+    opciones:
+      - code: ciudadanos
+        label: "Sí, ciudadanos o clientes"
+        emits: {usuarios_externos: ciudadanos}
+      - code: proveedores
+        label: "Sí, personal de proveedores"
+        emits: {usuarios_externos: proveedores}
+      - code: ambos
+        label: "Sí, de los dos tipos"
+        emits: {usuarios_externos: ambos}
+      - code: "no"
+        label: "No"
+        emits: {usuarios_externos: "no"}
+
+  - code: op.acc.autenticacion.externos
+    bloque: B08
+    orden: 61
+    tipo: MULTI
+    texto: "¿Cómo se identifican esas personas externas?"
+    por_que: "Determina el refuerzo de op.acc.5 que hay que declarar. Cl@ve y el certificado electrónico son las vías habituales en el sector público."
+    como_saberlo: "Mira la pantalla de acceso de vuestra sede o área de cliente: qué opciones ofrece."
+    show_if: {"!=": [{var: "hechos.usuarios_externos"}, "no"]}
+    minutos_estimados: 1
+    opciones:
+      - code: password
+        label: "Usuario y contraseña"
+        emits: {auth_externos: [password], refuerzo_sugerido_op_acc_5: op.acc.5.r1}
+      - code: otp
+        label: "Contraseña más código de un solo uso"
+        emits: {auth_externos: [otp], refuerzo_sugerido_op_acc_5: op.acc.5.r2}
+      - code: certificado
+        label: "Certificado electrónico"
+        emits: {auth_externos: [certificado], refuerzo_sugerido_op_acc_5: op.acc.5.r3}
+      - code: clave
+        label: "Cl@ve"
+        emits: {auth_externos: [clave], refuerzo_sugerido_op_acc_5: op.acc.5.r3}
+      - code: dnie
+        label: "DNI electrónico o tarjeta criptográfica"
+        emits: {auth_externos: [dnie], refuerzo_sugerido_op_acc_5: op.acc.5.r4}
+
+  - code: op.acc.credenciales.ciclo
+    bloque: B08
+    orden: 70
+    tipo: MULTI
+    texto: "¿Qué hacéis con las credenciales a lo largo del tiempo?"
+    por_que: "Son los refuerzos de registro, suspensión por no uso y limitación de horario. En Alta son obligatorios."
+    como_saberlo: "Mira si está configurado: bloqueo tras varios intentos fallidos, desactivación de cuentas sin uso y restricción de horarios de acceso."
+    show_if: {">=": [{var: "nivel_orden.CITA"}, 2]}
+    minutos_estimados: 2
+    opciones:
+      - code: registro_entrega
+        label: "Queda registro de a quién se entrega cada credencial"
+        emits: {cred_registro: true}
+      - code: bloqueo_intentos
+        label: "Se bloquea la cuenta tras varios intentos fallidos"
+        emits: {cred_bloqueo: true}
+      - code: suspension_inactividad
+        label: "Se desactivan las cuentas que no se usan"
+        emits: {cred_inactividad: true}
+      - code: horario
+        label: "Hay restricción de horario o de fechas de acceso"
+        emits: {cred_horario: true}
+      - code: ninguna
+        label: "Ninguna de estas"
+        emits: {cred_ciclo: "no"}

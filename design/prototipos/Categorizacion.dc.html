@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:2px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <span style="display:flex; align-items:center; gap:10px">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:700">B</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A">BLENS</span>
+    </span>
+    <span style="font-size:12px; color:#475569">Categorización orientativa · sin registro · 2 minutos</span>
+  </header>
+
+  <div style="flex:1; display:flex; justify-content:center; padding:32px 28px 72px">
+    <div style="width:100%; max-width:680px; display:flex; flex-direction:column; gap:20px">
+
+      <div style="{{ zonaPasos }}">
+        <div style="display:flex; align-items:center; gap:6px">
+          <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="5">
+            <span style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:0">
+              <span style="{{ p.barra }}"></span>
+              <span style="{{ p.etiqueta }}">{{ p.nombre }}</span>
+            </span>
+          </sc-for>
+        </div>
+      </div>
+
+      <section style="{{ zonaPregunta }}">
+        <span style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#475569">Dimensión {{ numeroPaso }} de 5 · {{ dimension }}</span>
+        <h1 style="margin:0; font-size:20px; line-height:1.35; font-weight:600; letter-spacing:-0.01em; color:#0F172A; text-wrap:pretty">{{ pregunta }}</h1>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#475569; text-wrap:pretty">{{ ayuda }}</p>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <sc-for list="{{ opciones }}" as="o" hint-placeholder-count="4">
+            <button type="button" onClick="{{ o.onClick }}" style="{{ o.caja }}">
+              <span style="{{ o.radio }}"><span style="{{ o.punto }}"></span></span>
+              <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:14px; font-weight:600; color:#0F172A">{{ o.titulo }}</span>
+                <span style="font-size:13px; line-height:1.5; color:#475569">{{ o.ejemplo }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding-top:4px">
+          <button type="button" onClick="{{ atras }}" style="{{ botonAtras }}">Atrás</button>
+          <button type="button" onClick="{{ adelante }}" style="{{ botonAdelante }}">{{ textoAdelante }}</button>
+        </div>
+      </section>
+
+      <section style="{{ zonaResultado }}">
+        <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:16px">
+          <span style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:#475569">Resultado orientativo</span>
+          <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap">
+            <span style="font-size:32px; font-weight:600; letter-spacing:-0.02em; color:#0F172A">Categoría {{ categoria }}</span>
+            <span style="font-size:14px; color:#475569">{{ razonCategoria }}</span>
+          </div>
+          <p style="margin:0; font-size:14px; line-height:1.6; color:#475569; text-wrap:pretty">{{ implicacion }}</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px">
+            <sc-for list="{{ cifras }}" as="c" hint-placeholder-count="3">
+              <span style="display:flex; flex-direction:column; gap:3px; padding:12px 14px; background:#F8FAFC; border-radius:6px">
+                <span style="font-size:24px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">{{ c.n }}</span>
+                <span style="font-size:12px; line-height:1.4; color:#475569">{{ c.t }}</span>
+              </span>
+            </sc-for>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px">
+            <span style="font-size:13px; font-weight:600; color:#0F172A">Cómo ha salido</span>
+            <sc-for list="{{ resumenDim }}" as="d" hint-placeholder-count="5">
+              <span style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid #F1F5F9">
+                <span style="font-size:13px; color:#0F172A">{{ d.nombre }}</span>
+                <span style="{{ d.chip }}">{{ d.valor }}</span>
+              </span>
+            </sc-for>
+            <span style="font-size:12px; color:#475569; padding-top:4px">La categoría del sistema es la más alta de sus cinco dimensiones.</span>
+          </div>
+        </div>
+
+        <div style="{{ avisoAmbito }}">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Revisa el alcance antes de seguir</span>
+          <p style="margin:0; font-size:13px; line-height:1.55; color:#475569">Sin ninguna dimensión aplicable no hay categoría que declarar ni medidas que aplicar. Si el servicio sí trata información de terceros o soporta trámites, vuelve atrás y ajusta las respuestas.</p>
+          <button type="button" onClick="{{ rehacer }}" style="font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:9px 14px; cursor:pointer; align-self:flex-start">Volver a las preguntas</button>
+        </div>
+
+        <div style="{{ bloqueGuardar }}">
+          <span style="font-size:16px; font-weight:600; color:#FFFFFF">Guarda el resultado y sigue</span>
+          <p style="margin:0; font-size:14px; line-height:1.55; color:#CCFBF1; text-wrap:pretty">Al crear la cuenta se conserva esta categorización, se genera tu Declaración de Aplicabilidad y se abre el perfilado con las preguntas que te tocan.</p>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+            <button type="button" style="font-family:inherit; font-size:14px; font-weight:600; color:#0B4F4A; background:#FFFFFF; border:0; border-radius:6px; padding:10px 16px; cursor:pointer">Crear cuenta y guardar</button>
+            <button type="button" style="font-family:inherit; font-size:14px; font-weight:500; color:#FFFFFF; background:transparent; border:1px solid rgba(255,255,255,0.4); border-radius:6px; padding:10px 16px; cursor:pointer" style-hover="background:rgba(255,255,255,0.1)">Descargar en PDF</button>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+          <button type="button" onClick="{{ rehacer }}" style="font-family:inherit; font-size:14px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:9px 14px; cursor:pointer" style-hover="background:#F0FDFA">Revisar las respuestas</button>
+          <span style="font-size:12px; color:#475569; max-width:420px; text-align:right">Resultado orientativo. La categorización definitiva la aprueba el responsable del sistema y puede variar según el alcance.</span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:860}}">
+class Component extends DCLogic {
+  state = { paso: 0, valores: [null, null, null, null, null] };
+
+  datos() {
+    return [
+      {
+        dim: "Confidencialidad", corto: "Confid.",
+        preg: "¿Qué pasaría si alguien de fuera viera la información de este servicio?",
+        ayuda: "Piensa en quién no debería verla: datos de vecinos, expedientes, nóminas, historiales.",
+        op: [
+          ["No aplica", "El servicio solo maneja información ya pública, como un tablón de anuncios."],
+          ["Bajo", "Sería incómodo pero se resolvería: un listado interno sin datos personales."],
+          ["Medio", "Habría perjuicio serio: datos personales de vecinos, expedientes en tramitación."],
+          ["Alto", "Sería muy grave: datos de salud, antecedentes, información de seguridad ciudadana."]
+        ]
+      },
+      {
+        dim: "Integridad", corto: "Integr.",
+        preg: "¿Qué pasaría si alguien alterara los datos sin que os dierais cuenta?",
+        ayuda: "Un importe cambiado, una fecha de registro movida, un documento sustituido.",
+        op: [
+          ["No aplica", "Los datos se regeneran solos desde otra fuente y no hay decisión que dependa de ellos."],
+          ["Bajo", "Se detectaría pronto y se corregiría sin consecuencias fuera de la casa."],
+          ["Medio", "Afectaría a decisiones o derechos: padrón, registro de entrada, subvenciones."],
+          ["Alto", "Podría invalidar actos administrativos o poner en riesgo a personas."]
+        ]
+      },
+      {
+        dim: "Disponibilidad", corto: "Disp.",
+        preg: "¿Cuánto tiempo puede estar caído el servicio sin que sea un problema serio?",
+        ayuda: "Cuenta desde que deja de funcionar hasta que alguien de fuera lo nota y protesta.",
+        op: [
+          ["No aplica", "No hay servicio en línea: si se cae, se trabaja igual en papel o por teléfono."],
+          ["Bajo", "Varios días. Se puede avisar y reanudar sin más."],
+          ["Medio", "Unas horas. Hay plazos administrativos o atención al público que se resienten."],
+          ["Alto", "Minutos. Es un servicio crítico o de emergencias."]
+        ]
+      },
+      {
+        dim: "Autenticidad", corto: "Autent.",
+        preg: "¿Qué pasaría si alguien se hiciera pasar por otra persona en este servicio?",
+        ayuda: "Presentar una instancia en nombre de un vecino, firmar como un funcionario que no es.",
+        op: [
+          ["No aplica", "No hay identificación: cualquiera puede usarlo de forma anónima y no pasa nada."],
+          ["Bajo", "Se notaría y se anularía la operación sin perjuicio real."],
+          ["Medio", "Se podrían presentar trámites o acceder a expedientes en nombre de otro."],
+          ["Alto", "Se podrían firmar resoluciones o mover fondos suplantando a un cargo."]
+        ]
+      },
+      {
+        dim: "Trazabilidad", corto: "Trazab.",
+        preg: "¿Necesitáis poder demostrar quién hizo cada cosa y cuándo?",
+        ayuda: "Ante una reclamación, una inspección o una denuncia, qué tendríais que poder enseñar.",
+        op: [
+          ["No aplica", "No hay actuaciones que haya que atribuir a nadie."],
+          ["Bajo", "Basta con saber, a grandes rasgos, qué pasó."],
+          ["Medio", "Hay que poder reconstruir quién accedió o modificó qué, con fecha."],
+          ["Alto", "Se exige registro completo y conservado, con valor probatorio."]
+        ]
+      }
+    ];
+  }
+
+  renderVals() {
+    const s = this.state, d = this.datos();
+    const fin = s.paso >= 5;
+    const actual = d[Math.min(s.paso, 4)];
+    const valor = s.valores[Math.min(s.paso, 4)];
+
+    const nivelesChip = {
+      0: ["#64748B", "#F8FAFC", "no aplica"], 1: ["#15803D", "#F0FDF4", "bajo"],
+      2: ["#B45309", "#FFFBEB", "medio"], 3: ["#B91C1C", "#FEF2F2", "alto"]
+    };
+
+    const max = Math.max.apply(null, s.valores.map((v) => (v === null ? 0 : v)));
+    const fueraAmbito = max === 0;
+    const categoria = max >= 3 ? "Alta" : max === 2 ? "Media" : "Básica";
+    const medidas = { Básica: 53, Media: 73, Alta: 91 }[categoria];
+    const evidencias = { Básica: 78, Media: 118, Alta: 164 }[categoria];
+    const documentos = { Básica: 9, Media: 14, Alta: 18 }[categoria];
+    const altas = s.valores.map((v, i) => [v, d[i].dim]).filter((x) => x[0] === max && max > 0).map((x) => x[1].toLowerCase());
+    const enumera = (xs) => xs.length <= 1 ? (xs[0] || "") : xs.slice(0, -1).join(", ") + " y " + xs[xs.length - 1];
+
+    const implicaciones = {
+      "Básica": "Con categoría Básica el nivel exigido a cada medida es L2: tener el proceso hecho y repetible. No hace falta auditoría de certificación por tercero, pero sí autoevaluación y declaración.",
+      "Media": "Con categoría Media el nivel exigido a cada medida es L3: el proceso definido, documentado y aplicado igual siempre. Requiere auditoría de certificación por entidad acreditada, cada dos años.",
+      "Alta": "Con categoría Alta el nivel exigido es L4: el proceso medido y bajo control, con indicadores. Requiere auditoría de certificación por entidad acreditada, cada dos años, y refuerzos adicionales."
+    };
+
+    const pasos = d.map((x, i) => {
+      const hecho = s.valores[i] !== null;
+      const activo = i === s.paso;
+      return {
+        nombre: x.corto,
+        barra: `display:block; height:4px; border-radius:2px; background:${activo ? "#0F766E" : hecho ? "#14A79B" : "#E2E8F0"}`,
+        etiqueta: `font-size:12px; color:${activo ? "#0B4F4A" : "#475569"}; font-weight:${activo ? 600 : 400}; overflow:hidden; text-overflow:ellipsis; white-space:nowrap`
+      };
+    });
+
+    const opciones = actual.op.map((o, i) => {
+      const sel = valor === i;
+      return {
+        titulo: o[0], ejemplo: o[1],
+        onClick: () => {
+          const v = s.valores.slice(); v[Math.min(s.paso, 4)] = i;
+          this.setState({ valores: v });
+        },
+        caja: `display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:13px 15px; border-radius:6px; border:1.5px solid ${sel ? "#0F766E" : "#E2E8F0"}; background:${sel ? "#F0FDFA" : "#FFFFFF"}`,
+        radio: `flex:0 0 auto; margin-top:2px; width:18px; height:18px; border-radius:50%; border:1.5px solid ${sel ? "#0F766E" : "#94A3B8"}; display:flex; align-items:center; justify-content:center; background:#FFFFFF`,
+        punto: `width:9px; height:9px; border-radius:50%; background:#0F766E; opacity:${sel ? 1 : 0}`
+      };
+    });
+
+    return {
+      pasos, opciones,
+      numeroPaso: Math.min(s.paso, 4) + 1,
+      dimension: actual.dim, pregunta: actual.preg, ayuda: actual.ayuda,
+      zonaPasos: `display:${fin ? "none" : "block"}`,
+      zonaPregunta: `display:${fin ? "none" : "flex"}; flex-direction:column; gap:14px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:24px`,
+      zonaResultado: `display:${fin ? "flex" : "none"}; flex-direction:column; gap:16px`,
+      atras: () => this.setState({ paso: Math.max(0, s.paso - 1) }),
+      botonAtras: `font-family:inherit; font-size:14px; font-weight:500; color:#475569; background:transparent; border:0; padding:9px 12px; border-radius:6px; cursor:${s.paso === 0 ? "not-allowed" : "pointer"}; opacity:${s.paso === 0 ? 0.5 : 1}`,
+      adelante: () => { if (valor !== null) this.setState({ paso: s.paso + 1 }); },
+      textoAdelante: s.paso === 4 ? "Ver resultado" : "Siguiente",
+      botonAdelante: `font-family:inherit; font-size:14px; font-weight:600; color:#FFFFFF; background:${valor === null ? "#64748B" : "#0F766E"}; border:0; border-radius:6px; padding:10px 16px; cursor:${valor === null ? "not-allowed" : "pointer"}`,
+      rehacer: () => this.setState({ paso: 0 }),
+      categoria: fueraAmbito ? "sin determinar" : categoria,
+      razonCategoria: fueraAmbito ? "ninguna dimensión aplica" : `por ${enumera(altas)}`,
+      implicacion: fueraAmbito
+        ? "Si ninguna de las cinco dimensiones aplica, este servicio no entra en el ámbito del ENS tal y como lo has descrito. Suele significar que el alcance está mal delimitado: revisa si incluye sistemas que tratan información de terceros, dan servicio al público o soportan trámites."
+        : implicaciones[categoria],
+      cifras: fueraAmbito ? [] : [
+        { n: medidas, t: "medidas aplicables" },
+        { n: evidencias, t: "evidencias que reunir" },
+        { n: documentos, t: "documentos obligatorios" }
+      ],
+      bloqueGuardar: `display:${fueraAmbito ? "none" : "flex"}; flex-direction:column; gap:12px; background:#0B4F4A; border-radius:8px; padding:20px`,
+      avisoAmbito: `display:${fueraAmbito ? "flex" : "none"}; flex-direction:column; gap:10px; padding:16px 18px; background:#FFFBEB; border:1px solid #B4530933; border-left:3px solid #B45309; border-radius:8px`,
+      resumenDim: d.map((x, i) => {
+        const v = s.valores[i] === null ? 0 : s.valores[i];
+        const c = nivelesChip[v];
+        return {
+          nombre: x.dim, valor: c[2],
+          chip: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:3px 8px`
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

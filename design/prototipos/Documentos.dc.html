@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:1px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; height:100vh; min-height:720px; background:#F8FAFC; overflow:hidden">
+
+  <header style="flex:0 0 56px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 24px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Documentos</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · 6 de 14 obligatorios en vigor</span>
+    </div>
+    <button type="button" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer; white-space:nowrap">Descargar todos</button>
+  </header>
+
+  <div style="flex:1; display:flex; min-height:0">
+
+    <aside style="width:330px; flex:0 0 330px; display:flex; flex-direction:column; background:#FFFFFF; border-right:1px solid #E2E8F0">
+      <div style="padding:14px 16px; border-bottom:1px solid #E2E8F0; display:flex; gap:6px; flex-wrap:wrap">
+        <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="4">
+          <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+        </sc-for>
+      </div>
+      <div style="flex:1; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:1px">
+        <sc-for list="{{ documentos }}" as="d" hint-placeholder-count="8">
+          <button type="button" onClick="{{ d.onClick }}" style="{{ d.caja }}">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+              <span style="font-size:12px; color:#475569">{{ d.tipo }}</span>
+              <span style="{{ d.chip }}">{{ d.estado }}</span>
+            </span>
+            <span style="{{ d.titulo }}">{{ d.nombre }}</span>
+            <span style="font-size:12px; color:#475569; font-variant-numeric:tabular-nums">{{ d.pie }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex:1; min-width:0; overflow-y:auto">
+      <div style="max-width:880px; margin:0 auto; padding:24px 28px 72px; display:flex; flex-direction:column; gap:16px">
+
+        <div style="display:flex; flex-direction:column; gap:10px">
+          <span style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+            <span style="{{ chipActual }}">{{ estadoActual }}</span>
+            <span style="font-size:12px; color:#475569">{{ tipoActual }} · {{ versionActual }}</span>
+          </span>
+          <h1 style="margin:0; font-size:24px; line-height:1.3; font-weight:600; letter-spacing:-0.01em; color:#0F172A">{{ nombreActual }}</h1>
+          <span style="font-size:13px; color:#475569; line-height:1.5">{{ resumenActual }}</span>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px">
+            <button type="button" onClick="{{ alternarEditor }}" style="{{ botonEditor }}">{{ textoEditor }}</button>
+            <button type="button" onClick="{{ alternarDiff }}" style="{{ botonDiff }}">{{ textoDiff }}</button>
+            <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:6px; padding:8px 12px; cursor:pointer" style-hover="background:#F1F5F9">Descargar PDF</button>
+            <button type="button" onClick="{{ enviarRevision }}" style="{{ botonRevision }}">{{ textoRevision }}</button>
+          </div>
+        </div>
+
+        <section style="{{ zonaDiff }}">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Cambios frente a la versión anterior</span>
+            <span style="font-size:12px; color:#475569">{{ resumenDiff }}</span>
+          </div>
+          <div style="display:flex; flex-direction:column">
+            <sc-for list="{{ diff }}" as="l" hint-placeholder-count="6">
+              <span style="{{ l.linea }}">
+                <span style="{{ l.marca }}">{{ l.signo }}</span>
+                <span style="font-size:13px; line-height:1.55; color:#0F172A">{{ l.texto }}</span>
+              </span>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="{{ zonaEditor }}">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #E2E8F0; flex-wrap:wrap">
+            <span style="font-size:14px; font-weight:600; color:#0F172A">Editar el documento generado</span>
+            <span style="{{ estadoGuardado }}">{{ textoGuardado }}</span>
+          </div>
+          <div style="padding:16px; display:flex; flex-direction:column; gap:12px">
+            <span style="font-size:12px; line-height:1.5; color:#475569">Los datos entre llaves se rellenan solos con lo declarado en el sistema. Editar el texto crea una versión nueva en borrador; la vigente no cambia hasta aprobar.</span>
+            <div id="editor-doc" ref="{{ refTexto }}" contentEditable="true" suppressContentEditableWarning="{{ siempre }}" onBlur="{{ onTexto }}" style="font-family:inherit; font-size:14px; line-height:1.7; color:#0F172A; white-space:pre-wrap; padding:16px; border:1px solid #E2E8F0; border-radius:6px; min-height:280px; background:#FFFFFF; width:100%; box-sizing:border-box; outline:none"></div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+              <button type="button" onClick="{{ guardar }}" style="{{ botonGuardar }}">Guardar borrador</button>
+              <button type="button" onClick="{{ restaurar }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:6px; padding:8px 12px; cursor:pointer" style-hover="background:#F1F5F9">Volver al texto generado</button>
+            </div>
+          </div>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:12px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Versiones</span>
+          <sc-for list="{{ versiones }}" as="v" hint-placeholder-count="4">
+            <span style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid #F1F5F9; flex-wrap:wrap">
+              <span style="display:flex; flex-direction:column; gap:2px; min-width:0">
+                <span style="font-size:13px; font-weight:500; color:#0F172A">{{ v.titulo }}</span>
+                <span style="font-size:12px; color:#475569">{{ v.detalle }}</span>
+              </span>
+              <span style="display:flex; align-items:center; gap:12px; flex:0 0 auto">
+                <span style="{{ v.chip }}">{{ v.estado }}</span>
+                <a href="#" style="font-size:13px; font-weight:500">Descargar</a>
+              </span>
+            </span>
+          </sc-for>
+        </section>
+
+        <section style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:8px">
+          <span style="font-size:14px; font-weight:600; color:#0F172A">Medidas que lo exigen</span>
+          <span style="display:flex; gap:6px; flex-wrap:wrap">
+            <sc-for list="{{ medidas }}" as="m" hint-placeholder-count="3">
+              <a href="#" style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#0B4F4A; background:#F0FDFA; border:1px solid #CCFBF1; border-radius:5px; padding:3px 8px">{{ m.cod }}</a>
+            </sc-for>
+          </span>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  state = { sel: 0, filtro: 0, editor: false, diff: false, textos: {}, guardado: false };
+
+  area = React.createRef();
+
+  sincronizar() {
+    const el = this.area.current || document.getElementById("editor-doc");
+    if (!el) return;
+    const s = this.state;
+    const valor = s.textos[s.sel] === undefined ? this.textoGenerado(this.datos()[s.sel]) : s.textos[s.sel];
+    if (el.contains(document.activeElement) || el === document.activeElement) return;
+    if (el.innerText === valor) return;
+    el.innerText = valor;
+  }
+
+  componentDidMount() { this.sincronizar(); }
+  componentDidUpdate() { this.sincronizar(); }
+
+  chip(t) {
+    const c = {
+      vigente: ["#15803D", "#F0FDF4", "vigente"], aprobado: ["#15803D", "#F0FDF4", "aprobado"],
+      revision: ["#1D4ED8", "#EFF6FF", "en revisión"], borrador: ["#64748B", "#F8FAFC", "borrador"],
+      obsoleto: ["#7C2D12", "#FEF6F0", "obsoleto"]
+    }[t];
+    return { estilo: `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:3px 8px; white-space:nowrap; flex:0 0 auto`, texto: c[2] };
+  }
+
+  datos() {
+    return [
+      ["Política de seguridad de la información", "Política", "vigente", "v3.0 · aprobada el 14/01/2026", "Marco general y compromiso del órgano de gobierno con la seguridad del sistema.", ["org.1"]],
+      ["Normativa de seguridad", "Normativa", "revision", "v2.1 · en revisión desde el 10/09/2026", "Obligaciones del personal en el uso de los medios: puesto, correo, contraseñas y movilidad.", ["org.2"]],
+      ["Procedimiento de gestión de incidentes", "Procedimiento", "vigente", "v1.4 · aprobado el 22/04/2026", "Cómo se detecta, clasifica, notifica y cierra un incidente, y a quién se avisa.", ["op.exp.7", "org.3"]],
+      ["Declaración de Aplicabilidad", "Declaración", "vigente", "v2.2 · aprobada el 02/09/2026", "Medidas aplicables, no aplicables y su justificación, firmadas por el responsable del sistema.", ["—"]],
+      ["Análisis de riesgos", "Informe", "borrador", "v2.0 · borrador del 12/09/2026", "Amenazas valoradas, riesgo intrínseco y residual, y decisiones de tratamiento.", ["op.pl.1"]],
+      ["Plan de continuidad", "Plan", "borrador", "sin versión aprobada", "Cómo seguir dando servicio y en cuánto tiempo recuperar cada sistema.", ["op.cont.2", "op.cont.3"]],
+      ["Procedimiento de copias de seguridad", "Procedimiento", "vigente", "v1.2 · aprobado el 01/09/2026", "Qué se copia, con qué frecuencia, dónde se guarda y cómo se prueba la restauración.", ["mp.info.6"]],
+      ["Política de control de acceso", "Política", "obsoleto", "v1.0 · sustituida el 30/06/2026", "Sustituida por el procedimiento de gestión de derechos de acceso.", ["op.acc.4"]]
+    ];
+  }
+
+  textoGenerado(d) {
+    return `1. Objeto\n\nEste documento establece ${d[0].toLowerCase()} del sistema {nombre_sistema}, de categoría {categoria}, conforme al Esquema Nacional de Seguridad.\n\n2. Ámbito de aplicación\n\nAplica a {alcance}, a las personas que lo operan y a los proveedores con acceso, relacionados en el registro de proveedores.\n\n3. Responsabilidades\n\nEl responsable del sistema es {responsable_sistema}. El responsable de seguridad es {responsable_seguridad}. La aprobación corresponde al órgano de gobierno.\n\n4. Contenido\n\n[Texto propio de la organización. Lo generado a partir de las respuestas del perfilado aparece aquí y puede ajustarse.]\n\n5. Revisión\n\nSe revisará al menos una vez al año y siempre que haya cambios relevantes en el alcance, la categoría o los proveedores.`;
+  }
+
+  renderVals() {
+    const s = this.state, todos = this.datos();
+    const criterios = [null, "vigente", "revision", "borrador"];
+    const crit = criterios[s.filtro];
+    const cuenta = (c) => todos.filter((d) => c === null ? true : d[2] === c).length;
+
+    const documentos = todos.map((d, i) => [d, i]).filter((x) => crit === null || x[0][2] === crit).map((x) => {
+      const d = x[0], i = x[1], c = this.chip(d[2]);
+      return {
+        nombre: d[0], tipo: d[1], estado: c.texto, chip: c.estilo, pie: d[3],
+        onClick: () => this.setState({ sel: i, editor: false, diff: false }),
+        caja: `display:flex; flex-direction:column; gap:4px; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:10px 12px; border:0; border-radius:6px; background:${i === s.sel ? "#F0FDFA" : "transparent"}; box-shadow:${i === s.sel ? "inset 2px 0 0 #0F766E" : "none"}`,
+        titulo: `font-size:13px; font-weight:${i === s.sel ? 600 : 500}; color:#0F172A; line-height:1.35`
+      };
+    });
+
+    const filtros = [["Todos", null], ["Vigentes", "vigente"], ["En revisión", "revision"], ["Borradores", "borrador"]]
+      .map((f, i) => ({
+        nombre: f[0], n: cuenta(f[1]),
+        onClick: () => this.setState({ filtro: i }),
+        estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+      }));
+
+    const a = todos[s.sel], ch = this.chip(a[2]);
+    const generado = this.textoGenerado(a);
+    const texto = s.textos[s.sel] === undefined ? generado : s.textos[s.sel];
+
+    const diffLineas = [
+      [" ", "3. Responsabilidades"],
+      ["-", "El responsable de seguridad es el jefe de informática."],
+      ["+", "El responsable de seguridad es Ana Castaño, designada por resolución de alcaldía del 14/01/2026."],
+      [" ", "4. Contenido"],
+      ["+", "Se añade el apartado de uso de dispositivos personales, a raíz del perfilado del bloque Puestos."],
+      ["-", "Se elimina la referencia al antiguo servidor de ficheros, dado de baja en julio."]
+    ].map((l) => ({
+      signo: l[0], texto: l[1],
+      linea: `display:flex; align-items:flex-start; gap:10px; padding:8px 16px; border-bottom:1px solid #F1F5F9; background:${l[0] === "+" ? "#F0FDF4" : l[0] === "-" ? "#FEF2F2" : "#FFFFFF"}`,
+      marca: `font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13px; font-weight:600; flex:0 0 auto; color:${l[0] === "+" ? "#15803D" : l[0] === "-" ? "#B91C1C" : "#94A3B8"}`
+    }));
+
+    const versionesPorDoc = {
+      0: [["v3.0 · aprobada el 14/01/2026", "Ana Castaño, responsable del sistema", "vigente"],
+          ["v2.1 · aprobada el 03/06/2025", "Ana Castaño · ampliación del alcance a la sede electrónica", "obsoleto"],
+          ["v2.0 · aprobada el 11/02/2025", "Ana Castaño · primera versión bajo el RD 311/2022", "obsoleto"]],
+      1: [["v2.1 · en revisión desde el 10/09/2026", "Marta Ruiz · pendiente de Ana Castaño", "revision"],
+          ["v2.0 · aprobada el 22/04/2026", "Ana Castaño", "vigente"]],
+      2: [["v1.4 · aprobada el 22/04/2026", "Ana Castaño · se añade la notificación al CCN-CERT", "vigente"],
+          ["v1.3 · aprobada el 12/11/2025", "Ana Castaño", "obsoleto"]],
+      3: [["v2.2 · aprobada el 02/09/2026", "Ana Castaño · 6 medidas no aplicables justificadas", "vigente"],
+          ["v2.1 · aprobada el 14/05/2026", "Ana Castaño · cambio de categoría a Media", "obsoleto"]],
+      4: [["v2.0 · borrador del 12/09/2026", "Jorge Peña · pendiente de enviar a revisión", "borrador"],
+          ["v1.0 · aprobada el 11/02/2025", "Ana Castaño", "obsoleto"]],
+      5: [["sin versión aprobada", "Borrador iniciado por Jorge Peña el 08/09/2026", "borrador"]],
+      6: [["v1.2 · aprobada el 01/09/2026", "Jorge Peña · se añade la prueba trimestral de restauración", "vigente"],
+          ["v1.1 · aprobada el 03/02/2026", "Jorge Peña", "obsoleto"]],
+      7: [["v1.0 · sustituida el 30/06/2026", "Ana Castaño · sustituida por el procedimiento de accesos", "obsoleto"]]
+    };
+    const versiones = (versionesPorDoc[s.sel] || []).map((v) => {
+      const c = this.chip(v[2]);
+      return { titulo: v[0], detalle: v[1], estado: c.texto, chip: c.estilo };
+    });
+
+    const modificado = s.textos[s.sel] !== undefined && s.textos[s.sel] !== generado;
+
+    return {
+      documentos, filtros, versiones, diff: diffLineas,
+      medidas: a[5].map((m) => ({ cod: m })),
+      nombreActual: a[0], tipoActual: a[1], versionActual: a[3], resumenActual: a[4],
+      estadoActual: ch.texto, chipActual: ch.estilo,
+      refTexto: this.area,
+      siempre: true,
+      onTexto: (e) => {
+        const v = e.target.innerText;
+        if (v === texto) return;
+        this.setState({ textos: Object.assign({}, s.textos, { [s.sel]: v }), guardado: false });
+      },
+      guardar: () => this.setState({ guardado: true }),
+      restaurar: () => {
+        const el = this.area.current || document.getElementById("editor-doc");
+        if (el) el.innerText = generado;
+        const t = Object.assign({}, s.textos); delete t[s.sel];
+        this.setState({ textos: t, guardado: false });
+      },
+      botonGuardar: `font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:${modificado ? "#0F766E" : "#64748B"}; border:0; border-radius:6px; padding:8px 12px; cursor:${modificado ? "pointer" : "not-allowed"}`,
+      estadoGuardado: `display:${modificado || s.guardado ? "inline-flex" : "none"}; align-items:center; font-size:12px; font-weight:500; border-radius:5px; padding:3px 8px; white-space:nowrap; color:${s.guardado ? "#15803D" : "#B45309"}; background:${s.guardado ? "#F0FDF4" : "#FFFBEB"}; border:1px solid ${s.guardado ? "#15803D" : "#B45309"}33`,
+      textoGuardado: s.guardado ? "Borrador guardado · la versión vigente no cambia" : "Cambios sin guardar",
+      alternarEditor: () => this.setState({ editor: !s.editor, diff: false }),
+      textoEditor: s.editor ? "Cerrar el editor" : "Editar texto",
+      botonEditor: `font-family:inherit; font-size:13px; font-weight:600; color:${s.editor ? "#FFFFFF" : "#FFFFFF"}; background:${s.editor ? "#0B4F4A" : "#0F766E"}; border:0; border-radius:6px; padding:8px 12px; cursor:pointer`,
+      alternarDiff: () => this.setState({ diff: !s.diff, editor: false }),
+      textoDiff: s.diff ? "Ocultar cambios" : "Ver cambios",
+      botonDiff: `display:${versiones.length > 1 ? "inline-block" : "none"}; font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:${s.diff ? "#F0FDFA" : "#FFFFFF"}; border:1px solid #0F766E; border-radius:6px; padding:8px 12px; cursor:pointer`,
+      zonaEditor: `display:${s.editor ? "block" : "none"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      zonaDiff: `display:${s.diff && versiones.length > 1 ? "block" : "none"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      resumenDiff: versiones.length > 1
+        ? `${versiones[0].titulo.split(" ·")[0]} frente a ${versiones[1].titulo.split(" ·")[0]} · 2 añadidos, 2 eliminados`
+        : "No hay versión anterior con la que comparar",
+      hayDiff: versiones.length > 1,
+      botonDiffVisible: `display:${versiones.length > 1 ? "inline-block" : "none"}`,
+      enviarRevision: () => this.setState({ editor: false }),
+      textoRevision: a[2] === "borrador" ? "Enviar a revisión" : a[2] === "revision" ? "Aprobar y poner en vigor" : "Crear versión nueva",
+      botonRevision: "font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:8px 12px; cursor:pointer"
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin:0; padding:0; background:#F8FAFC; }
+  body { font-family:Inter, system-ui, sans-serif; font-feature-settings:"tnum" 1; color:#0F172A; -webkit-font-smoothing:antialiased; }
+  a { color:#0F766E; text-decoration:none; }
+  a:hover { color:#0B4F4A; text-decoration:underline; }
+  *:focus-visible { outline:2px solid #0F766E; outline-offset:1px; border-radius:4px; }
+  ::selection { background:#CCFBF1; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; min-height:100vh; background:#F8FAFC">
+
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 28px; height:56px; background:#FFFFFF; border-bottom:1px solid #E2E8F0">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0">
+      <span style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:6px; background:#0B4F4A; color:#FFFFFF; font-size:12px; font-weight:600">AV</span>
+      <span style="font-size:14px; font-weight:600; color:#0F172A; white-space:nowrap">Incidentes y acciones</span>
+      <span style="font-size:12px; color:#475569; white-space:nowrap">Sede electrónica · procedimiento v1.4</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <span style="display:flex; gap:2px; padding:2px; background:#F1F5F9; border-radius:6px">
+        <button type="button" onClick="{{ verIncidentes }}" style="{{ botonIncidentes }}">Incidentes</button>
+        <button type="button" onClick="{{ verAcciones }}" style="{{ botonAcciones }}">Plan de acciones</button>
+      </span>
+      <button type="button" onClick="{{ abrirAlta }}" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 12px; cursor:pointer; white-space:nowrap">{{ textoAlta }}</button>
+    </div>
+  </header>
+
+  <div style="flex:1; padding:24px 28px 64px; max-width:1240px; width:100%; margin:0 auto; box-sizing:border-box; display:flex; flex-direction:column; gap:14px">
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px">
+      <sc-for list="{{ totales }}" as="t" hint-placeholder-count="4">
+        <span style="{{ t.caja }}">
+          <span style="font-size:24px; font-weight:600; color:#0F172A; font-variant-numeric:tabular-nums">{{ t.n }}</span>
+          <span style="font-size:12px; line-height:1.4; color:#475569">{{ t.t }}</span>
+        </span>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <input type="text" placeholder="{{ marcadorBusqueda }}" style="font-family:inherit; font-size:13px; padding:7px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; color:#0F172A; flex:1 1 200px; min-width:0" />
+      <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="4">
+        <button type="button" onClick="{{ f.onClick }}" style="{{ f.estilo }}">{{ f.nombre }} <span style="font-variant-numeric:tabular-nums; opacity:0.7">{{ f.n }}</span></button>
+      </sc-for>
+    </div>
+
+    <section style="{{ zonaIncidentes }}">
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:14px">
+          <thead>
+            <tr style="background:#F8FAFC; text-align:left">
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0">Incidente</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:104px; white-space:nowrap">Detectado</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:96px; white-space:nowrap">Gravedad</th>
+              <th style="padding:9px 10px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:112px; white-space:nowrap">Responsable</th>
+              <th style="padding:9px 16px; font-size:12px; font-weight:600; color:#475569; border-bottom:1px solid #E2E8F0; width:124px; white-space:nowrap">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ incidentes }}" as="i" hint-placeholder-count="6">
+              <tr style="{{ i.fila }}">
+                <td style="{{ i.celdaTexto }}">
+                  <span style="display:flex; flex-direction:column; gap:3px">
+                    <span style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap">
+                      <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ i.cod }}</span>
+                      <a href="#" style="font-size:14px; font-weight:500">{{ i.nombre }}</a>
+                    </span>
+                    <span style="font-size:12px; line-height:1.45; color:#475569">{{ i.detalle }}</span>
+                    <span style="{{ i.avisoNotificar }}">{{ i.textoNotificar }}</span>
+                    <span style="{{ i.zonaChecks }}">
+                      <sc-for list="{{ i.checks }}" as="c" hint-placeholder-count="2">
+                        <button type="button" onClick="{{ c.onClick }}" style="{{ c.caja }}">
+                          <span style="{{ c.casilla }}">{{ c.marca }}</span>
+                          <span style="display:flex; flex-direction:column; gap:1px; text-align:left">
+                            <span style="{{ c.texto }}">{{ c.nombre }}</span>
+                            <span style="font-size:12px; color:#475569">{{ c.pie }}</span>
+                          </span>
+                        </button>
+                      </sc-for>
+                    </span>
+                  </span>
+                </td>
+                <td style="{{ i.celdaNum }}">{{ i.fecha }}</td>
+                <td style="{{ i.celda }}"><span style="{{ i.chipGravedad }}">{{ i.gravedad }}</span></td>
+                <td style="{{ i.celda }}">{{ i.responsable }}</td>
+                <td style="{{ i.celdaFin }}"><span style="{{ i.chipEstado }}">{{ i.estado }}</span></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 16px; border-top:1px solid #E2E8F0; font-size:12px; line-height:1.5; color:#475569">Los incidentes de gravedad alta o con datos personales afectados se notifican al CCN-CERT y, si procede, a la AEPD en 72 horas. La plataforma avisa, no notifica por ti.</div>
+    </section>
+
+    <section style="{{ zonaAcciones }}">
+      <div style="display:flex; flex-direction:column">
+        <sc-for list="{{ acciones }}" as="a" hint-placeholder-count="5">
+          <div style="{{ a.caja }}">
+            <span style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap">
+              <span style="display:flex; flex-direction:column; gap:4px; flex:1 1 320px; min-width:0">
+                <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+                  <span style="font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:#475569">{{ a.cod }}</span>
+                  <span style="font-size:14px; font-weight:600; color:#0F172A">{{ a.nombre }}</span>
+                  <span style="{{ a.chipOrigen }}">{{ a.origen }}</span>
+                </span>
+                <span style="font-size:13px; line-height:1.5; color:#475569">{{ a.detalle }}</span>
+              </span>
+              <span style="display:flex; flex-direction:column; gap:3px; align-items:flex-end; text-align:right; flex:0 0 auto; margin-left:auto">
+                <span style="{{ a.chipPlazo }}">{{ a.plazo }}</span>
+                <span style="font-size:12px; color:#475569; white-space:nowrap">{{ a.responsable }}</span>
+              </span>
+            </span>
+            <span style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+              <sc-for list="{{ a.estados }}" as="e" hint-placeholder-count="3">
+                <button type="button" onClick="{{ e.onClick }}" style="{{ e.estilo }}">{{ e.nombre }}</button>
+              </sc-for>
+              <span style="font-size:12px; color:#475569">{{ a.pie }}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+
+  <div style="{{ fondoModal }}" onClick="{{ cerrarModal }}">
+    <div onClick="{{ detener }}" style="width:100%; max-width:600px; max-height:88vh; overflow-y:auto; background:#FFFFFF; border-radius:8px; box-shadow:0 24px 64px rgba(15,23,42,0.28); display:flex; flex-direction:column">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:18px 20px; border-bottom:1px solid #E2E8F0">
+        <span style="display:flex; flex-direction:column; gap:3px; min-width:0">
+          <span style="font-size:16px; font-weight:600; color:#0F172A">{{ tituloModal }}</span>
+          <span style="font-size:12px; color:#475569">{{ subtituloModal }}</span>
+        </span>
+        <button type="button" onClick="{{ cerrarModal }}" style="font-family:inherit; font-size:13px; color:#475569; background:transparent; border:0; padding:4px 8px; border-radius:6px; cursor:pointer; flex:0 0 auto" style-hover="background:#F1F5F9">Cerrar</button>
+      </div>
+
+      <div style="padding:20px; display:flex; flex-direction:column; gap:14px">
+        <label style="display:flex; flex-direction:column; gap:5px">
+          <span style="font-size:12px; font-weight:600; color:#0F172A">{{ etiquetaTitulo }}</span>
+          <input type="text" placeholder="{{ marcadorTitulo }}" style="font-family:inherit; font-size:14px; color:#0F172A; padding:9px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF" />
+        </label>
+
+        <label style="display:flex; flex-direction:column; gap:5px">
+          <span style="font-size:12px; font-weight:600; color:#0F172A">{{ etiquetaDetalle }}</span>
+          <textarea placeholder="{{ marcadorDetalle }}" style="font-family:inherit; font-size:14px; line-height:1.55; color:#0F172A; padding:10px; border:1px solid #E2E8F0; border-radius:6px; resize:vertical; min-height:88px; background:#FFFFFF"></textarea>
+        </label>
+
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <span style="font-size:12px; font-weight:600; color:#0F172A">{{ etiquetaEscala }}</span>
+          <span style="display:flex; gap:6px; flex-wrap:wrap">
+            <sc-for list="{{ opcionesEscala }}" as="o" hint-placeholder-count="3">
+              <button type="button" onClick="{{ o.onClick }}" style="{{ o.estilo }}">{{ o.nombre }}</button>
+            </sc-for>
+          </span>
+          <span style="font-size:12px; line-height:1.5; color:#475569">{{ ayudaEscala }}</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px">
+          <label style="display:flex; flex-direction:column; gap:5px">
+            <span style="font-size:12px; font-weight:600; color:#0F172A">{{ etiquetaFecha }}</span>
+            <input type="text" placeholder="{{ marcadorFecha }}" style="font-family:inherit; font-size:13px; color:#0F172A; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF; font-variant-numeric:tabular-nums" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:5px">
+            <span style="font-size:12px; font-weight:600; color:#0F172A">Responsable</span>
+            <select style="font-family:inherit; font-size:13px; color:#0F172A; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF">
+              <option>Marta Ruiz · Sistemas</option>
+              <option>Jorge Peña · Proveedor IT</option>
+              <option>Ana Castaño · Secretaría</option>
+            </select>
+          </label>
+          <label style="display:flex; flex-direction:column; gap:5px">
+            <span style="font-size:12px; font-weight:600; color:#0F172A">{{ etiquetaVinculo }}</span>
+            <select style="font-family:inherit; font-size:13px; color:#0F172A; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; background:#FFFFFF">
+              <sc-for list="{{ opcionesVinculo }}" as="v" hint-placeholder-count="3">
+                <option>{{ v.t }}</option>
+              </sc-for>
+            </select>
+          </label>
+        </div>
+
+        <div style="{{ zonaDatos }}">
+          <button type="button" onClick="{{ alternarDatos }}" style="{{ casillaDatos }}">{{ marcaDatos }}</button>
+          <span style="display:flex; flex-direction:column; gap:4px; min-width:0">
+            <span style="font-size:13px; font-weight:500; color:#0F172A">Hay datos personales afectados</span>
+            <span style="{{ avisoDatos }}">Si se confirma, la notificación a la AEPD tiene un plazo de 72 horas desde que se conoce. La plataforma crea la tarea y el aviso; la notificación la presenta la organización.</span>
+          </span>
+        </div>
+
+        <div style="{{ zonaEvidencia }}">
+          <span style="font-size:13px; font-weight:600; color:#0F172A">Adjuntar evidencia</span>
+          <span style="font-size:12px; line-height:1.5; color:#475569">Capturas, cabeceras del correo, registros del cortafuegos o el informe del proveedor. Se guardan con fecha y autor.</span>
+          <button type="button" style="font-family:inherit; font-size:13px; font-weight:500; color:#0F766E; background:#FFFFFF; border:1px solid #0F766E; border-radius:6px; padding:8px 12px; cursor:pointer; align-self:flex-start" style-hover="background:#F0FDFA">Seleccionar ficheros</button>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-top:1px solid #E2E8F0; background:#F8FAFC; flex-wrap:wrap">
+        <span style="font-size:12px; line-height:1.5; color:#475569; max-width:300px">{{ pieModal }}</span>
+        <span style="display:flex; align-items:center; gap:8px">
+          <button type="button" onClick="{{ cerrarModal }}" style="font-family:inherit; font-size:13px; font-weight:500; color:#475569; background:transparent; border:0; padding:8px 10px; border-radius:6px; cursor:pointer">Cancelar</button>
+          <button type="button" onClick="{{ cerrarModal }}" style="font-family:inherit; font-size:13px; font-weight:600; color:#FFFFFF; background:#0F766E; border:0; border-radius:6px; padding:8px 13px; cursor:pointer">{{ confirmarModal }}</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  state = { vista: "incidentes", filtro: 0, estados: {}, modal: null, escala: null, datos: false,
+    notificaciones: { "INC-2026-014|CCN-CERT": "12/09/2026 · Marta Ruiz" } };
+
+  componentDidMount() {
+    this._esc = (e) => { if (e.key === "Escape") this.setState({ modal: null }); };
+    document.addEventListener("keydown", this._esc);
+  }
+  componentWillUnmount() { document.removeEventListener("keydown", this._esc); }
+
+  chip(t, texto) {
+    const c = { ok: ["#15803D", "#F0FDF4"], warn: ["#B45309", "#FFFBEB"], bad: ["#B91C1C", "#FEF2F2"], exp: ["#7C2D12", "#FEF6F0"], info: ["#1D4ED8", "#EFF6FF"], mut: ["#64748B", "#F8FAFC"], marca: ["#0B4F4A", "#F0FDFA"] }[t];
+    return `display:inline-flex; align-items:center; font-size:12px; font-weight:500; color:${c[0]}; background:${c[1]}; border:1px solid ${c[0]}33; border-radius:5px; padding:2px 7px; white-space:nowrap; flex:0 0 auto`;
+  }
+
+  datosIncidentes() {
+    return [
+      ["INC-2026-014", "Correo de phishing con enlace a portal falso", "Tres usuarios recibieron el correo; uno introdujo sus credenciales. Cuenta bloqueada y contraseña restablecida.", "12/09/2026", "alta", "bad", "Marta Ruiz", "en tratamiento", "warn", "Notificado al CCN-CERT el 12/09. Plazo AEPD hasta el 15/09 si se confirma acceso a datos."],
+      ["INC-2026-013", "Parada del gestor de expedientes durante 4 horas", "Fallo de la actualización del proveedor. Servicio repuesto con la copia de la noche anterior.", "28/08/2026", "media", "warn", "Jorge Peña", "cerrado", "ok", ""],
+      ["INC-2026-012", "Portátil extraviado en desplazamiento", "Equipo cifrado y bloqueado en remoto. Sin constancia de acceso a la información.", "14/08/2026", "media", "warn", "Ana Castaño", "cerrado", "ok", ""],
+      ["INC-2026-011", "Intentos de acceso fallidos desde IP extranjera", "1.240 intentos contra la VPN en dos horas. Bloqueo por país activado en el cortafuegos.", "02/08/2026", "baja", "mut", "Jorge Peña", "cerrado", "ok", ""],
+      ["INC-2026-010", "Envío de expediente a destinatario equivocado", "Error humano en el correo de notificación. Solicitada la eliminación al receptor.", "21/07/2026", "media", "warn", "Ana Castaño", "en tratamiento", "warn", "Valorar notificación a la AEPD: hay datos personales de un tercero."]
+    ];
+  }
+
+  datosAcciones() {
+    return [
+      ["ACC-031", "Implantar doble factor en el acceso remoto", "Hallazgo de la auditoría interna: la VPN solo pide usuario y contraseña.", "auditoría", "30/09/2026", -3, "Jorge Peña"],
+      ["ACC-030", "Formación de concienciación al personal", "Derivada de INC-2026-014. No consta formación en los últimos 12 meses.", "incidente", "31/10/2026", 42, "Ana Castaño"],
+      ["ACC-029", "Documentar el plan de continuidad", "op.cont.2 sin documento aprobado; el borrador está parado desde julio.", "medida", "15/11/2026", 57, "Jorge Peña"],
+      ["ACC-028", "Revisar cuentas con privilegios", "op.acc.4 con madurez no soportada: faltan evidencias de la revisión trimestral.", "medida", "30/09/2026", -3, "Marta Ruiz"],
+      ["ACC-027", "Renovar el certificado de sede electrónica", "Caducó el 02/09/2026 y bloquea la vía de cumplimiento de op.pl.5.", "componente", "19/09/2026", 0, "Jorge Peña"]
+    ];
+  }
+
+  renderVals() {
+    const s = this.state, inc = s.vista === "incidentes";
+    const base = "padding:11px 10px; border-bottom:1px solid #F1F5F9; vertical-align:top; color:#0F172A; line-height:1.45";
+
+    const ti = this.datosIncidentes(), ta = this.datosAcciones();
+    const estadoAccion = (i) => s.estados[i] === undefined ? "abierta" : s.estados[i];
+    const vencida = (i) => ta[i][5] < 0 && estadoAccion(i) !== "hecha";
+
+    const critInc = [null, "abierto", "alta", "notificar"];
+    const pasaInc = (d) => {
+      const c = critInc[s.filtro];
+      if (!c) return true;
+      if (c === "abierto") return d[7] === "en tratamiento";
+      if (c === "alta") return d[4] === "alta";
+      if (c === "notificar") return !!d[9];
+      return true;
+    };
+
+    const organismos = { "INC-2026-014": ["CCN-CERT", "AEPD"], "INC-2026-010": ["AEPD"] };
+    const incidentes = ti.filter(pasaInc).map((d) => ({
+      zonaChecks: `display:${organismos[d[0]] ? "flex" : "none"}; flex-direction:column; gap:2px; margin-top:4px`,
+      checks: (organismos[d[0]] || []).map((org) => {
+        const clave = d[0] + "|" + org;
+        const hecho = s.notificaciones[clave];
+        return {
+          nombre: `Notificado a ${org}`,
+          pie: hecho ? hecho : org === "AEPD" ? "plazo de 72 horas desde que se conoce" : "plazo de 24 horas para incidentes de nivel alto",
+          marca: hecho ? "✓" : "",
+          onClick: () => {
+            const n = Object.assign({}, s.notificaciones);
+            if (hecho) delete n[clave]; else n[clave] = "19/09/2026 · Marta Ruiz";
+            this.setState({ notificaciones: n });
+          },
+          caja: "display:flex; align-items:flex-start; gap:8px; font-family:inherit; background:transparent; border:0; padding:3px 0; cursor:pointer",
+          casilla: `flex:0 0 auto; margin-top:1px; width:16px; height:16px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#FFFFFF; border:1.5px solid ${hecho ? "#15803D" : "#B45309"}; background:${hecho ? "#15803D" : "#FFFFFF"}`,
+          texto: `font-size:12px; font-weight:500; color:${hecho ? "#15803D" : "#B45309"}`
+        };
+      }),
+      cod: d[0], nombre: d[1], detalle: d[2], fecha: d[3], gravedad: d[4], responsable: d[6], estado: d[7],
+      chipGravedad: this.chip(d[5], d[4]), chipEstado: this.chip(d[8], d[7]),
+      avisoNotificar: `display:${d[9] ? "block" : "none"}; font-size:12px; line-height:1.45; color:#B45309`,
+      textoNotificar: d[9] || "",
+      fila: `background:${d[4] === "alta" ? "#FEF2F2" : "#FFFFFF"}`,
+      celda: base, celdaTexto: base + "; padding-left:16px; max-width:0",
+      celdaNum: base + "; font-variant-numeric:tabular-nums; color:#475569; white-space:nowrap",
+      celdaFin: base + "; padding-right:16px"
+    }));
+
+    const critAcc = [null, "vencida", "abierta", "hecha"];
+    const casa = (i, c) => !c ? true : c === "vencida" ? vencida(i) : c === "abierta" ? (estadoAccion(i) !== "hecha" && !vencida(i)) : estadoAccion(i) === "hecha";
+    const acciones = ta.map((d, i) => [d, i]).filter((x) => casa(x[1], critAcc[s.filtro])).map((x) => {
+      const d = x[0], i = x[1], est = estadoAccion(i);
+      const dias = d[5];
+      const tonoPlazo = est === "hecha" ? "ok" : dias < 0 ? "bad" : dias <= 7 ? "warn" : "mut";
+      const textoPlazo = est === "hecha" ? "completada" : dias < 0 ? (dias === -1 ? "vencida hace 1 día" : `vencida hace ${-dias} días`) : dias === 0 ? "vence hoy" : dias === 1 ? "1 día" : `${dias} días`;
+      const origenTono = { auditoría: "info", incidente: "bad", medida: "marca", componente: "warn" }[d[3]];
+      return {
+        cod: d[0], nombre: d[1], detalle: d[2], origen: d[3], responsable: d[6],
+        plazo: textoPlazo, chipPlazo: this.chip(tonoPlazo, textoPlazo), chipOrigen: this.chip(origenTono, d[3]),
+        caja: `display:flex; flex-direction:column; gap:10px; padding:14px 16px; border-bottom:1px solid #F1F5F9; background:${est === "hecha" ? "#F8FAFC" : dias < 0 ? "#FEF2F2" : "#FFFFFF"}`,
+        pie: est === "hecha" ? "Pendiente de verificar el cierre con evidencia." : d[4],
+        estados: ["abierta", "en curso", "hecha"].map((e) => ({
+          nombre: e,
+          onClick: () => this.setState({ estados: Object.assign({}, s.estados, { [i]: e }) }),
+          estilo: `font-family:inherit; font-size:12px; font-weight:${est === e ? 600 : 500}; cursor:pointer; padding:5px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${est === e ? "#0F766E" : "#E2E8F0"}; background:${est === e ? "#F0FDFA" : "#FFFFFF"}; color:${est === e ? "#0B4F4A" : "#475569"}`
+        }))
+      };
+    });
+
+    const cuentaInc = (c) => ti.filter((d) => !c ? true : c === "abierto" ? d[7] === "en tratamiento" : c === "alta" ? d[4] === "alta" : !!d[9]).length;
+    const cuentaAcc = (c) => ta.filter((d, i) => casa(i, c)).length;
+    const plural = (n, sing, plur) => `${n} ${n === 1 ? sing : plur}`;
+
+    const filtros = (inc
+      ? [["Todos", null], ["En tratamiento", "abierto"], ["Gravedad alta", "alta"], ["Con notificación", "notificar"]].map((f) => [f[0], cuentaInc(f[1])])
+      : [["Todas", null], ["Vencidas", "vencida"], ["Abiertas", "abierta"], ["Hechas", "hecha"]].map((f) => [f[0], cuentaAcc(f[1])])
+    ).map((f, i) => ({
+      nombre: f[0], n: f[1],
+      onClick: () => this.setState({ filtro: i }),
+      estilo: `font-family:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 10px; border-radius:6px; white-space:nowrap; border:1px solid ${s.filtro === i ? "#0F766E" : "#E2E8F0"}; background:${s.filtro === i ? "#F0FDFA" : "#FFFFFF"}; color:${s.filtro === i ? "#0B4F4A" : "#475569"}`
+    }));
+
+    const cajaT = "display:flex; flex-direction:column; gap:3px; padding:14px 16px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px";
+    const vencidas = cuentaAcc("vencida"), abiertas = cuentaAcc("abierta"), hechas = cuentaAcc("hecha");
+
+    return {
+      incidentes, acciones, filtros,
+      totales: inc
+        ? [
+            { n: cuentaInc("abierto"), t: "en tratamiento", caja: cajaT + "; border-left:3px solid #B45309" },
+            { n: cuentaInc("alta"), t: cuentaInc("alta") === 1 ? "de gravedad alta" : "de gravedad alta", caja: cajaT + "; border-left:3px solid #B91C1C" },
+            { n: "5", t: "registrados este año", caja: cajaT },
+            { n: "4 h", t: "mayor tiempo de parada", caja: cajaT }
+          ]
+        : [
+            { n: vencidas, t: vencidas === 1 ? "acción vencida" : "acciones vencidas", caja: cajaT + "; border-left:3px solid #B91C1C" },
+            { n: abiertas, t: abiertas === 1 ? "abierta en plazo" : "abiertas en plazo", caja: cajaT },
+            { n: hechas, t: hechas === 1 ? "hecha, pendiente de verificar" : "hechas, pendientes de verificar", caja: cajaT },
+            { n: "3", t: "personas con acciones", caja: cajaT }
+          ],
+      verIncidentes: () => this.setState({ vista: "incidentes", filtro: 0 }),
+      verAcciones: () => this.setState({ vista: "acciones", filtro: 0 }),
+      botonIncidentes: `font-family:inherit; font-size:13px; font-weight:${inc ? 600 : 500}; cursor:pointer; padding:6px 12px; border:0; border-radius:5px; background:${inc ? "#FFFFFF" : "transparent"}; color:${inc ? "#0B4F4A" : "#475569"}`,
+      botonAcciones: `font-family:inherit; font-size:13px; font-weight:${inc ? 500 : 600}; cursor:pointer; padding:6px 12px; border:0; border-radius:5px; background:${inc ? "transparent" : "#FFFFFF"}; color:${inc ? "#475569" : "#0B4F4A"}`,
+      zonaIncidentes: `display:${inc ? "block" : "none"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      zonaAcciones: `display:${inc ? "none" : "block"}; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; overflow:hidden`,
+      abrirAlta: () => this.setState({ modal: inc ? "incidente" : "accion", escala: null, datos: false }),
+      cerrarModal: () => this.setState({ modal: null }),
+      detener: (e) => e.stopPropagation(),
+      fondoModal: `display:${s.modal ? "flex" : "none"}; position:fixed; inset:0; z-index:60; align-items:center; justify-content:center; padding:24px; background:rgba(15,23,42,0.45)`,
+      tituloModal: s.modal === "accion" ? "Nueva acción" : "Registrar incidente",
+      subtituloModal: s.modal === "accion"
+        ? "Queda en el plan de acciones, con responsable y plazo."
+        : "Todo incidente se registra, aunque se resuelva en el momento: el auditor mira el registro, no solo los graves.",
+      etiquetaTitulo: s.modal === "accion" ? "Qué hay que hacer" : "Qué ha pasado",
+      marcadorTitulo: s.modal === "accion" ? "Implantar doble factor en el acceso remoto" : "Correo de phishing con enlace a portal falso",
+      etiquetaDetalle: s.modal === "accion" ? "Por qué y qué se espera al terminar" : "Qué se ha observado y qué se ha hecho ya",
+      marcadorDetalle: s.modal === "accion"
+        ? "Origen del hallazgo y criterio de cierre: qué evidencia demostrará que está resuelto."
+        : "Cuándo se detectó, a quién afecta, qué medidas inmediatas se tomaron.",
+      etiquetaEscala: s.modal === "accion" ? "Origen" : "Gravedad",
+      ayudaEscala: s.modal === "accion"
+        ? "El origen determina dónde aparece la acción y con qué evidencia se cierra."
+        : s.escala === "alta"
+          ? "Gravedad alta: se notifica al CCN-CERT y se avisa al responsable del sistema."
+          : "Baja si no hay impacto en el servicio ni en los datos; media si afecta al servicio; alta si hay datos comprometidos o parada relevante.",
+      opcionesEscala: (s.modal === "accion" ? ["auditoría", "incidente", "medida", "componente"] : ["baja", "media", "alta"]).map((o) => ({
+        nombre: o,
+        onClick: () => this.setState({ escala: o }),
+        estilo: `font-family:inherit; font-size:13px; font-weight:${s.escala === o ? 600 : 500}; cursor:pointer; padding:7px 12px; border-radius:6px; white-space:nowrap; border:1px solid ${s.escala === o ? (o === "alta" ? "#B91C1C" : "#0F766E") : "#E2E8F0"}; background:${s.escala === o ? (o === "alta" ? "#FEF2F2" : "#F0FDFA") : "#FFFFFF"}; color:${s.escala === o ? (o === "alta" ? "#B91C1C" : "#0B4F4A") : "#475569"}`
+      })),
+      etiquetaFecha: s.modal === "accion" ? "Plazo" : "Detectado el",
+      marcadorFecha: s.modal === "accion" ? "dd/mm/aaaa" : "dd/mm/aaaa hh:mm",
+      etiquetaVinculo: s.modal === "accion" ? "Se vincula a" : "Activo afectado",
+      opcionesVinculo: (s.modal === "accion"
+        ? ["op.acc.5 · Mecanismo de autenticación", "INC-2026-014 · Phishing", "Certificado de sede electrónica", "Sin vincular"]
+        : ["Puestos de trabajo", "VM-APP01 · servidor de aplicaciones", "Sede electrónica", "Correo corporativo"]).map((t) => ({ t })),
+      zonaDatos: `display:${s.modal === "incidente" ? "flex" : "none"}; align-items:flex-start; gap:10px; padding:12px 14px; border-radius:6px; background:${s.datos ? "#FFFBEB" : "#F8FAFC"}; border:1px solid ${s.datos ? "#B4530933" : "#E2E8F0"}`,
+      alternarDatos: () => this.setState({ datos: !s.datos }),
+      marcaDatos: s.datos ? "✓" : "",
+      casillaDatos: `flex:0 0 auto; margin-top:1px; width:18px; height:18px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; color:#FFFFFF; border:1.5px solid ${s.datos ? "#B45309" : "#94A3B8"}; background:${s.datos ? "#B45309" : "#FFFFFF"}`,
+      avisoDatos: `display:${s.datos ? "block" : "none"}; font-size:12px; line-height:1.5; color:#B45309`,
+      zonaEvidencia: `display:${s.modal === "incidente" ? "flex" : "none"}; flex-direction:column; gap:6px; padding:12px 14px; border:1px dashed #94A3B8; border-radius:6px; background:#F8FAFC`,
+      pieModal: s.modal === "accion"
+        ? "Se avisará al responsable y aparecerá en su lista de tareas."
+        : "Queda registrado con fecha y autor, y enlazado al procedimiento de gestión de incidentes.",
+      confirmarModal: s.modal === "accion" ? "Crear acción" : "Registrar incidente",
+      textoAlta: inc ? "Registrar incidente" : "Nueva acción",
+      marcadorBusqueda: inc ? "Buscar incidente" : "Buscar acción"
+    };
+  }
+}
+</script>
+</body>
+</html>

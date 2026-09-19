@@ -1,0 +1,219 @@
+# Seed BLENS · Checks de verificación — familia op.pl
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: op.pl
+checks:
+  - code: "CHK-op.pl.1.1"
+    measure: op.pl.1
+    item: "op.pl.1.1"
+    descripcion: "Identifique los activos más valiosos del sistema. (Ver op.exp.1)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.1-01, EV-op.pl.1-02, EV-op.pl.1-03]
+  - code: "CHK-op.pl.1.2"
+    measure: op.pl.1
+    item: "op.pl.1.2"
+    descripcion: "Identifique las amenazas más probables"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.1-01, EV-op.pl.1-02, EV-op.pl.1-03]
+  - code: "CHK-op.pl.1.3"
+    measure: op.pl.1
+    item: "op.pl.1.3"
+    descripcion: "Identifique las salvaguardas que protegen de dichas amenazas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.1-01, EV-op.pl.1-02, EV-op.pl.1-03]
+  - code: "CHK-op.pl.1.4"
+    measure: op.pl.1
+    item: "op.pl.1.4"
+    descripcion: "Identifique los principales riesgos residuales"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.1-01, EV-op.pl.1-02, EV-op.pl.1-03]
+  - code: "CHK-op.pl.1.r1.1"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r1
+    item: "op.pl.1.r1.1"
+    descripcion: "Valore cualitativamente los activos más valiosos del sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r1.2"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r1
+    item: "op.pl.1.r1.2"
+    descripcion: "Cuantifique las amenazas más probables"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r1.3"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r1
+    item: "op.pl.1.r1.3"
+    descripcion: "Valore las salvaguardas que protegen de dichas amenazas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r1.4"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r1
+    item: "op.pl.1.r1.4"
+    descripcion: "Valore el riesgo residual"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r2.1"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r2
+    item: "op.pl.1.r2.1"
+    descripcion: "Valore cualitativamente los activos más valiosos del sistema"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r2.2"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r2
+    item: "op.pl.1.r2.2"
+    descripcion: "Cuantifique las amenazas posibles"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r2.3"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r2
+    item: "op.pl.1.r2.3"
+    descripcion: "Valore y priorice las salvaguardas adecuadas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.1.r2.4"
+    measure: op.pl.1
+    refuerzo: op.pl.1.r2
+    item: "op.pl.1.r2.4"
+    descripcion: "Valore y asuma formalmente el riesgo residual"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.2.1"
+    measure: op.pl.2
+    item: "op.pl.2.1"
+    descripcion: "Documentación de las instalaciones, incluyendo áreas y puntos de acceso"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.pl.2-01]
+  - code: "CHK-op.pl.2.2"
+    measure: op.pl.2
+    item: "op.pl.2.2"
+    descripcion: "Documentación del sistema, incluyendo equipos, redes internas y conexiones al exterior, y puntos de acceso al sistema (puestos de trabajo y consolas de administración)"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.pl.2-01]
+  - code: "CHK-op.pl.2.3"
+    measure: op.pl.2
+    item: "op.pl.2.3"
+    descripcion: "Esquema de líneas de defensa, incluyendo puntos de interconexión a otros sistemas o a otras redes (en especial, si se trata de internet o redes públicas en general); cortafuegos, DMZ, etc…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.2-01]
+  - code: "CHK-op.pl.2.4"
+    measure: op.pl.2
+    item: "op.pl.2.4"
+    descripcion: "Sistema de identificación y autenticación de usuarios, incluyendo el uso de claves concertadas, contraseñas, tarjetas de identificación, biometría, u otras de naturaleza análoga, y el uso de ficheros o directorios para…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.pl.2-01]
+  - code: "CHK-op.pl.2.r1.1"
+    measure: op.pl.2
+    refuerzo: op.pl.2.r1
+    item: "op.pl.2.r1.1"
+    descripcion: "Sistema de gestión, relativo a la planificación, organización y control de los recursos relativos a la seguridad de la información"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.pl.2-02]
+  - code: "CHK-op.pl.2.r2.1"
+    measure: op.pl.2
+    refuerzo: op.pl.2.r2
+    item: "op.pl.2.r2.1"
+    descripcion: "Sistema de gestión de la seguridad de la información, con actualización y aprobación periódica"
+    metodo: [ENTREVISTA, MUESTREO]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.2.r3.1"
+    measure: op.pl.2
+    refuerzo: op.pl.2.r3
+    item: "op.pl.2.r3.1"
+    descripcion: "Controles técnicos internos, incluyendo la validación de datos de entrada, salida y datos intermedios"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.3.1"
+    measure: op.pl.3
+    item: "op.pl.3.1"
+    descripcion: "Atenderá a las conclusiones del análisis de riesgos ([op.pl.1])"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.pl.3-01]
+  - code: "CHK-op.pl.3.2"
+    measure: op.pl.3
+    item: "op.pl.3.2"
+    descripcion: "Será acorde a la arquitectura de seguridad escogida ([op.pl.2])"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.3-01]
+  - code: "CHK-op.pl.3.3"
+    measure: op.pl.3
+    item: "op.pl.3.3"
+    descripcion: "Contemplará las necesidades técnicas, de formación y de financiación, de forma conjunta"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.pl.3-01]
+  - code: "CHK-op.pl.4.1"
+    measure: op.pl.4
+    item: "op.pl.4.1"
+    descripcion: "Necesidades de procesamiento"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.4-01]
+  - code: "CHK-op.pl.4.2"
+    measure: op.pl.4
+    item: "op.pl.4.2"
+    descripcion: "Necesidades de almacenamiento de información: durante su procesamiento y durante el periodo que deba retenerse"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.pl.4-01]
+  - code: "CHK-op.pl.4.3"
+    measure: op.pl.4
+    item: "op.pl.4.3"
+    descripcion: "Necesidades de comunicación"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.4-01]
+  - code: "CHK-op.pl.4.4"
+    measure: op.pl.4
+    item: "op.pl.4.4"
+    descripcion: "Necesidades de personal: cantidad y cualificación profesional"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-op.pl.4-01]
+  - code: "CHK-op.pl.4.5"
+    measure: op.pl.4
+    item: "op.pl.4.5"
+    descripcion: "Necesidades de instalaciones y medios auxiliares"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.4-01]
+  - code: "CHK-op.pl.4.r1.1"
+    measure: op.pl.4
+    refuerzo: op.pl.4.r1
+    item: "op.pl.4.r1.1"
+    descripcion: "Se realizará una previsión de la capacidad y se mantendrá actualizada durante todo el ciclo de vida del sistema"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.pl.4-02]
+  - code: "CHK-op.pl.4.r1.2"
+    measure: op.pl.4
+    refuerzo: op.pl.4.r1
+    item: "op.pl.4.r1.2"
+    descripcion: "Se emplearán herramientas y recursos para la monitorización de la capacidad"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-op.pl.4-02]
+  - code: "CHK-op.pl.5.1"
+    measure: op.pl.5
+    item: "op.pl.5.1"
+    descripcion: "Se utilizará el Catálogo de Productos y Servicios de Seguridad de las Tecnologías de la Información y Comunicación (CPSTIC) del CCN, para seleccionar los productos o servicios suministrados por un tercero que formen…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.5-01, EV-op.pl.5-02, EV-op.pl.5-03, EV-op.pl.5-04]
+  - code: "CHK-op.pl.5.2"
+    measure: op.pl.5
+    item: "op.pl.5.2"
+    descripcion: "Si el sistema suministra un servicio de seguridad a un tercero bajo el alcance del ENS, el producto o productos que en los que se sustente dicho servicio debe superar un proceso de cualificación y ser incluido en el…"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-op.pl.5-01, EV-op.pl.5-02, EV-op.pl.5-03, EV-op.pl.5-04]
+  - code: "CHK-op.pl.5.r1.1"
+    measure: op.pl.5
+    refuerzo: op.pl.5.r1
+    item: "op.pl.5.r1.1"
+    descripcion: "La información deberá ser protegida frente a las amenazas TEMPEST de acuerdo con la normativa en vigor"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-op.pl.5.r2.1"
+    measure: op.pl.5
+    refuerzo: op.pl.5.r2
+    item: "op.pl.5.r2.1"
+    descripcion: "Cada producto y servicio incluirá en su descripción una lista de componentes software, acorde a lo especificado en [mp.sw.1.r5]"
+    metodo: [MUESTREO]
+    evidencia_esperada: []

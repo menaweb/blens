@@ -1,0 +1,431 @@
+# Seed BLENS · Plantillas de evidencia — familia op.acc (Control de acceso)
+# Especificación: docs/evidencias_por_herramienta.md §3.4 · Modelos: EvidenceTemplate / ProductEvidenceHint
+#
+# Recordatorio: op.acc aplica por NIVEL DE DIMENSIÓN (nivel_orden.TA para op.acc.1,
+# nivel_orden.CITA para el resto), no por categoría.
+
+version: 1
+familia: op.acc
+
+templates:
+
+  # ------------------------------------------------------------------ op.acc.1
+  - code: EV-op.acc.1-01
+    measure: op.acc.1
+    option_group: op.acc.1.usuarios
+    preferencia: 1
+    titulo: "Listado de usuarios del directorio"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.acc.1"
+    applies_if: {">=": [{var: "nivel_orden.TA"}, 1]}
+    instrucciones: "Exporta la lista de cuentas con su estado (activa o deshabilitada), tipo de cuenta y fecha del último acceso."
+    criterios_aceptacion:
+      - "Se ve la fecha de generación"
+      - "Las cuentas son nominales, o las genéricas están identificadas"
+      - "Aparece el último acceso de cada cuenta"
+      - "El número de cuentas activas es coherente con la plantilla declarada"
+    rechazos_tipicos:
+      - "Cuentas activas de personas que ya no están en la organización"
+      - "Cuentas genéricas sin justificación ni trazabilidad de uso"
+      - "Listado sin fecha ni origen"
+    product_hints:
+      - match: {producto: "Entra ID"}
+        instrucciones: "Centro de administración de Microsoft Entra → Usuarios → Todos los usuarios → Descargar usuarios (incluye estado y último inicio de sesión)"
+      - match: {producto: "Active Directory"}
+        instrucciones: "PowerShell: Get-ADUser -Filter * -Properties Enabled,LastLogonDate | Export-Csv"
+      - match: {producto: "Google Workspace"}
+        instrucciones: "Consola de administración → Directorio → Usuarios → Descargar usuarios"
+
+  - code: EV-op.acc.1-02
+    measure: op.acc.1
+    option_group: op.acc.1.usuarios
+    preferencia: 2
+    titulo: "Captura del panel de usuarios"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.acc.1"
+    applies_if: {">=": [{var: "nivel_orden.TA"}, 1]}
+    instrucciones: "Captura del panel de usuarios con el total de cuentas y su estado."
+    criterios_aceptacion:
+      - "Se ve el nombre del directorio y la organización"
+      - "Se ve el total de cuentas"
+
+  - code: EV-op.acc.1-03
+    measure: op.acc.1
+    titulo: "Justificación de las cuentas compartidas"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.1"
+    applies_if: {in: [{var: "hechos.cuentas_nominales"}, ["algunas_genericas", "muchas_genericas", "mixto"]]}
+    generable: true
+    instrucciones: "Relación de cuentas compartidas, para qué se usan, quién las usa y cómo se sabe quién actuó en cada momento."
+    criterios_aceptacion:
+      - "Cada cuenta compartida tiene justificación y responsable"
+      - "Se explica cómo se mantiene la trazabilidad de su uso"
+    rechazos_tipicos:
+      - "Cuenta de administrador compartida sin ningún registro de quién la usa"
+
+  - code: EV-op.acc.1-04
+    measure: op.acc.1
+    refuerzo: op.acc.1.r1
+    titulo: "Identificación avanzada"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.1"
+    applies_if: {">=": [{var: "nivel_orden.TA"}, 2]}
+    instrucciones: "Evidencia de que los identificadores son únicos, no reutilizables y están asociados a una persona concreta (política de nomenclatura y su aplicación)."
+    criterios_aceptacion:
+      - "Se ve la regla de identificación aplicada"
+      - "No hay identificadores reutilizados tras una baja"
+
+  # ------------------------------------------------------------------ op.acc.2
+  - code: EV-op.acc.2-01
+    measure: op.acc.2
+    titulo: "Autorizaciones de acceso (muestra)"
+    tipo: REGISTRO
+    formatos: [pdf, png, csv]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.acc.2"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    instrucciones: "De 3 a 5 concesiones de acceso del periodo con su petición y la autorización de quien es responsable de esa información."
+    criterios_aceptacion:
+      - "Consta quién pidió, quién autorizó y cuándo"
+      - "Quien autoriza es el responsable de la información, no quien ejecuta"
+      - "Los casos son del periodo auditado"
+    rechazos_tipicos:
+      - "Accesos concedidos por informática sin autorización del responsable"
+      - "Autorizaciones de palabra, sin rastro"
+
+  - code: EV-op.acc.2-02
+    measure: op.acc.2
+    titulo: "Perfiles de acceso por puesto"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx, xlsx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.2"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    generable: true
+    instrucciones: "Matriz de qué permisos corresponden a cada puesto o perfil, de forma que se aplique el mínimo privilegio."
+    criterios_aceptacion:
+      - "Cubre los puestos con acceso al sistema"
+      - "Está aprobada y fechada"
+    rechazos_tipicos:
+      - "Perfiles definidos en el papel que no coinciden con los permisos reales del directorio"
+
+  - code: EV-op.acc.2-03
+    measure: op.acc.2
+    refuerzo: op.acc.2.r1
+    titulo: "Relación de privilegios concedidos"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.acc.2"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 3]}
+    instrucciones: "Export de los permisos efectivos sobre los recursos críticos: quién puede hacer qué."
+    criterios_aceptacion:
+      - "Identifica recurso, usuario o grupo y nivel de permiso"
+
+  - code: EV-op.acc.2-04
+    measure: op.acc.2
+    refuerzo: op.acc.2.r2
+    titulo: "Control de acceso por dispositivo"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.2"
+    applies_if: {"!=": [{var: "hechos.control_dispositivo"}, "no"]}
+    instrucciones: "Captura de la política que limita desde qué equipos se puede acceder (acceso condicional, equipos gestionados, filtrado de red)."
+    criterios_aceptacion:
+      - "Se ve a qué usuarios y aplicaciones se aplica"
+      - "Se ve la condición de dispositivo exigida"
+    product_hints:
+      - match: {producto: "Entra ID"}
+        instrucciones: "Entra → Protección → Acceso condicional → abre la directiva y captura Asignaciones y Controles"
+
+  # ------------------------------------------------------------------ op.acc.3
+  - code: EV-op.acc.3-01
+    measure: op.acc.3
+    option_group: op.acc.3.segregacion
+    preferencia: 1
+    titulo: "Matriz de funciones incompatibles"
+    tipo: DOCUMENTO
+    formatos: [pdf, xlsx, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.3"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 2]}
+    generable: true
+    instrucciones: "Documento que identifique qué tareas no puede acumular la misma persona y cómo se garantiza."
+    criterios_aceptacion:
+      - "Incluye al menos desarrollo frente a producción, petición frente a concesión de accesos, y administración frente a auditoría"
+      - "Aprobada y fechada"
+
+  - code: EV-op.acc.3-02
+    measure: op.acc.3
+    option_group: op.acc.3.segregacion
+    preferencia: 2
+    titulo: "Medidas compensatorias por imposibilidad de segregar"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.3"
+    applies_if: {"==": [{var: "hechos.segregacion"}, "imposible"]}
+    generable: true
+    instrucciones: "Justificación de por qué no es posible separar las tareas y qué se hace en su lugar: supervisión, registro de acciones de administrador y revisión por un tercero."
+    criterios_aceptacion:
+      - "Explica el motivo (tamaño del equipo) con datos"
+      - "Concreta quién supervisa y con qué periodicidad"
+      - "Se enlaza con el registro de actividad de los administradores"
+    rechazos_tipicos:
+      - "Declarar la imposibilidad sin ninguna medida compensatoria"
+
+  - code: EV-op.acc.3-03
+    measure: op.acc.3
+    refuerzo: op.acc.3.r2
+    titulo: "Privilegios de auditoría separados"
+    tipo: CAPTURA
+    formatos: [png, pdf, csv]
+    obligatoria: false
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.3"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 3]}
+    instrucciones: "Evidencia de que quien revisa los registros no es quien administra el sistema: permisos del rol de auditoría."
+    criterios_aceptacion:
+      - "Se ve el rol de auditoría y quién lo tiene"
+
+  # ------------------------------------------------------------------ op.acc.4
+  - code: EV-op.acc.4-01
+    measure: op.acc.4
+    titulo: "Procedimiento de altas, cambios y bajas"
+    tipo: DOCUMENTO
+    formatos: [pdf, docx]
+    obligatoria: true
+    vigencia_dias: 730
+    carpeta_paquete: "05_[op]/op.acc.4"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    generable: true
+    instrucciones: "Procedimiento que cubra el ciclo completo de una cuenta: alta, cambio de puesto, ausencia prolongada y baja, con plazos y responsables."
+    criterios_aceptacion:
+      - "Incluye plazo para la retirada de accesos en las bajas"
+      - "Contempla el cambio de puesto, no solo alta y baja"
+      - "Aprobado y fechado"
+
+  - code: EV-op.acc.4-02
+    measure: op.acc.4
+    titulo: "Muestra de altas y bajas del periodo"
+    tipo: REGISTRO
+    formatos: [pdf, csv, png]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.acc.4"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    instrucciones: "De 3 a 5 altas y otras tantas bajas del periodo, con su solicitud, autorización y la fecha real de ejecución."
+    criterios_aceptacion:
+      - "En las bajas se ve la fecha de salida y la de retirada del acceso"
+      - "El plazo coincide con el declarado en el procedimiento"
+      - "Los casos son reales y del periodo auditado"
+    rechazos_tipicos:
+      - "Baja de hace seis meses con la cuenta todavía activa"
+      - "No se conserva rastro de las solicitudes"
+
+  - code: EV-op.acc.4-03
+    measure: op.acc.4
+    titulo: "Última revisión de permisos"
+    tipo: ACTA
+    formatos: [pdf, xlsx, docx]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.4"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    instrucciones: "Registro de la última revisión de accesos: quién la hizo, qué se revisó, qué se retiró y cuándo."
+    criterios_aceptacion:
+      - "Fecha dentro del periodo de revisión declarado"
+      - "Consta la aprobación del responsable de cada área"
+      - "Se ven los cambios derivados, o que no hubo ninguno"
+    rechazos_tipicos:
+      - "Se declara revisión semestral y solo hay una de hace dos años"
+      - "Revisión sin ningún cambio en una organización con rotación"
+
+  # ------------------------------------------------------------------ op.acc.5
+  - code: EV-op.acc.5-01
+    measure: op.acc.5
+    titulo: "Mecanismo de autenticación de usuarios externos"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.CITA"}, 1]}, {"!=": [{var: "hechos.usuarios_externos"}, "no"]}]}
+    instrucciones: "Captura de la pantalla de acceso y de la configuración del mecanismo exigido a los usuarios externos."
+    criterios_aceptacion:
+      - "Se ve qué métodos se admiten"
+      - "El método coincide con el refuerzo declarado en la Declaración de Aplicabilidad"
+    rechazos_tipicos:
+      - "Se declara certificado electrónico y la sede también permite entrar solo con contraseña"
+
+  - code: EV-op.acc.5-02
+    measure: op.acc.5
+    refuerzo: op.acc.5.r5
+    titulo: "Registro de entrega de credenciales a usuarios externos"
+    tipo: REGISTRO
+    formatos: [pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.5"
+    applies_if: {and: [{">=": [{var: "nivel_orden.CITA"}, 2]}, {"!=": [{var: "hechos.usuarios_externos"}, "no"]}]}
+    instrucciones: "Evidencia del proceso de entrega y activación de credenciales: quién las recibió, cuándo y con qué comprobación de identidad."
+    criterios_aceptacion:
+      - "Consta la verificación de identidad previa"
+
+  # ------------------------------------------------------------------ op.acc.6
+  - code: EV-op.acc.6-01
+    measure: op.acc.6
+    option_group: op.acc.6.mfa
+    preferencia: 1
+    titulo: "Política de doble factor y su alcance"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {and: [{">=": [{var: "nivel_orden.CITA"}, 1]}, {in: ["mfa", {var: "hechos.auth_internos"}]}]}
+    instrucciones: "Captura de la política de segundo factor: a qué usuarios y aplicaciones se aplica y qué exclusiones tiene."
+    criterios_aceptacion:
+      - "Se ve que se aplica a todos los usuarios, o se justifican las exclusiones"
+      - "Incluye a los administradores"
+      - "Se ve el estado de la política: activada, no en modo solo informe"
+    rechazos_tipicos:
+      - "Doble factor disponible pero no obligatorio"
+      - "Exclusiones permanentes sin justificación"
+      - "Política en modo de solo informe presentada como activa"
+    product_hints:
+      - match: {producto: "Entra ID"}
+        instrucciones: "Entra → Protección → Acceso condicional → abre la directiva de MFA y captura Usuarios, Aplicaciones, Controles y Estado"
+      - match: {producto: "Google Workspace"}
+        instrucciones: "Consola de administración → Seguridad → Autenticación → Verificación en dos pasos: captura la configuración y su cumplimiento"
+
+  - code: EV-op.acc.6-02
+    measure: op.acc.6
+    option_group: op.acc.6.mfa
+    preferencia: 2
+    titulo: "Listado de usuarios con segundo factor activo"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {and: [{">=": [{var: "nivel_orden.CITA"}, 1]}, {in: ["mfa", {var: "hechos.auth_internos"}]}]}
+    instrucciones: "Export de los métodos de autenticación registrados por usuario, para ver cobertura real frente al total."
+    criterios_aceptacion:
+      - "Se ve el total de usuarios y cuántos tienen el segundo factor"
+      - "Los administradores están cubiertos"
+
+  - code: EV-op.acc.6-03
+    measure: op.acc.6
+    refuerzo: op.acc.6.r1
+    titulo: "Política de contraseñas"
+    tipo: CAPTURA
+    formatos: [png, pdf, html]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {and: [{">=": [{var: "nivel_orden.CITA"}, 1]}, {in: ["password", {var: "hechos.auth_internos"}]}]}
+    instrucciones: "Captura o export de la política de contraseñas aplicada: longitud, complejidad, bloqueo por intentos y caducidad."
+    criterios_aceptacion:
+      - "Es la política aplicada en el sistema, no un documento de intenciones"
+      - "Coincide con lo que dice vuestra normativa interna"
+    product_hints:
+      - match: {producto: "Active Directory"}
+        instrucciones: "Administración de directivas de grupo → Default Domain Policy → Directivas de cuenta → Guardar informe HTML"
+
+  - code: EV-op.acc.6-04
+    measure: op.acc.6
+    refuerzo: op.acc.6.r9
+    titulo: "Doble factor en el acceso remoto"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {in: [{var: "hechos.acceso_remoto"}, ["vpn", "vpn_mfa", "nube"]]}
+    instrucciones: "Captura de la configuración que exige segundo factor al entrar desde fuera (VPN, escritorio remoto o aplicaciones publicadas)."
+    criterios_aceptacion:
+      - "Se ve que el segundo factor es obligatorio en el acceso remoto"
+    rechazos_tipicos:
+      - "VPN con solo usuario y contraseña"
+
+  - code: EV-op.acc.6-05
+    measure: op.acc.6
+    refuerzo: op.acc.6.r5
+    titulo: "Registro de entrega y activación de credenciales"
+    tipo: REGISTRO
+    formatos: [pdf, csv]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 2]}
+    instrucciones: "Evidencia de cómo se entregan las credenciales al personal y cómo se activa la cuenta."
+    criterios_aceptacion:
+      - "Consta la identificación previa de la persona"
+      - "La credencial inicial es de un solo uso o se obliga a cambiarla"
+
+  - code: EV-op.acc.6-06
+    measure: op.acc.6
+    refuerzo: op.acc.6.r7
+    titulo: "Suspensión de cuentas sin uso"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, png, pdf]
+    obligatoria: true
+    vigencia_dias: 180
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 3]}
+    instrucciones: "Evidencia de que las cuentas sin actividad se desactivan: configuración del plazo y listado de cuentas suspendidas."
+    criterios_aceptacion:
+      - "Se ve el plazo de inactividad aplicado"
+      - "Hay cuentas efectivamente suspendidas, o se justifica que no las hay"
+
+  - code: EV-op.acc.6-07
+    measure: op.acc.6
+    refuerzo: op.acc.6.r6
+    titulo: "Limitación de la ventana de acceso"
+    tipo: CAPTURA
+    formatos: [png, pdf]
+    obligatoria: true
+    vigencia_dias: 365
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 3]}
+    instrucciones: "Captura de la restricción de horarios o fechas de acceso configurada."
+    criterios_aceptacion:
+      - "Se ve a qué usuarios se aplica y en qué franja"
+
+  - code: EV-op.acc.6-08
+    measure: op.acc.6
+    titulo: "Cuentas con permisos de administrador"
+    tipo: EXPORT_CONFIG
+    formatos: [csv, xlsx, pdf]
+    obligatoria: true
+    vigencia_dias: 90
+    carpeta_paquete: "05_[op]/op.acc.6"
+    applies_if: {">=": [{var: "nivel_orden.CITA"}, 1]}
+    instrucciones: "Listado de las cuentas con privilegios de administrador, con su titular y su propósito."
+    criterios_aceptacion:
+      - "Cada cuenta privilegiada tiene una persona identificada"
+      - "El número es proporcionado al tamaño de la organización"
+      - "Los administradores usan cuenta distinta para tareas ordinarias, o se justifica"
+    rechazos_tipicos:
+      - "Diez administradores de dominio en una organización de veinte personas"
+      - "Cuenta de administrador usada también para el correo y la navegación"

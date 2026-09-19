@@ -1,0 +1,137 @@
+# Seed BLENS · Checks de verificación — familia mp.sw
+# DERIVADOS de los requisitos atómicos (items) del catálogo OSCAL oficial (generate_checks_from_oscal.py).
+# `metodo` y `evidencia_esperada`: primera pasada automática. REVISAR contra CCN-STIC-808.
+version: 1
+familia: mp.sw
+checks:
+  - code: "CHK-mp.sw.1.1"
+    measure: mp.sw.1
+    item: "mp.sw.1.1"
+    descripcion: "El desarrollo de aplicaciones se realizará sobre un sistema diferente y separado del de producción, no debiendo existir herramientas o datos de desarrollo en el entorno de producción, ni datos de producción en el de…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: [EV-mp.sw.1-01, EV-mp.sw.1-04]
+  - code: "CHK-mp.sw.1.r1.1"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r1
+    item: "mp.sw.1.r1.1"
+    descripcion: "Las aplicaciones se desarrollarán respetando el principio de mínimo privilegio, accediendo únicamente a los recursos imprescindibles para su función, y con los privilegios que sean indispensables"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.sw.1.r2.1"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r2
+    item: "mp.sw.1.r2.1"
+    descripcion: "Se aplicará una metodología de desarrollo seguro reconocida que:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.1-03]
+  - code: "CHK-mp.sw.1.r2.1a"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r2
+    item: "a)"
+    item_padre: "mp.sw.1.r2.1"
+    descripcion: "Tendrá en consideración los aspectos de seguridad a lo largo de todo el ciclo de vida"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.1-03]
+  - code: "CHK-mp.sw.1.r2.1b"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r2
+    item: "b)"
+    item_padre: "mp.sw.1.r2.1"
+    descripcion: "Incluirá normas de programación segura, especialmente: control de asignación y liberación de memoria, desbordamiento de memoria (overflow)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.1-03]
+  - code: "CHK-mp.sw.1.r2.1c"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r2
+    item: "c)"
+    item_padre: "mp.sw.1.r2.1"
+    descripcion: "Tratará específicamente los datos usados en pruebas"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.1-03]
+  - code: "CHK-mp.sw.1.r2.1d"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r2
+    item: "d)"
+    item_padre: "mp.sw.1.r2.1"
+    descripcion: "Permitirá la inspección del código fuente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.1-03]
+  - code: "CHK-mp.sw.1.r3.1"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r3
+    item: "mp.sw.1.r3.1"
+    descripcion: "Los siguientes elementos serán parte integral del diseño del sistema:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.sw.1.r3.1a"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r3
+    item: "a)"
+    item_padre: "mp.sw.1.r3.1"
+    descripcion: "Los mecanismos de identificación y autenticación"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.sw.1.r3.1b"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r3
+    item: "b)"
+    item_padre: "mp.sw.1.r3.1"
+    descripcion: "Los mecanismos de protección de la información tratada"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.sw.1.r3.1c"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r3
+    item: "c)"
+    item_padre: "mp.sw.1.r3.1"
+    descripcion: "La generación y tratamiento de pistas de auditoría"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []
+  - code: "CHK-mp.sw.1.r4.1"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r4
+    item: "mp.sw.1.r4.1"
+    descripcion: "Preferiblemente, las pruebas previas a la implantación o modificación de los sistemas de información no se realizarán con datos reales…"
+    metodo: [ENTREVISTA]
+    evidencia_esperada: [EV-mp.sw.1-02]
+  - code: "CHK-mp.sw.1.r5.1"
+    measure: mp.sw.1
+    refuerzo: mp.sw.1.r5
+    item: "mp.sw.1.r5.1"
+    descripcion: "El desarrollador elaborará y mantendrá actualizada una relación formal de los componentes software de terceros empleados en la aplicación o producto…"
+    metodo: [INSPECCION_TECNICA]
+    evidencia_esperada: []
+  - code: "CHK-mp.sw.2.1"
+    measure: mp.sw.2
+    item: "mp.sw.2.1"
+    descripcion: "Se comprobará que:"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.2-01]
+  - code: "CHK-mp.sw.2.1a"
+    measure: mp.sw.2
+    item: "a)"
+    item_padre: "mp.sw.2.1"
+    descripcion: "Se cumplen los criterios de aceptación en materia de seguridad"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.2-01]
+  - code: "CHK-mp.sw.2.1b"
+    measure: mp.sw.2
+    item: "b)"
+    item_padre: "mp.sw.2.1"
+    descripcion: "No se deteriora la seguridad de otros componentes del servicio"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.2-01]
+  - code: "CHK-mp.sw.2.r1.1"
+    measure: mp.sw.2
+    refuerzo: mp.sw.2.r1
+    item: "mp.sw.2.r1.1"
+    descripcion: "Las pruebas se realizarán en un entorno aislado (pre-producción)"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: [EV-mp.sw.2-02]
+  - code: "CHK-mp.sw.2.r2.1"
+    measure: mp.sw.2
+    refuerzo: mp.sw.2.r2
+    item: "mp.sw.2.r2.1"
+    descripcion: "Se realizará una auditoría de código fuente"
+    metodo: [DOCUMENTAL]
+    evidencia_esperada: []

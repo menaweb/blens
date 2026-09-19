@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# uv
+.uv/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# Django
+*.sqlite3
+/backend/media/
+/backend/staticfiles/
+
+# Entorno y secretos (§15: sin secretos en el repo)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Infra (CDK)
+cdk.out/
+.cdk.staging/
+
+# CPSTIC: los PDF de la guía 105 no se versionan (§3.2.0)
+db/seed/cpstic/*.pdf
+db/seed/cpstic/*.html
+
+# Sistema / editores
+.DS_Store
+.idea/
+.vscode/
+*.swp
