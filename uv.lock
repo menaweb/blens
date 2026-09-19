@@ -143,6 +143,7 @@ dependencies = [
     { name = "django-ninja" },
     { name = "kombu", extra = ["sqs"] },
     { name = "psycopg", extra = ["binary"] },
+    { name = "pyyaml" },
 ]
 
 [package.dev-dependencies]
@@ -151,7 +152,6 @@ dev = [
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-django" },
-    { name = "pyyaml" },
     { name = "redis" },
     { name = "ruff" },
 ]
@@ -167,6 +167,7 @@ requires-dist = [
     { name = "django-ninja", specifier = ">=1.4" },
     { name = "kombu", extras = ["sqs"], specifier = ">=5.4" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2" },
+    { name = "pyyaml", specifier = ">=6.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -175,7 +176,6 @@ dev = [
     { name = "pre-commit", specifier = ">=4.0" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-django", specifier = ">=4.9" },
-    { name = "pyyaml", specifier = ">=6.0" },
     { name = "redis", specifier = ">=5.2" },
     { name = "ruff", specifier = ">=0.8" },
 ]
