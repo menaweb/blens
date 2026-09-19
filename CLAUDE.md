@@ -83,12 +83,16 @@ F4  engines/evidence_engine  reglas JSON Logic (evaluador propio del subconjunto
                              sha256 y vigencia propia; revisión con separación de funciones
     M11 y M5 (API)           `/api/systems/{id}/profiling` y `/api/systems/{id}/evidence`
     madurez soportada        `MeasureAssessment.madurez_soportada` ya consulta la evidencia
+    pantallas Vue            perfilado (bloques, ficha de pregunta con sus cuatro apoyos,
+                             delegar en vez de «no lo sé») y carpeta de evidencias
+                             (huecos agrupados por carpeta del paquete, rechazos típicos
+                             antes de subir, «no aplica» justificado)
 ```
 
-**Sin construir:** la landing (`landing/`), las **pantallas Vue del perfilado y de la
-carpeta** (de F4 solo está el backend), la app `documents` y el parser CPSTIC de verdad
+**Sin construir:** la landing (`landing/`), la app `documents` y el parser CPSTIC de verdad
 (solo hay prototipo). F4 tampoco está cerrada mientras no se haga la **validación externa**
-que pide `docs/validacion_externa.md`: el seed sigue siendo criterio propio.
+que pide `docs/validacion_externa.md`: el seed sigue siendo criterio propio. Siguiente
+fase: **F5** (generación documental y versionado), en `docs/plan_construccion.md`.
 
 **Madurez declarada frente a madurez soportada.** Ya está enchufado: de **L2 en adelante**
 una medida necesita evidencia validada para que su nivel cuente
