@@ -47,3 +47,12 @@ export const mandar = <T>(url: string, datos?: unknown, metodo = 'POST') =>
 
 export const borrar = <T>(url: string) =>
   enviar<T>(url, { method: 'DELETE', headers: { 'X-CSRFToken': cookie('csrftoken') } })
+
+/** Subida de ficheros: multipart, sin `Content-Type` a mano (lo pone el navegador con su
+ *  `boundary`). El CSRF sí, porque es una escritura. */
+export const subir = <T>(url: string, datos: FormData) =>
+  enviar<T>(url, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': cookie('csrftoken') },
+    body: datos,
+  })

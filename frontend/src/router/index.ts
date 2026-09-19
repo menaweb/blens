@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AceptarInvitacionView from '@/views/AceptarInvitacionView.vue'
+import CarpetaEvidenciasView from '@/views/CarpetaEvidenciasView.vue'
 import CategorizacionView from '@/views/CategorizacionView.vue'
 import ChecklistView from '@/views/ChecklistView.vue'
 import CrearCuentaView from '@/views/CrearCuentaView.vue'
 import EstadoView from '@/views/EstadoView.vue'
 import IniciarSesionView from '@/views/IniciarSesionView.vue'
 import PerfilView from '@/views/PerfilView.vue'
+import PerfiladoView from '@/views/PerfiladoView.vue'
 import RecuperarView from '@/views/RecuperarView.vue'
 import UsuariosView from '@/views/UsuariosView.vue'
 import { useCuentaStore } from '@/stores/cuenta'
@@ -29,6 +31,21 @@ export const router = createRouter({
       path: '/sistemas/:systemId/medidas',
       name: 'checklist',
       component: ChecklistView,
+      props: (ruta) => ({ systemId: Number(ruta.params.systemId) }),
+    },
+    // Perfilado (M11) y carpeta de evidencias (M5): el eje del producto.
+    {
+      path: '/sistemas/:systemId/perfilado',
+      name: 'perfilado',
+      component: PerfiladoView,
+      meta: { sesion: true },
+      props: (ruta) => ({ systemId: Number(ruta.params.systemId) }),
+    },
+    {
+      path: '/sistemas/:systemId/evidencias',
+      name: 'evidencias',
+      component: CarpetaEvidenciasView,
+      meta: { sesion: true },
       props: (ruta) => ({ systemId: Number(ruta.params.systemId) }),
     },
   ],
