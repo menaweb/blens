@@ -8,19 +8,13 @@ y que un ciclo se le devuelve al cliente en castellano.
 import json
 
 import pytest
-from django.test import Client
 
 from apps.compliance.models import MeasureAssessment
 from apps.risk.models import Asset, AssetDependency, RiskResult, ThreatInstance
 from apps.risk.services import amenazas_por_defecto, recalcular
 from apps.risk.tasks import recalcular_riesgo
 from apps.tenancy.models import Role
-
-
-def como(usuario):
-    cliente = Client()
-    cliente.force_login(usuario)
-    return cliente
+from apps.tenancy.testing import como
 
 
 def post(cliente, url, payload=None):

@@ -1,7 +1,7 @@
 """Sistemas, categorización guardada y Declaración de Aplicabilidad (M2).
 
 Todo lo de aquí pasa por `can()` (§15): ni una comprobación de rol suelta. Autenticación
-por sesión de Django mientras Cognito no esté cableado (§5, D1): lo sustituye F3b.
+por token de Cognito (§5, D1), como el resto de la API.
 """
 
 from __future__ import annotations
@@ -12,27 +12,20 @@ from typing import Literal
 from apps.compliance.models import DeclaracionAplicabilidad, MeasureApplied, System
 from apps.compliance.services import generar_dda, guardar_valoracion, niveles_de
 from apps.compliance.tasks import render_dda
-from apps.tenancy.models import Membership
 from apps.tenancy.permissions import can, require
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from ninja import Router, Schema
 from ninja.errors import HttpError
-from ninja.security import django_auth
 
+from api.auth import blens_auth
+from api.routers.members import tenant_de
 from engines.oscal_io.export import DecisionMedida, dda_to_oscal_profile
 
-router = Router(auth=django_auth)
+router = Router(auth=blens_auth)
 
 NivelIn = Literal["NA", "BAJO", "MEDIO", "ALTO"]
-
-
-def _tenant_de(request):
-    membresia = Membership.objects.filter(user=request.user).first()
-    if membresia is None or not membresia.vigente:
-        raise HttpError(403, "El usuario no pertenece a ninguna organización activa.")
-    return membresia.tenant
 
 
 class SystemIn(Schema):
@@ -60,7 +53,7 @@ def _system_out(system: System) -> SystemOut:
 
 @router.get("/systems", response=list[SystemOut], summary="Sistemas de la organización")
 def systems(request):
-    tenant = _tenant_de(request)
+    tenant = tenant_de(request)
     return [
         _system_out(s)
         for s in System.objects.filter(tenant=tenant)
@@ -70,7 +63,7 @@ def systems(request):
 
 @router.post("/systems", response=SystemOut, summary="Dar de alta un sistema")
 def create_system(request, datos: SystemIn):
-    tenant = _tenant_de(request)
+    tenant = tenant_de(request)
     require(request.user, "categorizacion.editar", tenant=tenant)
     system = System.objects.create(
         tenant=tenant, nombre=datos.nombre, descripcion=datos.descripcion

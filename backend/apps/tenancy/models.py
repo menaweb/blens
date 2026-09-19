@@ -129,7 +129,10 @@ class Invitation(models.Model):
     systems = models.JSONField(default=list, blank=True)
     bloques = models.JSONField(default=list, blank=True)
     token_hash = models.CharField(max_length=64, unique=True)
+    #: Caducidad del **enlace**. La de la membresía que se creará, si el rol es de los
+    #: que caducan (auditor, consultor), va en `membership_dias`.
     expires_at = models.DateTimeField()
+    membership_dias = models.PositiveIntegerField(null=True, blank=True)
     used_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
@@ -247,3 +250,31 @@ class AuditLog(models.Model):
                 return False, entrada.pk
             prev = entrada.hash
         return True, None
+
+
+class UserIdentity(models.Model):
+    """Enlace entre el usuario de Django y su identidad en Cognito (D1).
+
+    Va en una tabla aparte y no en un modelo de usuario propio a propósito: cambiar
+    `AUTH_USER_MODEL` con migraciones ya aplicadas es una operación cara, y esto es
+    aditivo. El usuario de Django sigue siendo quien aparece en `Membership`, en
+    `AuditLog` y en las autorías; Cognito solo aporta la autenticación.
+    """
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="identidad"
+    )
+    cognito_sub = models.CharField(max_length=64, unique=True)
+    email = models.EmailField(unique=True)
+    #: Espejo de lo que dice Cognito, para poder exigir el segundo factor sin preguntárselo
+    #: en cada petición. La verdad sigue estando en el pool.
+    mfa_activado = models.BooleanField(default=False)
+    nombre = models.CharField(max_length=150, blank=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "identidad"
+        verbose_name_plural = "identidades"
+
+    def __str__(self) -> str:
+        return self.email

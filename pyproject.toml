@@ -12,6 +12,10 @@ dependencies = [
     # El seed propio y el importador leen YAML en tiempo de ejecución.
     "pyyaml>=6.0",
     "weasyprint>=70.0",
+    # Identidad: Cognito (D1). Solo se importan cuando el proveedor real está activo;
+    # con COGNITO_FAKE=1 (tests y desarrollo) no se llama a AWS.
+    "boto3>=1.35",
+    "pyjwt[crypto]>=2.9",
 ]
 
 [dependency-groups]

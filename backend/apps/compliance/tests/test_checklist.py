@@ -8,17 +8,11 @@ los dos lados.
 import json
 
 import pytest
-from django.test import Client
 
 from apps.compliance.models import MeasureAssessment
 from apps.compliance.services import asegurar_valoraciones, generar_dda, puntuar_sistema
 from apps.tenancy.models import Role
-
-
-def como(usuario):
-    cliente = Client()
-    cliente.force_login(usuario)
-    return cliente
+from apps.tenancy.testing import como
 
 
 def patch(cliente, url, payload):

@@ -1,9 +1,27 @@
-"""Fixtures compartidas del backend."""
+"""Fixtures compartidas del backend.
+
+La autenticación va por token de Cognito (D1), y en los tests el proveedor es el doble
+en memoria de `apps.tenancy.identity`: **la suite no llama a AWS**. Por eso cada usuario
+de prueba nace con su identidad y `como(usuario)` devuelve un cliente ya autenticado con
+un token de verdad, emitido por el mismo camino que usaría una persona.
+"""
 
 import pytest
 from apps.compliance.models import System
-from apps.tenancy.models import Membership, Role, Tenant
+from apps.tenancy.identity import get_identity, reset_identity
+from apps.tenancy.models import Membership, Role, Tenant, UserIdentity
+from apps.tenancy.testing import PASSWORD
 from django.contrib.auth import get_user_model
+from django.test import Client
+
+
+@pytest.fixture(autouse=True)
+def identidad_en_memoria(settings):
+    """Fuerza el doble del proveedor de identidad y lo vacía entre tests."""
+    settings.COGNITO = {**settings.COGNITO, "FAKE": True}
+    reset_identity()
+    yield
+    reset_identity()
 
 
 @pytest.fixture
@@ -17,18 +35,49 @@ def otro_tenant(db):
 
 
 @pytest.fixture
+def catalogo(db):
+    """Catálogo ENS importado del OSCAL oficial. Lo necesita todo lo que categoriza."""
+    from pathlib import Path
+
+    from apps.catalog.models import CatalogVersion
+    from django.core.management import call_command
+
+    oscal = Path(__file__).resolve().parents[1] / "db/seed/oscal/ENS_Anexo_II_rev_9.json"
+    call_command("import_ens_oscal", str(oscal), verbosity=0)
+    return CatalogVersion.objects.get(is_current=True)
+
+
+@pytest.fixture
 def system(db, tenant):
     return System.objects.create(tenant=tenant, nombre="Sede electrónica", categoria="MEDIA")
 
 
 @pytest.fixture
 def usuarios(db):
-    """Crea un usuario por rol para no repetirlo en cada test."""
+    """Un usuario por rol, cada uno con su identidad en el proveedor.
+
+    Nacen con el segundo factor ya activado: son cuentas en uso, no recién creadas. Los
+    tests que prueban el MFA lo desactivan a propósito.
+    """
     User = get_user_model()
-    return {
-        rol: User.objects.create_user(username=f"u_{rol.lower()}", password="x")
-        for rol in Role.values
-    }
+    identidad = get_identity()
+    creados = {}
+    for rol in Role.values:
+        email = f"{rol.lower()}@ejemplo.test"
+        user = User.objects.create_user(username=email, email=email, password=None)
+        user.set_unusable_password()
+        user.save()
+        sub = identidad.registrar(email, PASSWORD)
+        identidad.confirmar_registro(email, "123456")
+        UserIdentity.objects.create(user=user, cognito_sub=sub, email=email, mfa_activado=True)
+        creados[rol] = user
+    return creados
+
+
+@pytest.fixture
+def anonimo(db):
+    """Cliente sin credenciales, para comprobar que un endpoint no responde sin sesión."""
+    return Client()
 
 
 @pytest.fixture
