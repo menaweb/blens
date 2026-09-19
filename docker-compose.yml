@@ -1,0 +1,24 @@
+# Servicios de desarrollo. Aurora y SQS son cosa de infra/ (CDK), no de aquí.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: blens
+      POSTGRES_USER: blens
+      POSTGRES_PASSWORD: blens
+    ports:
+      - "5434:5432"          # puerto no estándar: convive con otros proyectos
+    volumes:
+      - blens_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blens"]
+      interval: 5s
+      retries: 10
+
+  broker:
+    image: redis:7-alpine
+    ports:
+      - "6381:6379"           # no estándar: el 6379 suele estar ocupado por otro proyecto
+
+volumes:
+  blens_pgdata:

@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: blens
+          POSTGRES_USER: blens
+          POSTGRES_PASSWORD: blens
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U blens"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://blens:blens@localhost:5432/blens
+      DJANGO_SECRET_KEY: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync
+      - name: ruff
+        run: uv run ruff check .
+      - name: black
+        run: uv run black --check .
+      - name: Migraciones sin pendientes
+        run: uv run backend/manage.py makemigrations --check --dry-run
+      - name: pytest
+        run: uv run pytest
+
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync
+      - name: Validación del seed contra el catálogo OSCAL (§15)
+        run: uv run python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.json
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm build

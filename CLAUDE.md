@@ -30,31 +30,42 @@
 
 ## 0. Estado actual del repositorio
 
-> **Léelo antes de creerte §6 y §15.** Este documento describe el producto **objetivo**. El repositorio todavía **no tiene código**: hoy es un bundle de especificación + datos semilla + diseño. Casi todos los comandos de §15 y casi todo el árbol de §6 son **destino, no realidad**.
+> **Léelo antes de creerte §6 y §15.** El producto descrito en este documento está por
+> construir; lo que existe hoy es **F0 cerrada** (andamiaje) más la especificación, el seed
+> y el diseño. Nada de la lógica de negocio está implementada todavía.
 
-**Lo que existe hoy (verificado):**
+**Construido (fase F0):**
 
 ```
-CLAUDE.md          ESTRUCTURA.md      ← cómo colocar los ficheros y primer prompt
-docs/              10 documentos compañeros (§15)
-design/            README_handoff.md + 18 prototipos .dc.html + support.js
-db/seed/oscal/     ENS_Anexo_II_rev_9.json  (OSCAL 1.1.3, version 1.0.0, 2026-01-23)
-db/seed/blens/     validate_seed.py · 7 questions.*.yaml · 7 evidence_templates.*.yaml
-                   checks/ (16 yaml + 2 generadores) · magerit/ (asset_types, threats, measure_threat_map)
-engines/           SOLO cpstic_parser/cpstic_parser_prototipo.py (se reescribe en la fase CPSTIC)
+backend/     Django 5.2 + Django Ninja. config/ (settings, celery), api/ (routers, OpenAPI),
+             apps/: tenancy (Tenant, Membership, Invitation, AuditLog, can()), compliance
+             (System), y catalog · profiling · documents · evidence · risk VACÍAS
+frontend/    Vue 3 + Vite + TS, Pinia, Vue Router, Vitest. Tipos generados del OpenAPI
+infra/       CDK en Python: pila vacía, eu-west-1. Deps aparte: uv sync --group infra
+db/seed/     catálogo OSCAL oficial + capa propia (preguntas, evidencias, checks, MAGERIT)
+docs/ design/  10 documentos compañeros · handoff visual + 18 prototipos .dc.html
+.github/     CI: ruff · black · makemigrations --check · pytest · validate_seed · vitest · build
 ```
 
-**Lo que NO existe:** `backend/`, `frontend/`, `infra/`, `api/`, `landing/`, `pyproject.toml`, ningún `engines/<motor>/`, ninguna migración, **ni repositorio git inicializado**. La fase F0 de `docs/plan_construccion.md` es lo primero que hay que construir.
+**Sin construir:** la landing (`landing/`), **todos los motores** de `engines/` salvo el
+prototipo del parser CPSTIC, el importador OSCAL (`import_ens_oscal`), el seed a base de
+datos (`seed_blens`) y cualquier modelo de §7 que no esté arriba. Siguiente fase: **F1**
+(catálogo ENS + `ens_applicability`), en `docs/plan_construccion.md`.
 
-**Lo único ejecutable hoy** (no hay `pyproject.toml`, así que las dependencias van inline; el Python del sistema no trae PyYAML):
+**Puesta en marcha y comandos:** `README.md`. Puertos no estándar a propósito para convivir
+con otros proyectos: Postgres **5434**, Django **8001**, Vite **5175**, Redis **6381**.
 
-```bash
-uv run --with pyyaml python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.json
-```
+**Base de datos de desarrollo: `blens_dev`.** Hubo un BLENS anterior (julio de 2026) cuyo
+esquema sobrevivía en este Postgres; se borró por decisión expresa. **No se parte de él**:
+todo lo anterior a F0 queda descartado.
 
-Hoy termina en **`RESULTADO: OK`** (156 preguntas · 199 plantillas · 464 checks · 269 pares MAGERIT). Mantenlo así: según §15 cualquier error rompe el build.
-
-**Convención de nombres de hechos — no la rompas.** Las claves de `ProfileFact` son **planas y en snake_case** (`instalacion_cpd`, `entidad_tipo`, `cred_ciclo`). En JSON Logic, `{var: "hechos.a.b"}` significa *recorrer* `hechos → a → b`, así que un hecho plano llamado `a.b` **nunca resolvería**. `docs/cuestionario_perfilado.md` sí usa notación con puntos (`entidad.tipo`, `infra.ubicacion[]`, `nivel.C`): es notación de especificación, y al bajarla al seed se aplana. Tres condiciones arrastraban la notación del documento y dejaban el seed en rojo; se corrigieron así:
+**Convención de nombres de hechos — no la rompas.** Las claves de `ProfileFact` son **planas
+y en snake_case** (`instalacion_cpd`, `entidad_tipo`, `cred_ciclo`). En JSON Logic,
+`{var: "hechos.a.b"}` significa *recorrer* `hechos → a → b`, así que un hecho plano llamado
+`a.b` **nunca resolvería**. `docs/cuestionario_perfilado.md` sí usa notación con puntos
+(`entidad.tipo`, `infra.ubicacion[]`, `nivel.C`): es notación de especificación, y al bajarla
+al seed se aplana. Tres condiciones arrastraban la notación del documento y dejaban el seed
+en rojo; se corrigieron así:
 
 | Era | Ahora | Cómo |
 |---|---|---|
@@ -62,9 +73,15 @@ Hoy termina en **`RESULTADO: OK`** (156 preguntas · 199 plantillas · 464 check
 | `hechos.ciclo` (nadie lo emitía) | `hechos.ciclo` | nueva pregunta `org.ciclo` (bloque **B00**) |
 | `hechos.infra.ubicacion ∈ [nube, saas, hibrido]` | `hechos.instalacion_externa == true` | ya lo emitía `mp.if.areas` y nadie lo consumía |
 
-**Bloque B00 incompleto a propósito:** solo tiene las dos preguntas de las que dependen condiciones de otros bloques. El resto de B0 del cuestionario (motivo, alcance, sedes, volumen, teletrabajo, subcontratación) sigue pendiente para la fase de perfilado.
+**Bloque B00 incompleto a propósito:** solo tiene las dos preguntas de las que dependen
+condiciones de otros bloques. El resto de B0 del cuestionario (motivo, alcance, sedes,
+volumen, teletrabajo, subcontratación) sigue pendiente para la fase de perfilado.
 
-**Límite conocido de `instalacion_externa`:** su opción es «En instalaciones de un proveedor o en la nube», así que no distingue *coubicación/hosting* de *nube pública* ni de *SaaS*, como sí hace B3.1 del cuestionario. Basta para decidir si se muestra el bloque de nube; si op.nub necesita más finura, se parte esa opción en `mp.if.areas` y se actualizan los consumidores.
+**Límite conocido de `instalacion_externa`:** su opción es «En instalaciones de un proveedor
+o en la nube», así que no distingue *coubicación/hosting* de *nube pública* ni de *SaaS*,
+como sí hace B3.1 del cuestionario. Basta para decidir si se muestra el bloque de nube; si
+op.nub necesita más finura, se parte esa opción en `mp.if.areas` y se actualizan los
+consumidores.
 
 ---
 
@@ -375,7 +392,7 @@ blens/
   pyproject.toml          # gestor de deps (uv)
 ```
 
-**Este árbol es el destino, no el estado actual (§0).** Hoy solo existen `docs/`, `design/`, `db/seed/` y un prototipo suelto en `engines/`.
+**Este árbol es el destino.** Tras F0 existen `backend/`, `frontend/`, `infra/`, `db/seed/`, `docs/` y `design/`; de `engines/` solo el prototipo del parser CPSTIC, y `landing/` no existe (§0).
 
 **Contar items del catálogo:** el catálogo tiene **467 items** OSCAL, pero solo **407 `props.label` distintos** — las etiquetas **no** son únicas entre medidas. `validate_seed.py` imprime `items: 406` porque cuenta etiquetas únicas, no items. Al anclar un `EnsCheck` a un `EnsRequirementItem`, la clave estable es el **id del control + la posición**, nunca el `label` a secas.
 
@@ -785,34 +802,35 @@ La v1 es **el producto completo (M1–M9 + M11–M14)**. BLENS se construye como
 - **Separación de funciones impuesta por el sistema:** quien aporta una evidencia no la valida, y quien redacta un documento no lo aprueba, aunque tenga el rol. Si la organización es demasiado pequeña, se registra la excepción justificada. Ver `docs/roles_y_permisos.md` §3.
 - **Sin secretos en el repo.** Secrets Manager / variables de entorno.
 - **DoD por módulo:** criterios de §4 marcados + tests + migración + endpoint Django Ninja tipado.
-- **Comandos.** ⚠️ Salvo el validador del seed, **ninguno funciona todavía** (§0): no hay `pyproject.toml`, `manage.py` ni `frontend/`. Son el contrato al que debe llegar F0, no algo que puedas ejecutar hoy.
+- **Comandos.** Los marcados con ⛔ son el contrato de fases posteriores: todavía no existen.
   ```
-  # HOY — lo único ejecutable (deps inline: no hay pyproject.toml aún)
-  uv run --with pyyaml python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.json
-  # imprime medidas/items/preguntas/plantillas/checks/pares y termina en RESULTADO: OK | N ERRORES
-
-  # Generar el esqueleto de checks de una familia (se CURA a mano después)
-  uv run --quiet python db/seed/blens/checks/generate_checks_from_oscal.py \
-      db/seed/oscal/ENS_Anexo_II_rev_9.json op.exp > /tmp/checks.op_exp.skeleton.yaml
-
-  # --- A PARTIR DE AQUÍ: objetivo de F0 en adelante, todavía no existe ---
   # Backend (Python, gestor: uv)
   uv sync                                 # instalar deps
+  docker compose up -d                    # Postgres 5434 · Redis 6381
   uv run backend/manage.py migrate        # migraciones
-  uv run backend/manage.py import_ens_oscal db/seed/oscal/ENS_Anexo_II_rev_9.json   # medidas, refuerzos, items, params
-  uv run backend/manage.py seed_blens     # capa propia: checks, measure_threat_map, preguntas, plantillas de evidencia
-  uv run backend/manage.py runserver      # dev API
+  uv run backend/manage.py runserver 8001 # dev API (/api/health, /api/docs)
   uv run pytest                           # tests (motores al 100%)
-  uv run celery -A config worker -l info  # worker async
+  uv run ruff check . && uv run black --check .
+  cd backend && uv run celery -A config worker -l info   # worker async
+
+  # Seed: validación contra el catálogo OSCAL (se ejecuta en CI)
+  uv run python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.json
+  # Esqueleto de checks de una familia (se CURA a mano después)
+  uv run python db/seed/blens/checks/generate_checks_from_oscal.py \
+      db/seed/oscal/ENS_Anexo_II_rev_9.json op.exp
+
+  ⛔ uv run backend/manage.py import_ens_oscal db/seed/oscal/ENS_Anexo_II_rev_9.json   # F1
+  ⛔ uv run backend/manage.py seed_blens     # F1: checks, measure_threat_map, preguntas, plantillas
 
   # Frontend (Vue)
   pnpm --dir frontend install
-  pnpm --dir frontend dev
-  pnpm --dir frontend build
+  pnpm --dir frontend dev                 # http://localhost:5175
+  pnpm --dir frontend test                # vitest
+  pnpm --dir frontend build               # vue-tsc + build
   pnpm --dir frontend gen:api             # OpenAPI (Django Ninja) → tipos TS
 
-  # Infra
-  uv run cdk deploy                       # CDK en Python
+  # Infra (deps aparte: uv sync --group infra)
+  uv run cdk deploy                       # CDK en Python, eu-west-1
   ```
 
 **Documentos compañeros** (contexto, no reimplementar): `docs/cuestionario_perfilado.md` (banco de preguntas, caminos y evidencias de M11 — especificación del seed); `docs/competencia_y_ux.md` (investigación de competencia traducida a requisitos: indicador de listo para auditoría, portal del auditor, antipatrones de UI, precio); `docs/evidencias_por_herramienta.md` (qué evidencia acepta un auditor por familia de herramienta, con alternativas, criterios de aceptación y rechazos típicos); `docs/ingesta_ia.md` (M16: casos de uso, límites, privacidad y fases); `docs/plan_construccion.md` (**fases, criterios de cierre y prompts de arranque para Claude Code**); `docs/brief_diseno.md` (**pantallas, estados y sistema visual para Claude Design**); `docs/roles_y_permisos.md` (roles, matriz de permisos, separación de funciones, acceso de soporte y del auditor); `docs/validacion_externa.md` (**guiones para contrastar el seed con auditor, certificadora y cliente piloto — antes de cerrar F4**); `docs/decisiones.md` (**decisiones abiertas con recomendación y plazo: alcance del producto, autenticación, región, precio, marca**); planteamiento de producto, especificación del motor de riesgos, documento de presentación al auditor, y el sistema visual de `docs/brief_diseno.md` §2.
