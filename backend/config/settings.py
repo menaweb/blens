@@ -131,6 +131,24 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TIMEZONE = TIME_ZONE
 
+# --- Identidad: Cognito (D1) ---------------------------------------------------
+#: Cognito **solo autentica**. El rol vive en `Membership` y lo resuelve `can()` (§5).
+#: `FAKE` levanta el doble en memoria de `apps.tenancy.identity`: es lo que permite que
+#: los tests y el desarrollo local no llamen a AWS (criterio de cierre de F3b).
+COGNITO = {
+    "USER_POOL_ID": os.environ.get("COGNITO_USER_POOL_ID", ""),
+    "CLIENT_ID": os.environ.get("COGNITO_CLIENT_ID", ""),
+    "CLIENT_SECRET": os.environ.get("COGNITO_CLIENT_SECRET", ""),
+    "REGION": os.environ.get("COGNITO_REGION", ""),
+    "FAKE": env_bool("COGNITO_FAKE", DEBUG),
+}
+
+#: El token de acceso lo custodia el backend en una cookie HttpOnly: nunca `localStorage`
+#: (D1). El frontend no lo lee, solo lo acompaña la petición.
+AUTH_COOKIE = "blens_access"
+AUTH_REFRESH_COOKIE = "blens_refresh"
+AUTH_COOKIE_SAMESITE = "Lax"
+
 # --- Seguridad (BLENS aspira a ENS Alto, §13) ---------------------------------
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"

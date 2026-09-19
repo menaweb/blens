@@ -22,11 +22,11 @@ from apps.tenancy.permissions import require
 from django.shortcuts import get_object_or_404
 from ninja import Router, Schema
 from ninja.errors import HttpError
-from ninja.security import django_auth
 
+from api.auth import blens_auth
 from engines.scoring_engine import ETIQUETA_POR_NIVEL, Indice, Resultado, ResultadoMedida
 
-router = Router(auth=django_auth)
+router = Router(auth=blens_auth)
 
 NIVEL_MAXIMO = 5
 
