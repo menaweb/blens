@@ -38,7 +38,7 @@ Django `8001`, Vite `5175`, Redis `6381`.
 uv run pytest                                  # tests de backend y motores
 uv run ruff check . && uv run black --check .  # estilo
 uv run backend/manage.py makemigrations        # migraciones
-uv run celery -A config worker -l info         # worker (desde backend/)
+cd backend && uv run celery -A config worker   # worker (ver nota de WeasyPrint)
 
 pnpm --dir frontend test                       # vitest
 pnpm --dir frontend build                      # typecheck + build
@@ -58,6 +58,21 @@ uv run python db/seed/blens/validate_seed.py db/seed/oscal/ENS_Anexo_II_rev_9.js
 | `db/seed/` | Catálogo OSCAL oficial (sin tocar) y la capa propia de BLENS |
 | `design/` | Handoff visual: manda en lo visual sobre cualquier otra referencia |
 | `infra/` | AWS CDK en Python (eu-west-1) |
+
+## Generación de PDF (WeasyPrint)
+
+WeasyPrint necesita pango y cairo del sistema. En macOS, además de instalarlos, hay que
+indicarle dónde están: Homebrew los deja en `/opt/homebrew/lib`, que dyld no mira por
+defecto. Y el pool `prefork` de Celery no funciona bien con fork en macOS, así que en
+local se usa `--pool=solo`:
+
+```bash
+brew install pango cairo gdk-pixbuf libffi
+cd backend && DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib \
+  uv run celery -A config worker -l info --pool=solo
+```
+
+En Linux (y en el contenedor de producción) no hace falta ninguna de las dos cosas.
 
 ## Base de datos de desarrollo
 

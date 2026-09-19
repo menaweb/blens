@@ -3,6 +3,8 @@
 from ninja import NinjaAPI
 
 from api.routers.catalog import router as catalog_router
+from api.routers.categorization import router as categorization_router
+from api.routers.dda import router as dda_router
 from api.routers.health import router as health_router
 
 api = NinjaAPI(
@@ -14,3 +16,5 @@ api = NinjaAPI(
 
 api.add_router("/health", health_router, tags=["infraestructura"])
 api.add_router("/catalog", catalog_router, tags=["catálogo"])
+api.add_router("/categorization", categorization_router, tags=["categorización"])
+api.add_router("", dda_router, tags=["declaración de aplicabilidad"])

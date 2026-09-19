@@ -101,10 +101,16 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Ficheros generados (PDF de categorización y DdA). En AWS van a S3 con versioning y
+# Object Lock (§11); en local, al disco.
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 # --- Celery (§5: trabajo pesado fuera del ciclo request/response) --------------
 AWS_REGION = os.environ.get("AWS_REGION", "eu-west-1")
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6381/0")
 CELERY_TASK_ALWAYS_EAGER = env_bool("CELERY_TASK_ALWAYS_EAGER", False)
+CELERY_TASK_EAGER_PROPAGATES = env_bool("CELERY_TASK_EAGER_PROPAGATES", False)
 CELERY_BROKER_TRANSPORT_OPTIONS = {"region": AWS_REGION}
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

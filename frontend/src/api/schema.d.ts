@@ -109,6 +109,237 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/categorization/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Categorizar (sin cuenta)
+         * @description Categoría y cifras. No guarda nada: es lo que responde el asistente de 5 pasos.
+         */
+        post: operations["api_routers_categorization_preview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categorization/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Pedir el PDF del resultado
+         * @description Crea el informe y **encola** el PDF: el render no va en la petición web.
+         */
+        post: operations["api_routers_categorization_report"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categorization/report/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Estado del PDF */
+        get: operations["api_routers_categorization_report_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categorization/report/{token}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Descargar el PDF */
+        get: operations["api_routers_categorization_report_pdf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categorization/vocabulario": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Dimensiones y niveles */
+        get: operations["api_routers_categorization_vocabulario"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sistemas de la organización */
+        get: operations["api_routers_dda_systems"];
+        put?: never;
+        /** Dar de alta un sistema */
+        post: operations["api_routers_dda_create_system"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/valuation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Guardar la categorización */
+        put: operations["api_routers_dda_set_valuation"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/systems/{system_id}/dda": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generar una versión de la DdA */
+        post: operations["api_routers_dda_create_dda"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dda/{dda_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalle de una DdA */
+        get: operations["api_routers_dda_get_dda"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dda/{dda_id}/measures/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Editar una medida de la DdA */
+        patch: operations["api_routers_dda_patch_measure"];
+        trace?: never;
+    };
+    "/api/dda/{dda_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Aprobar la DdA
+         * @description Solo el RSEG, y solo si no quedan selecciones sin resolver ni no-aplicables sin justificar.
+         */
+        post: operations["api_routers_dda_approve_dda"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dda/{dda_id}/oscal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Exportar la DdA en OSCAL (profile) */
+        get: operations["api_routers_dda_export_oscal"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dda/{dda_id}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Encolar el PDF de la DdA */
+        post: operations["api_routers_dda_queue_pdf"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -299,6 +530,247 @@ export interface components {
              */
             D: "NA" | "BAJO" | "MEDIO" | "ALTO";
         };
+        /** CategorizacionOut */
+        CategorizacionOut: {
+            /** Categoria */
+            categoria: string;
+            /** Sin Determinar */
+            sin_determinar: boolean;
+            /**
+             * Aviso
+             * @default
+             */
+            aviso: string;
+            /** Madurez Minima */
+            madurez_minima: number;
+            /** Requiere Certificacion */
+            requiere_certificacion: boolean;
+            /** Dimensiones */
+            dimensiones: components["schemas"]["DimensionOut"][];
+            /** Resumen */
+            resumen: {
+                [key: string]: unknown;
+            };
+        };
+        /** DimensionOut */
+        DimensionOut: {
+            /** Dim */
+            dim: string;
+            /** Nombre */
+            nombre: string;
+            /** Nivel */
+            nivel: string;
+            /** Marca Categoria */
+            marca_categoria: boolean;
+        };
+        /** NivelesIn */
+        NivelesIn: {
+            /**
+             * C
+             * @default NA
+             * @enum {string}
+             */
+            C: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * I
+             * @default NA
+             * @enum {string}
+             */
+            I: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * T
+             * @default NA
+             * @enum {string}
+             */
+            T: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * A
+             * @default NA
+             * @enum {string}
+             */
+            A: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * D
+             * @default NA
+             * @enum {string}
+             */
+            D: "NA" | "BAJO" | "MEDIO" | "ALTO";
+        };
+        /** InformeOut */
+        InformeOut: {
+            /** Token */
+            token: string;
+            /** Categoria */
+            categoria: string;
+            /** Estado */
+            estado: string;
+            /** Descarga */
+            descarga: string;
+        };
+        /** InformeIn */
+        InformeIn: {
+            /**
+             * C
+             * @default NA
+             * @enum {string}
+             */
+            C: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * I
+             * @default NA
+             * @enum {string}
+             */
+            I: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * T
+             * @default NA
+             * @enum {string}
+             */
+            T: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * A
+             * @default NA
+             * @enum {string}
+             */
+            A: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * D
+             * @default NA
+             * @enum {string}
+             */
+            D: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * Organizacion
+             * @default
+             */
+            organizacion: string;
+            /**
+             * Alcance
+             * @default
+             */
+            alcance: string;
+        };
+        /** SystemOut */
+        SystemOut: {
+            /** Id */
+            id: number;
+            /** Nombre */
+            nombre: string;
+            /** Descripcion */
+            descripcion: string;
+            /** Categoria */
+            categoria: string;
+            /** Niveles */
+            niveles: {
+                [key: string]: string;
+            };
+        };
+        /** SystemIn */
+        SystemIn: {
+            /** Nombre */
+            nombre: string;
+            /**
+             * Descripcion
+             * @default
+             */
+            descripcion: string;
+        };
+        /** ValoracionIn */
+        ValoracionIn: {
+            /**
+             * C
+             * @default NA
+             * @enum {string}
+             */
+            C: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * I
+             * @default NA
+             * @enum {string}
+             */
+            I: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * T
+             * @default NA
+             * @enum {string}
+             */
+            T: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * A
+             * @default NA
+             * @enum {string}
+             */
+            A: "NA" | "BAJO" | "MEDIO" | "ALTO";
+            /**
+             * D
+             * @default NA
+             * @enum {string}
+             */
+            D: "NA" | "BAJO" | "MEDIO" | "ALTO";
+        };
+        /** DdaOut */
+        DdaOut: {
+            /** Id */
+            id: number;
+            /** Version */
+            version: number;
+            /** Estado */
+            estado: string;
+            /** Categoria */
+            categoria: string;
+            /** Niveles */
+            niveles: {
+                [key: string]: string;
+            };
+            /** Catalogo */
+            catalogo: string;
+            /** Madurez Minima */
+            madurez_minima: number;
+            /** Problemas */
+            problemas: string[];
+            /** Medidas */
+            medidas: components["schemas"]["MedidaOut"][];
+        };
+        /** MedidaOut */
+        MedidaOut: {
+            /** Code */
+            code: string;
+            /** Nombre */
+            nombre: string;
+            /** Marco */
+            marco: string;
+            /** Familia */
+            familia: string;
+            /** Aplica */
+            aplica: boolean;
+            /** Motivo */
+            motivo: string;
+            /** Justificacion */
+            justificacion: string;
+            /** Compensatoria */
+            compensatoria: string;
+            /** Refuerzos Obligatorios */
+            refuerzos_obligatorios: string[];
+            /** Refuerzos Opcionales */
+            refuerzos_opcionales: string[];
+            /** Selecciones */
+            selecciones: {
+                [key: string]: string;
+            };
+        };
+        /** DecisionIn */
+        DecisionIn: {
+            /** Aplica */
+            aplica?: boolean | null;
+            /** Justificacion */
+            justificacion?: string | null;
+            /** Compensatoria */
+            compensatoria?: string | null;
+            /** Selecciones */
+            selecciones?: {
+                [key: string]: string;
+            } | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -423,6 +895,317 @@ export interface operations {
             query?: never;
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_categorization_preview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NivelesIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategorizacionOut"];
+                };
+            };
+        };
+    };
+    api_routers_categorization_report: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InformeIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InformeOut"];
+                };
+            };
+        };
+    };
+    api_routers_categorization_report_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InformeOut"];
+                };
+            };
+        };
+    };
+    api_routers_categorization_report_pdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_categorization_vocabulario: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_dda_systems: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SystemOut"][];
+                };
+            };
+        };
+    };
+    api_routers_dda_create_system: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SystemIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SystemOut"];
+                };
+            };
+        };
+    };
+    api_routers_dda_set_valuation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValoracionIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SystemOut"];
+                };
+            };
+        };
+    };
+    api_routers_dda_create_dda: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                system_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DdaOut"];
+                };
+            };
+        };
+    };
+    api_routers_dda_get_dda: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dda_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DdaOut"];
+                };
+            };
+        };
+    };
+    api_routers_dda_patch_measure: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dda_id: number;
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionIn"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MedidaOut"];
+                };
+            };
+        };
+    };
+    api_routers_dda_approve_dda: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dda_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DdaOut"];
+                };
+            };
+        };
+    };
+    api_routers_dda_export_oscal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dda_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_routers_dda_queue_pdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dda_id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;

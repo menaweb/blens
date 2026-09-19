@@ -1,0 +1,77 @@
+{% extends "pdf/_base.html" %}
+
+{% block titulo %}Categorización ENS{% endblock %}
+{% block antetitulo %}Esquema Nacional de Seguridad · Anexo I{% endblock %}
+{% block encabezado %}
+  {% if informe.categoria %}Categoría {{ informe.get_categoria_display|default:informe.categoria|title }}{% else %}Categoría sin determinar{% endif %}
+{% endblock %}
+{% block submeta %}
+  {{ informe.organizacion|default:"Organización sin indicar" }}{% if informe.alcance %} · {{ informe.alcance }}{% endif %}
+{% endblock %}
+
+{% block contenido %}
+  {% if not informe.categoria %}
+    <div class="aviso">
+      Las cinco dimensiones se han valorado como «no aplica», así que no hay categoría que
+      determinar. Normalmente significa que el alcance está mal delimitado: revisa qué
+      información y qué servicios entran de verdad en el sistema.
+    </div>
+  {% else %}
+    <p>
+      La categoría de un sistema es <strong>la más alta de sus cinco dimensiones</strong>
+      (Anexo I). Aquí la marca{{ dimensiones_que_marcan|length|pluralize:"n" }}
+      <strong>{{ nombres_que_marcan }}</strong>.
+    </p>
+    <p>
+      Implica un nivel de madurez mínimo <strong>L{{ madurez_minima }}</strong> (CCN-STIC-815)
+      y {% if informe.categoria == "BASICA" %}permite acreditar la conformidad mediante
+      <strong>autoevaluación</strong>{% else %}exige <strong>certificación</strong> por una
+      entidad acreditada, con auditoría al menos cada dos años{% endif %} (art. 38 y art. 31).
+    </p>
+
+    <div class="cifras">
+      <div class="cifra">
+        <div class="valor">{{ resumen.medidas }}</div>
+        <div class="etiqueta">medidas aplicables</div>
+      </div>
+      <div class="cifra">
+        <div class="valor">{{ resumen.evidencias_estimadas }}</div>
+        <div class="etiqueta">evidencias estimadas</div>
+      </div>
+      <div class="cifra">
+        <div class="valor">{{ resumen.documentos_generables }}</div>
+        <div class="etiqueta">documentos que genera BLENS</div>
+      </div>
+    </div>
+
+    <h2>Valoración por dimensión</h2>
+    <table>
+      <thead><tr><th>Dimensión</th><th>Nivel</th><th></th></tr></thead>
+      <tbody>
+        {% for fila in dimensiones %}
+          <tr>
+            <td>{{ fila.nombre }}</td>
+            <td><span class="chip {% if fila.nivel == 'NA' %}gris{% endif %}">{{ fila.etiqueta }}</span></td>
+            <td class="meta">{% if fila.marca %}marca la categoría{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Medidas aplicables por marco</h2>
+    <table>
+      <thead><tr><th>Marco</th><th>Medidas</th></tr></thead>
+      <tbody>
+        {% for fila in marcos %}
+          <tr><td>{{ fila.nombre }}</td><td>{{ fila.total }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="aviso">
+      Las cifras de evidencias y documentos son una <strong>estimación</strong> a partir del
+      catálogo de BLENS: la lista definitiva sale del perfilado del sistema, que es donde se
+      concreta cómo trabaja cada organización.
+    </div>
+  {% endif %}
+{% endblock %}

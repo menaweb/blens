@@ -1,0 +1,62 @@
+{% extends "pdf/_base.html" %}
+
+{% block titulo %}Declaración de Aplicabilidad{% endblock %}
+{% block antetitulo %}Esquema Nacional de Seguridad · Anexo II{% endblock %}
+{% block encabezado %}Declaración de Aplicabilidad · v{{ dda.version }}{% endblock %}
+{% block submeta %}
+  {{ dda.system.nombre }} · Categoría {{ dda.categoria|title }} · Estado {{ dda.get_estado_display }}
+  {% if dda.aprobada_en %} · Aprobada el {{ dda.aprobada_en|date:"d/m/Y" }}
+    {% if dda.aprobador %}por {{ dda.aprobador.get_full_name|default:dda.aprobador.username }}{% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block contenido %}
+  <p>
+    Generada a partir de <span class="mono">{{ dda.catalog.code }}</span> con la valoración
+    por dimensiones del sistema. Madurez mínima exigida: <strong>L{{ dda.madurez_minima }}</strong>.
+  </p>
+
+  <div class="cifras">
+    <div class="cifra"><div class="valor">{{ total_aplican }}</div><div class="etiqueta">medidas aplicables</div></div>
+    <div class="cifra"><div class="valor">{{ total_no_aplican }}</div><div class="etiqueta">no aplicables</div></div>
+    <div class="cifra"><div class="valor">{{ total_refuerzos }}</div><div class="etiqueta">refuerzos obligatorios</div></div>
+  </div>
+
+  <h2>Medidas aplicables</h2>
+  <table>
+    <thead>
+      <tr><th style="width:18%">Medida</th><th>Nombre</th><th style="width:22%">Motivo</th><th style="width:22%">Refuerzos</th></tr>
+    </thead>
+    <tbody>
+      {% for fila in aplican %}
+        <tr>
+          <td class="mono">{{ fila.measure.code }}</td>
+          <td>{{ fila.measure.nombre }}</td>
+          <td class="meta">{{ fila.motivo }}</td>
+          <td class="mono">
+            {{ fila.refuerzos_obligatorios|join:", " }}
+            {% for param, elegido in fila.selecciones.items %}
+              {% if elegido %}<br>{{ elegido }} <span class="meta">(elegido)</span>{% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Medidas no aplicables</h2>
+  <table>
+    <thead><tr><th style="width:18%">Medida</th><th>Nombre</th><th style="width:45%">Justificación</th></tr></thead>
+    <tbody>
+      {% for fila in no_aplican %}
+        <tr>
+          <td class="mono">{{ fila.measure.code }}</td>
+          <td>{{ fila.measure.nombre }}</td>
+          <td>{{ fila.justificacion|default:fila.motivo }}
+            {% if fila.compensatoria %}<br><span class="meta">Compensatoria: {{ fila.compensatoria }}</span>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

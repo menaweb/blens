@@ -1,0 +1,55 @@
+/* Design tokens de design/README_handoff.md. En lo visual manda ese documento. */
+:root {
+  --brand-900: #0b4f4a;
+  --brand-700: #0f766e;
+  --brand-500: #14a79b;
+  --brand-100: #ccfbf1;
+  --brand-50: #f0fdfa;
+  --ink-900: #0f172a;
+  --ink-600: #475569;
+  --ink-400: #94a3b8;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --line: #e2e8f0;
+
+  --nivel-na-fg: #64748b;
+  --nivel-na-bg: #f8fafc;
+  --nivel-bajo-fg: #15803d;
+  --nivel-bajo-bg: #f0fdf4;
+  --nivel-medio-fg: #b45309;
+  --nivel-medio-bg: #fffbeb;
+  --nivel-alto-fg: #b91c1c;
+  --nivel-alto-bg: #fef2f2;
+
+  --radio: 8px;
+  --col: 680px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-alt);
+  color: var(--ink-900);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "tnum";
+  line-height: 1.5;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-700);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
