@@ -21,9 +21,10 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ninja import Router, Schema
 from ninja.errors import HttpError
-from ninja.security import django_auth
 
-router = Router(auth=django_auth)
+from api.auth import blens_auth
+
+router = Router(auth=blens_auth)
 
 DIMENSIONES = ("C", "I", "T", "A", "D")
 

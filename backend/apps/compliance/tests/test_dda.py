@@ -4,22 +4,16 @@ import json
 
 import pytest
 from django.core.exceptions import ValidationError
-from django.test import Client
 
 from apps.compliance.models import DeclaracionAplicabilidad, EstadoDda
 from apps.compliance.services import generar_dda
 from apps.tenancy.models import Role
+from apps.tenancy.testing import como
 
 
 @pytest.fixture
 def dda(sistema_media, rseg):
     return generar_dda(sistema_media, usuario=rseg)
-
-
-def como(usuario):
-    cliente = Client()
-    cliente.force_login(usuario)
-    return cliente
 
 
 def patch(cliente, url, payload):
